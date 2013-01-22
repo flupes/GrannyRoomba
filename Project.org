@@ -1,0 +1,9 @@
+#+TITLE: GrannyRoomba Project
+#+AUTHOR: Lorenzo Flueckiger
+
+* Goal
+Develop a simple and cheap telepresence robot to improve the Skype
+experience of a grandmother with her grandchild K.
+
+* Approach
+* Links
