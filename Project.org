@@ -23,11 +23,17 @@ is great for close up but we loose Grand-Ma' face. In addition, it is much
 more demanding for the Dad than the laptop system which can stay
 unattended for longer periods.
 
-The system let Grand-Ma completely dependant of the skills of the phone
-holder to keep up with the action and avoid to become dizzy. It is nothing
-new that telepresence systems (not tele-operation) can greatly improve
-remote interactions between people. So why not having our own telepresence
-robot at home?
+The system let Grand-Ma completely dependent of the skills of the phone
+holder to keep up with the action and avoid to become dizzy. I knew that
+Mobile Remote Presence (MRP) systems are designed to improve remote
+interactions between people (see [[http://scholar.google.com/scholar?btnG=Search%2BScholar&as_q=%22Mobile%2BRemote%2BPresence%2BSystems%2Bfor%2BOlder%2BAdults%3A%2BAcceptance%2C%2BBenefits%2C%2Band%2BConcerns%22&as_sauthors=Beer&as_occt=any&as_epq=&as_oq=&as_eq=&as_publication=&as_ylo=&as_yhi=&as_sdtAAP=1&as_sdtp=1][Takayama HRI2011]] for a use case close to
+this one) but was seeing this mostly as something on the fringe of my own
+robotic domain. However when visiting our neighbor [[http://www.willowgarage.com/pages/research/human-robot-interaction][Willow Garage]] I
+finally realized that I could use one of these MRP at home to have
+Grand-Ma managing herself her projection into K. world!
+
+Of course, I will not buy a nice professional MRP, but this gave me the
+idea to tinker with a Roomba and an Android tablet...
 
 * Links
 
