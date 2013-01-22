@@ -5,5 +5,29 @@
 Develop a simple and cheap telepresence robot to improve the Skype
 experience of a grandmother with her grandchild K.
 
-* Approach
+* Rationale
+
+K. does a video conference with his overseas Grand-Ma almost every
+week. It is one way to keep this important relationship active. K. loves
+to show in great details his latest creations (essentially Legos;-) and
+they occasionally play roles.
+
+We initially were doing Skype sessions with a laptop. We often had to move
+the laptop from the table to the play area and back. Then we moved to
+Skype on a smart-phone. This bring more mobility and allow to show better
+details of the constructions. However it requires a person holding the
+phone. Since K. needs his hands to manipulate toys, this role ends up to
+Daddy. For this, we most of the time use the back camera to let the phone
+holder point the camera precisely to the details of the action. This mode
+is great for close up but we loose Grand-Ma' face. In addition, it is much
+more demanding for the Dad than the laptop system which can stay
+unattended for longer periods.
+
+The system let Grand-Ma completely dependant of the skills of the phone
+holder to keep up with the action and avoid to become dizzy. It is nothing
+new that telepresence systems (not tele-operation) can greatly improve
+remote interactions between people. So why not having our own telepresence
+robot at home?
+
 * Links
+
