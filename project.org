@@ -1,11 +1,14 @@
-#+TITLE: GrannyRoomba Project
+##+TITLE: GrannyRoomba Project
 #+AUTHOR: Lorenzo Flueckiger
+#+STARTUP: showall
 
-* Goal
+* GrannyRoomba Project
+
+** Goal
 Develop a simple and cheap telepresence robot to improve the Skype
 experience of a grandmother with her grandchild K.
 
-* Rationale
+** Rationale
 
 K. does a video conference with his overseas Grand-Ma almost every
 week. It is one way to keep this important relationship active. K. loves
@@ -29,11 +32,31 @@ Mobile Remote Presence (MRP) systems are designed to improve remote
 interactions between people (see [[http://scholar.google.com/scholar?btnG=Search%2BScholar&as_q=%22Mobile%2BRemote%2BPresence%2BSystems%2Bfor%2BOlder%2BAdults%3A%2BAcceptance%2C%2BBenefits%2C%2Band%2BConcerns%22&as_sauthors=Beer&as_occt=any&as_epq=&as_oq=&as_eq=&as_publication=&as_ylo=&as_yhi=&as_sdtAAP=1&as_sdtp=1][Takayama HRI2011]] for a use case close to
 this one) but was seeing this mostly as something on the fringe of my own
 robotic domain. However when visiting our neighbor [[http://www.willowgarage.com/pages/research/human-robot-interaction][Willow Garage]] I
-finally realized that I could use one of these MRP at home to have
-Grand-Ma managing herself her projection into K. world!
+suddenly realized that I could use one of these MRP at home to have
+Grand-Ma managing her own projection into K. world!
 
-Of course, I will not buy a nice professional MRP, but this gave me the
-idea to tinker with a Roomba and an Android tablet...
+Of course, a nice professional MRP is out of my budget, but this gave me
+the idea to tinker with a Roomba and an Android tablet...
 
-* Links
+** Design
+
+First, I do not want to have to deal with any video and audio link between
+two private homes separated by a continent and an ocean. So the video and
+audio link will still be handled by Skype or iChat/FaceTime. This implies
+to use a netbook or tablet (a phone screen is a little bit too small to
+personalize Grand-Ma, plus I do not want to hack my phone).
+
+Second I need a mobile base to support Grand-Ma virtual head. The height
+of a MRP plays a critical role in user interactions. Unfortunately, it is
+not realistic to build for this project a mobile robot that can support at
+1.5m mast. However a virtual head hovering between 30cm to 50cm from the
+ground will be plenty: the play with K. mostly happens on the floor or on
+a large shelf (what is the right word here?) 35cm height. If the action
+moves on a table, K. will have to lift Grand-Ma to let her roll on the
+table... To minimize the hardware work and finally use a gadget that only
+gather dust in the attic, my old Roomba seems all designated for the
+job. This is a pretty old [[http://www.irobot.com/us/Support/For_Home/Roomba_400_Resources/Anatomy.aspx][Roomba 400 Series, Discovery model]], that
+fortunately already has the serial port socket. In theory this Roomba
+should provide a robust mobile base with a nice control system documented
+in the [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][iRobot Roomba Serial Command Interface (SCI) Specification]].
 
