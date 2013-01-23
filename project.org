@@ -63,8 +63,8 @@ bit too small to personalize Grand-Ma) is very tempting.
 
 Second I need a mobile base to support Grand-Ma virtual head. The height
 of a MRP plays a critical role in user interactions. Unfortunately, it is
-not realistic to build for this project a mobile robot that can support at
-1.5m mast. However a virtual head hovering between 30cm to 50cm from the
+not realistic to build for this project a mobile robot that can support a 1.5m mast.
+However a virtual head hovering between 30cm to 50cm from the
 ground will be plenty: K. play mostly happens on the floor or on a large
 shelf (what is the right word here?) 35cm height. If the action moves on a
 table, K. will have to lift Grand-Ma to let her roll on the table... To
