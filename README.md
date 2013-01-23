@@ -5,7 +5,7 @@ The idea of this project is to develop a simple and cheap telepresence robot to 
 
 *This is only the inception of the project and this repo just contains few ideas for now...*
 
-More information about this project in the [project.org](/project.org/) file.
+More information about this project in the [project.org](https://github.com/flupes/GrannyRoomba/blob/master/project.org) file.
 
 Do you want to help? Do you find this name ridiculous? Contact me!
 
