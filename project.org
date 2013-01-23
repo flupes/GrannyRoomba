@@ -106,3 +106,24 @@ location. Again the IOIO would allow this extra control, but the mechanics
 will become a little bit more involved. So maybe this a a good follow on
 project next generation of GrannyRoomba.
 
+*** Device drivers
+
+ROS? RoombaCMD, custom?
+
+*** User interface
+
+A physical interface like a joystick would be great, but I think that this
+mode of operation could not work because of the time delay between the
+remote control station and the robot.
+
+So the UI will proabably end up being some sort of web page with control
+buttons (need to learn more on this topic).
+
+*** Communication
+
+For maximum accessiblity, the best would probably to run a web server on
+the Android tablet (is this possible) with a port mapping on the home
+router. This means I will have to learn about web protocols...
+
+[[http://www.rosbridge.org/doku.php][rosbridge]] and websockets?
+
