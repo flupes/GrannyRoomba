@@ -54,13 +54,23 @@ GrannyRoomba.
 
 ** Concepts
 
+*** Computing and screen
 First, I do not want to have to deal with any video and audio link between
 two private homes separated by a continent plus an ocean. So the video and
 audio link will still be handled by Skype or iChat/FaceTime. This implies
 to use a computer system that supports well this applications, has a
 screen and is lightweight. So an Android tablet (a phone screen is a little
-bit too small to personalize Grand-Ma) is very tempting.
+bit too small to personalize Grand-Ma) is very tempting. A small Android
+tablet like the [[http://www.google.com/nexus/7/][Nexus-7]] would provide:
+ - all the necessary computing power
+ - a nice screen to show Grand-Ma face
+ - a camera to feed the video stream to the remote user
+ - a wifi connection to connect to the home router and the rest of the world
+ - extra sensors (compass and accelerometer+gyro) that we could use to
+   improve the situation awareness of for the remote user
+ - an open platform nice to hack
 
+*** Robotic mobile base
 Second I need a mobile base to support Grand-Ma virtual head. The height
 of a MRP plays a critical role in user interactions. Unfortunately, it is
 not realistic to build for this project a mobile robot that can support a 1.5m mast.
@@ -75,10 +85,24 @@ has the serial port socket. In theory this Roomba should provide a robust
 mobile base with a nice control system documented in the [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][iRobot Roomba
 Serial Command Interface (SCI) Specification]].
 
+*** Android interface with hardware
 Communication between the tablet and the Roomba can happen in different
 ways. The more simple probably would some existing Bluetooth-Roomba
 adapter like [[https://www.sparkfun.com/products/10980][Rootooth]]. However it would only provide control to the
 Roomba and not support other input/output necessary for a Pan/Tilt
 system. So instead I will try a [[https://www.sparkfun.com/products/10748][IOIO board]] which provides incredible I/O
 capabilities to an Android system.
+
+*** Pan/tilt system
+Because the Roomba can perform nice point turns, only a tilt system for
+the camera is required. Note that in fact the whole tablet need to be
+tilted since the plan is to use the front facing camera. This will require a
+sort of gimbal, probably actuated with a servo motor. The servo motor can
+be easily managed by the IOIO.
+
+Note also that initially I would have loved be able to vary the height of
+the tablet/camera to provide a better view of objects depending their
+location. Again the IOIO would allow this extra control, but the mechanics
+will become a little bit more involved. So maybe this a a good follow on
+project next generation of GrannyRoomba.
 
