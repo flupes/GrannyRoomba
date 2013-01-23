@@ -38,25 +38,47 @@ Grand-Ma managing her own projection into K. world!
 Of course, a nice professional MRP is out of my budget, but this gave me
 the idea to tinker with a Roomba and an Android tablet...
 
-** Design
+** Requirements
+
+GrannyRoomba should provide the remote user a camera with pan/tilt
+controls, mounted on mobile base. The robot will only work indoors. The
+tilt control is critical to offer close-up views. The pan
+degree-of-freedom can be realized by the mobile base.
+
+There should be a simple to use interface to control the various movement
+of the camera, and the system should work between computers on different
+networks.
+
+The system should provide a video stream of the remote user on the
+GrannyRoomba.
+
+** Concepts
 
 First, I do not want to have to deal with any video and audio link between
-two private homes separated by a continent and an ocean. So the video and
+two private homes separated by a continent plus an ocean. So the video and
 audio link will still be handled by Skype or iChat/FaceTime. This implies
-to use a netbook or tablet (a phone screen is a little bit too small to
-personalize Grand-Ma, plus I do not want to hack my phone).
+to use a computer system that supports well this applications, has a
+screen and is lightweight. So an Android tablet (a phone screen is a little
+bit too small to personalize Grand-Ma) is very tempting.
 
 Second I need a mobile base to support Grand-Ma virtual head. The height
 of a MRP plays a critical role in user interactions. Unfortunately, it is
 not realistic to build for this project a mobile robot that can support at
 1.5m mast. However a virtual head hovering between 30cm to 50cm from the
-ground will be plenty: the play with K. mostly happens on the floor or on
-a large shelf (what is the right word here?) 35cm height. If the action
-moves on a table, K. will have to lift Grand-Ma to let her roll on the
-table... To minimize the hardware work and finally use a gadget that only
-gather dust in the attic, my old Roomba seems all designated for the
-job. This is a pretty old [[http://www.irobot.com/us/Support/For_Home/Roomba_400_Resources/Anatomy.aspx][Roomba 400 Series, Discovery model]], that
-fortunately already has the serial port socket. In theory this Roomba
-should provide a robust mobile base with a nice control system documented
-in the [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][iRobot Roomba Serial Command Interface (SCI) Specification]].
+ground will be plenty: K. play mostly happens on the floor or on a large
+shelf (what is the right word here?) 35cm height. If the action moves on a
+table, K. will have to lift Grand-Ma to let her roll on the table... To
+minimize the hardware work and finally use a gadget that only gather dust
+in the attic, my old Roomba seems all designated for the job. This is a
+pretty old [[http://www.irobot.com/us/Support/For_Home/Roomba_400_Resources/Anatomy.aspx][Roomba 400 Series, Discovery model]], that fortunately already
+has the serial port socket. In theory this Roomba should provide a robust
+mobile base with a nice control system documented in the [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][iRobot Roomba
+Serial Command Interface (SCI) Specification]].
+
+Communication between the tablet and the Roomba can happen in different
+ways. The more simple probably would some existing Bluetooth-Roomba
+adapter like [[https://www.sparkfun.com/products/10980][Rootooth]]. However it would only provide control to the
+Roomba and not support other input/output necessary for a Pan/Tilt
+system. So instead I will try a [[https://www.sparkfun.com/products/10748][IOIO board]] which provides incredible I/O
+capabilities to an Android system.
 
