@@ -127,3 +127,7 @@ router. This means I will have to learn about web protocols...
 
 [[http://www.rosbridge.org/doku.php][rosbridge]] and websockets?
 
+** Notes / Links
+
+http://hackingroomba.com/projects/build-a-roomba-serial-tether/
+
