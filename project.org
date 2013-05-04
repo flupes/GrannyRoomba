@@ -127,7 +127,39 @@ router. This means I will have to learn about web protocols...
 
 [[http://www.rosbridge.org/doku.php][rosbridge]] and websockets?
 
+rosjava development does not seems very active, and with the disapearance
+of Willow Garage, I have some doubt about the future support for
+ROS. Since my project is moving extremely slowly, I need a stable long
+term solution;-)
+
+[[https://code.google.com/p/i-jetty/][i-jetty]] seems the simple solutiond to deploy a webserver on an Android
+system.
+
+The web-based approach seems a little bit costly in time with my current
+knowledge of the domain. I will look at a more bare-bone solution with [[http://www.zeromq.org/][0MQ]]
+for the transport layer and [[https://developers.google.com/protocol-buffers/][Protocol Buffers]] for the data description and
+serialization.
+
 ** Notes / Links
 
 http://hackingroomba.com/projects/build-a-roomba-serial-tether/
 
+http://www.dprg.org/projects/2009-07a/
+
+* Updates
+
+- [2013-05-04 Sat] Peformed some initial testing with the IOIO OTG and the
+  Roomba Discovery: absolutely no success! The Roomba seems death to all
+  the attemps to communicate with it. Out of frustration, I purchased a
+  Roomba Create, and the same IOIO rig seems to talk fine with it. So this
+  is an extra expense, but I also get a much nicer platform that will easy
+  the hardware integration. The Roomba Create also has a extended
+  "Open-Interface". And finally, the cost is minimal since it uses the APS
+  battery and charger from the old Roomba (~$100 saved).
+- [2013-04-20 Sat] Starting to work again on the project after 3 months
+   lost due to a forced moving that had a double impact:
+  - The nice play-area with raised plateform does not exist at our new
+    place, meaning that a 2 feet high GrannyRoomba will not
+    have the ideal dimensions to play. It can still be used for ground
+    level play, but not see something on a normal table.
+  - A lot a energy and time was wasted to do non creative chores.
