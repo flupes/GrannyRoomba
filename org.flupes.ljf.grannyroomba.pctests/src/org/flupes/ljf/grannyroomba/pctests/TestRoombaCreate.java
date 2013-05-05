@@ -1,10 +1,14 @@
 package org.flupes.ljf.grannyroomba.pctests;
 
-import java.io.BufferedReader;
+import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
+
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
@@ -22,17 +26,14 @@ import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.IOIOConnectionManager.Thread;
-import ioio.lib.util.pc.IOIOConsoleApp;
+import ioio.lib.util.pc.IOIOSwingApp;
 
-public class TestRoombaCreate extends IOIOConsoleApp {
 
-	
-//	private static final int CMD_START = 128;
-//	private static final int CMD_CONTROL = 130;
-//	private static final int CMD_DEMO = 136;
+public class TestRoombaCreate extends IOIOSwingApp {
+
 
 	private RoombaCreate m_roomba;
-	
+
 	private DigitalOutput m_heartBeatLed;
 	private boolean m_beatState;
 	private long m_lastTime;
@@ -44,30 +45,15 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 
 	private static boolean s_listen = false;
 
+	private boolean m_uiOpened;
+
+
 	public static void main(String[] args) throws Exception {
 		s_logger.setLevel(Level.DEBUG);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		s_logger.addAppender(appender);
+
 		new TestRoombaCreate().go(args);
-	}
-
-	private void delay(int ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	private void writeByte(int b) 
-			throws ConnectionLostException {
-		try {
-			m_output.write( b );
-		} catch (IOException e) {
-			throw new ConnectionLostException(e);
-		}
 	}
 
 	@Override
@@ -77,33 +63,23 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 			@Override
 			protected void setup() throws ConnectionLostException,
 			InterruptedException {
+
 				m_heartBeatLed = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
 				m_beatState = true;
 				m_lastTime = System.currentTimeMillis();
 
 				m_roomba = new RoombaCreate(ioio_);
 				m_roomba.connect();
-				
-				/*
-				m_uart = ioio_.openUart(null,
-						new DigitalOutput.Spec(6, Mode.OPEN_DRAIN),
-						57600, Uart.Parity.NONE, Uart.StopBits.ONE);
-				m_output = m_uart.getOutputStream();
 
-				s_logger.info("start");
-				writeByte(CMD_START);
-				delay(500);
-				s_logger.info("demo");
-				writeByte(CMD_DEMO);
-				delay(40);
-				writeByte(4);
-				*/
 				if ( s_listen ) {
 					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
 							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
 					m_input = m_uart.getInputStream();
 				}
-				
+
+				m_roomba.startTelemetry();
+				//				m_roomba.demo(4);
+
 			}
 
 			@Override
@@ -133,18 +109,49 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 	}
 
 	@Override
-	protected void run(String[] args) throws Exception {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
-		boolean abort = false;
-		String line;
-		while (!abort && (line = reader.readLine()) != null) {
-			if (line.equals("q")) {
-				abort = true;
-			}
+	protected Window createMainWindow(String args[]) {
+		// Use native look and feel.
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
 		}
-	}
 
+		JFrame frame = new JFrame("Test Roomba Create Key Input");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		frame.setSize(400, 400);
+		frame.setLocationRelativeTo(null); // center it
+		frame.setVisible(true);
+
+		frame.addKeyListener( 
+				new KeyAdapter() { 
+					public void keyPressed(KeyEvent e) {
+						switch ( e.getKeyCode() ) {
+						case KeyEvent.VK_UP: 
+							s_logger.debug("UP pressed");
+							break;
+						case KeyEvent.VK_DOWN:
+							s_logger.debug("DOWN pressed");
+							break;
+						case KeyEvent.VK_LEFT: 
+							s_logger.debug("LEFT pressed");
+							break;
+						case KeyEvent.VK_RIGHT:
+							s_logger.debug("RIGHT pressed");
+							break;
+						case KeyEvent.VK_SPACE:
+							s_logger.debug("SPACE pressed");
+							break;
+						default:
+							s_logger.debug("Key " + e.getKeyChar() + " not processed");
+						}
+					}
+				} 
+				);
+		
+		return frame;
+	}
+	
 	private void beat() {
 		long currentTime = System.currentTimeMillis();
 		try {
@@ -167,4 +174,5 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 			e.printStackTrace();
 		}
 	}
+
 }

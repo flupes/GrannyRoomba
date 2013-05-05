@@ -79,6 +79,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	 * 
 	 */
 
+	static private final int CMD_DEMO = 136;
 	static private final int CMD_STREAM = 148;
 	static private final int CMD_TOGGLESTREAM = 150;
 
@@ -117,12 +118,6 @@ public class RoombaCreate extends SerialIoioRoomba {
 		super(ioio);
 		m_telemetry = new EnumMap(SensorPackets.class);
 
-		Integer number = 256;
-		byte checksum = number.byteValue();
-		System.out.println("checksum = " + checksum);
-		if ( (checksum & 0xFF) == 0 ) System.out.println(" -> OK");
-		else System.out.println(" -> Failed");
-
 		s_logger.info("Opening communication with a Roomba Create");
 		s_logger.info("Telemetry contains " + numberOfSensorPackets()
 				+ " and the message length is " + telemetryMessageLength()
@@ -151,6 +146,11 @@ public class RoombaCreate extends SerialIoioRoomba {
 		else {
 			writeByte( 0 );
 		}
+	}
+	
+	public void demo(int d) throws ConnectionLostException {
+		writeByte( CMD_DEMO );
+		writeByte( d );
 	}
 
 	private class TelemetryListening implements Runnable {
@@ -184,6 +184,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 						int bufferedBytes = m_input.available();
 						for ( int i=bufferedBytes; i>0; i--) {
 							dataByte = m_input.read();
+							s_logger.info("got: " + dataByte);
 							if ( dataByte == -1 ) break;
 							if ( message.size() > 86 ) {
 								s_logger.error("Something went wrong (msg growing too much!");
@@ -202,7 +203,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 									}
 									else {
 										// this was not a real header, drop
-										// the byte until the next potential start
+										// the bytes until the next potential start
+										Integer b;
+										do {
+											b = message.pollFirst();
+											if ( b == null ) break;
+										} while ( (b != TELEM_MSG_HEADER) ); 
 									}
 								}
 							}
@@ -211,11 +217,11 @@ public class RoombaCreate extends SerialIoioRoomba {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
 					// Sleep a little bit (less than 15ms ?)
 					delay(5);
 				}
 			}
+			s_logger.info("Exiting Telemetry Thread.");
 		}
 
 	}
