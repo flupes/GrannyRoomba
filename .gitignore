@@ -1,0 +1,11 @@
+# ignore bins directories
+bin/
+
+# ignore target directories
+targets/
+
+# ignore temps files
+*~
+
+# ignore eclipse metadata
+.metadata
