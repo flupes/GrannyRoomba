@@ -82,8 +82,15 @@ minimize the hardware work and finally use a gadget that only gather dust
 in the attic, my old Roomba seems all designated for the job. This is a
 pretty old [[http://www.irobot.com/us/Support/For_Home/Roomba_400_Resources/Anatomy.aspx][Roomba 400 Series, Discovery model]], that fortunately already
 has the serial port socket. In theory this Roomba should provide a robust
-mobile base with a nice control system documented in the [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][iRobot Roomba
-Serial Command Interface (SCI) Specification]].
+mobile base with a nice control system documented in the
+iRobot Roomba Serial Command Interface (SCI) Specification:
+  - [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][broken link from iRobot]]
+  - [[./refdocs/Roomba_SCI_Spec_Manual.pdf][local copy of the file]].
+
+The Roomba Create has a different set of capabilities and access to more
+internal information. The Create Open Interface is described in:
+  - [[http://www.irobot.com/hrd_right_rail/create_rr/create_fam/createFam_rr_manuals.html][online version of the specification]]
+  - [[./refdocs/Create_OpenInterface_v2.pdf][local copy]] just in case the iRobot link also disapears
 
 *** Android interface with hardware
 Communication between the tablet and the Roomba can happen in different
