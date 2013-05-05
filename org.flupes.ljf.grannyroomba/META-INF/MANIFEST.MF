@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Grannyroomba
+Bundle-SymbolicName: org.flupes.ljf.grannyroomba
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.flupes.ljf.grannyroomba,
+ org.flupes.ljf.grannyroomba.hw
+Require-Bundle: org.slf4j.api
