@@ -10,7 +10,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
-import org.flupes.ljf.grannyroomba.hw.SerialRoomba;
+import org.flupes.ljf.grannyroomba.hw.RoombaSeries400;
 
 import ioio.lib.api.DigitalInput;
 import ioio.lib.api.DigitalOutput;
@@ -22,9 +22,9 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.IOIOConnectionManager.Thread;
 import ioio.lib.util.pc.IOIOConsoleApp;
 
-public class TestConnection extends IOIOConsoleApp {
+public class TestRoombaSerie400 extends IOIOConsoleApp {
 
-	private SerialRoomba m_roomba;
+	private RoombaSeries400 m_roomba;
 
 	private DigitalOutput m_heartBeatLed;
 	private boolean m_beatState;
@@ -43,7 +43,7 @@ public class TestConnection extends IOIOConsoleApp {
 		logger.setLevel(Level.DEBUG);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		logger.addAppender(appender);
-		new TestConnection().go(args);
+		new TestRoombaSerie400().go(args);
 	}
 
 	@Override
@@ -56,14 +56,14 @@ public class TestConnection extends IOIOConsoleApp {
 				m_heartBeatLed = ioio_.openDigitalOutput(IOIO.LED_PIN, true);
 				m_beatState = true;
 				m_lastTime = System.currentTimeMillis();
-				m_roomba = new SerialRoomba(ioio_);
+				m_roomba = new RoombaSeries400(ioio_);
 
 				if ( s_listen ) {
 					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
 							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
 					m_input = m_uart.getInputStream();
 				}
-				m_roomba.start();
+				m_roomba.connect();
 
 			}
 
@@ -136,13 +136,6 @@ public class TestConnection extends IOIOConsoleApp {
 				System.out.println("Unknown input. d=drive, s=spot, p=powerinfo, q=quit.");
 			}
 		}
-		//		int c = System.in.read();
-		//		if ( c > 0 ) {
-		//			if ( 's' == (char)c ) {
-		//				m_roomba.getPowerInfo();
-		//			}
-		//		}
-
 	}
 
 	private void beat() {

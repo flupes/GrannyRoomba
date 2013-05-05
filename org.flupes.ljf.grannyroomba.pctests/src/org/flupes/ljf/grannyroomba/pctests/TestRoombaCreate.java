@@ -11,6 +11,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
+import org.flupes.ljf.grannyroomba.hw.RoombaCreate;
 
 import ioio.lib.api.DigitalInput;
 import ioio.lib.api.DigitalOutput;
@@ -25,9 +26,12 @@ import ioio.lib.util.pc.IOIOConsoleApp;
 
 public class TestRoombaCreate extends IOIOConsoleApp {
 
-	private static final int CMD_START = 128;
-	private static final int CMD_CONTROL = 130;
-	private static final int CMD_DEMO = 136;
+	
+//	private static final int CMD_START = 128;
+//	private static final int CMD_CONTROL = 130;
+//	private static final int CMD_DEMO = 136;
+
+	private RoombaCreate m_roomba;
 	
 	private DigitalOutput m_heartBeatLed;
 	private boolean m_beatState;
@@ -38,7 +42,7 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 	private OutputStream m_output;
 	private static Logger s_logger = Logger.getLogger("grannyroomba");
 
-	private static boolean s_listen = true;
+	private static boolean s_listen = false;
 
 	public static void main(String[] args) throws Exception {
 		s_logger.setLevel(Level.DEBUG);
@@ -77,16 +81,14 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 				m_beatState = true;
 				m_lastTime = System.currentTimeMillis();
 
+				m_roomba = new RoombaCreate(ioio_);
+				m_roomba.connect();
+				
+				/*
 				m_uart = ioio_.openUart(null,
 						new DigitalOutput.Spec(6, Mode.OPEN_DRAIN),
 						57600, Uart.Parity.NONE, Uart.StopBits.ONE);
 				m_output = m_uart.getOutputStream();
-
-				if ( s_listen ) {
-					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
-							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
-					m_input = m_uart.getInputStream();
-				}
 
 				s_logger.info("start");
 				writeByte(CMD_START);
@@ -95,6 +97,13 @@ public class TestRoombaCreate extends IOIOConsoleApp {
 				writeByte(CMD_DEMO);
 				delay(40);
 				writeByte(4);
+				*/
+				if ( s_listen ) {
+					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
+							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
+					m_input = m_uart.getInputStream();
+				}
+				
 			}
 
 			@Override
