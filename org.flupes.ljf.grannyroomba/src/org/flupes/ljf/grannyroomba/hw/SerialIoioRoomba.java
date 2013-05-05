@@ -61,10 +61,28 @@ public abstract class SerialIoioRoomba {
 		m_mode = CtrlModes.DISCONNECTED;
 	}
 
-	abstract public void connect() throws ConnectionLostException;
+	public void connect() throws ConnectionLostException {
+		connect(DEFAULT_RX_PIN, DEFAULT_TX_PIN);
+	}
 
-	abstract public void connect(int rxpin, int txpin)
-			throws ConnectionLostException;
+	public void connect(int rxpin, int txpin) throws ConnectionLostException {
+		if ( m_mode == CtrlModes.DISCONNECTED ) {
+			DigitalInput.Spec rxspec = new DigitalInput.Spec(rxpin);
+			DigitalOutput.Spec txspec = new DigitalOutput.Spec(txpin, Mode.OPEN_DRAIN);
+			s_logger.info("Opening communication with Roomba:\n"
+					+ "    RX pin = " + rxspec.pin + " (" + rxspec.mode +")" 
+					+ "\n    TX pin = " + txspec.pin + " (" + txspec.mode +")");
+			m_uart = m_ioio.openUart(rxspec, txspec,
+					BAUD_RATE, Uart.Parity.NONE, Uart.StopBits.ONE);
+			m_input = m_uart.getInputStream();
+			m_output = m_uart.getOutputStream();
+
+			s_logger.info("Send START to Roomba");
+			writeByte( CMD_START );
+			m_mode = CtrlModes.PASSIVE;
+			delay(100);			
+		}
+	}
 
 	protected void delay(int ms) {
 		try {
