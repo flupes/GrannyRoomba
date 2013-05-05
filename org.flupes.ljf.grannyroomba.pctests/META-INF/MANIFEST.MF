@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Pctests
+Bundle-SymbolicName: org.flupes.ljf.grannyroomba.pctests
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.flupes.ljf.grannyroomba.pctests
+Require-Bundle: org.slf4j.api;bundle-version="1.6.4",
+ org.apache.log4j;bundle-version="1.2.15",
+ org.slf4j.log4j;bundle-version="1.6.4"
+Bundle-ClassPath: lib/slf4j-log4j12-1.7.5.jar,
+ .
