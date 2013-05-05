@@ -3,7 +3,6 @@ package org.flupes.ljf.grannyroomba.pctests;
 import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -21,7 +20,6 @@ import ioio.lib.api.DigitalInput;
 import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.IOIO;
 import ioio.lib.api.Uart;
-import ioio.lib.api.DigitalOutput.Spec.Mode;
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
@@ -40,13 +38,16 @@ public class TestRoombaCreate extends IOIOSwingApp {
 
 	private Uart m_uart;
 	private InputStream m_input;
-	private OutputStream m_output;
 	private static Logger s_logger = Logger.getLogger("grannyroomba");
 
+	private static float SPEED_INCR = 0.2f;
+	private static float SPIN_INCR = 0.2f;
+	private static float MAX_VELOCITY = 500;
+	private static float MIN_VELOCITY = 50;
+	private static float MAX_RADIUS = 2000;
+	private static float MIN_RADIUS = 40;
+
 	private static boolean s_listen = false;
-
-	private boolean m_uiOpened;
-
 
 	public static void main(String[] args) throws Exception {
 		s_logger.setLevel(Level.DEBUG);
@@ -71,6 +72,8 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				m_roomba = new RoombaCreate(ioio_);
 				m_roomba.connect();
 
+				m_roomba.safe();
+				
 				if ( s_listen ) {
 					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
 							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
@@ -118,29 +121,42 @@ public class TestRoombaCreate extends IOIOSwingApp {
 
 		JFrame frame = new JFrame("Test Roomba Create Key Input");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
 		frame.setSize(400, 400);
 		frame.setLocationRelativeTo(null); // center it
 		frame.setVisible(true);
 
 		frame.addKeyListener( 
-				new KeyAdapter() { 
+				new KeyAdapter() {
+					private float speed = 0;
+					private float spin = 0;
 					public void keyPressed(KeyEvent e) {
 						switch ( e.getKeyCode() ) {
 						case KeyEvent.VK_UP: 
-							s_logger.debug("UP pressed");
+							if ( speed < 1-SPEED_INCR/2 ) speed += SPEED_INCR;
+							s_logger.debug("UP pressed -> speed="+speed+" / spin="+spin);
+							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_DOWN:
-							s_logger.debug("DOWN pressed");
+							if ( speed > -1+SPEED_INCR/2 ) speed -= SPEED_INCR;
+							s_logger.debug("DOWN pressed -> speed="+speed+" / spin="+spin);
+							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_LEFT: 
-							s_logger.debug("LEFT pressed");
+							if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
+							s_logger.debug("LEFT pressed -> speed="+speed+" / spin="+spin);
+							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_RIGHT:
-							s_logger.debug("RIGHT pressed");
+							if ( spin < 1-SPIN_INCR/2 ) spin += SPIN_INCR;
+							s_logger.debug("RIGHT pressed -> speed="+speed+" / spin="+spin);
+							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_SPACE:
-							s_logger.debug("SPACE pressed");
+							speed = 0;
+							spin = 0;
+							s_logger.debug("SPACE pressed -> speed="+speed+" / spin="+spin);
+							changeDrive(speed, spin);
 							break;
 						default:
 							s_logger.debug("Key " + e.getKeyChar() + " not processed");
@@ -148,10 +164,51 @@ public class TestRoombaCreate extends IOIOSwingApp {
 					}
 				} 
 				);
-		
+
 		return frame;
 	}
-	
+
+	protected void changeDrive(float speed, float spin) {
+		int velocity;
+		int radius;
+		if ( Math.abs(speed) < SPEED_INCR/2 ) {
+			if ( Math.abs(spin) < SPIN_INCR/2 ) {
+				velocity = 0;
+				radius = 0x8000;
+			}
+			else {
+				// Zero speed, this is a point turn
+				if ( spin > 0 ) {
+					radius = 0xFFFF;
+				}
+				else {
+					radius = 0x0001; 
+				}
+				velocity = (int)(MAX_VELOCITY*Math.abs(spin));
+			}
+		}
+		else {
+			velocity = (int)(MAX_VELOCITY*speed);
+			if ( Math.abs(spin) < SPIN_INCR/2 ) {
+				// Zero spin, straight forward or backward move
+				radius = 0x8000;
+			}
+			else {
+				radius = (int)(MAX_RADIUS
+						-(Math.abs(spin)-SPIN_INCR)*(MAX_RADIUS-MIN_RADIUS)/(1-SPIN_INCR));
+				if ( spin < 0 ) {
+					radius = -1*radius;
+				}
+			}
+		}
+		try {
+			m_roomba.drive(velocity, radius);
+		} catch (ConnectionLostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	private void beat() {
 		long currentTime = System.currentTimeMillis();
 		try {

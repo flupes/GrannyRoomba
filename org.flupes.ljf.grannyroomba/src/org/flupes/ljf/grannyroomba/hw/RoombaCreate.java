@@ -184,9 +184,9 @@ public class RoombaCreate extends SerialIoioRoomba {
 						int bufferedBytes = m_input.available();
 						for ( int i=bufferedBytes; i>0; i--) {
 							dataByte = m_input.read();
-							s_logger.info("got: " + dataByte);
+							s_logger.trace("got: " + dataByte);
 							if ( dataByte == -1 ) break;
-							if ( message.size() > 86 ) {
+							if ( message.size() > 256 ) {
 								s_logger.error("Something went wrong (msg growing too much!");
 							}
 							if ( (dataByte == TELEM_MSG_HEADER) && msgComplete ) {

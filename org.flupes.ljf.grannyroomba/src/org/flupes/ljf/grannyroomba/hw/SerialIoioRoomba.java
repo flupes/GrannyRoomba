@@ -45,6 +45,8 @@ public abstract class SerialIoioRoomba {
 
 	protected IOIO m_ioio;
 	protected Uart m_uart;
+	protected byte[] m_buffer = new byte[128];
+
 	protected DigitalOutput m_deviceDetect; 
 	protected InputStream m_input;
 	protected OutputStream m_output;
@@ -107,13 +109,13 @@ public abstract class SerialIoioRoomba {
 		writeByte( 0 );
 	}
 
-	protected void safe() throws ConnectionLostException {
+	public void safe() throws ConnectionLostException {
 		s_logger.info("Switch to SAFE mode.");
 		writeByte( CMD_SAFE );
 		delay(CMD_WAIT_MS);
 	}
 
-	protected void full() throws ConnectionLostException {
+	public void full() throws ConnectionLostException {
 		s_logger.info("Switch to FULL mode");
 		writeByte( CMD_FULL );
 		delay(CMD_WAIT_MS);
@@ -127,10 +129,38 @@ public abstract class SerialIoioRoomba {
 		delay(CMD_WAIT_MS);
 	}
 
+	public void stop() throws ConnectionLostException {
+		s_logger.debug("Stop Drive");
+		drive(0, 0x8000);
+	}
+	
+	public void drive(int velocity, int radius)
+			throws ConnectionLostException {
+		s_logger.debug("drive("+velocity+", "+radius+")");
+		writeByte( CMD_DRIVE );
+		writeWord( velocity );
+		writeWord( radius );
+		delay(CMD_WAIT_MS);
+	}
+	
 	protected void writeByte(int b) 
 			throws ConnectionLostException {
 		try {
 			m_output.write( b );
+		} catch (IOException e) {
+			throw new ConnectionLostException(e);
+		}
+	}
+
+	protected void writeWord(int s) 
+			throws ConnectionLostException {
+		try {
+			// Note: Java bytes are signed, 
+			// so writing a signed or unsigned word 
+			// is equivalent
+			m_buffer[0] = (byte) (s >> 8);
+			m_buffer[1] = (byte) (s & 0xFF);
+			m_output.write(m_buffer, 0, 2);
 		} catch (IOException e) {
 			throw new ConnectionLostException(e);
 		}
