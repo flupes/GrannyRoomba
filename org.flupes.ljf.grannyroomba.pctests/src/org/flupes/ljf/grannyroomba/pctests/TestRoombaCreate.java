@@ -198,10 +198,17 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				radius = 0x8000;
 			}
 			else {
-				radius = (int)(MAX_RADIUS
-						-(Math.abs(spin)-SPIN_INCR)*(MAX_RADIUS-MIN_RADIUS)/(1-SPIN_INCR));
-				if ( spin < 0 ) {
-					radius = -1*radius;
+				// We map linearly the spin to the curvature,
+				// and then get the radius from it.
+				float maxCurv = 1/MIN_RADIUS;
+				float minCurv = 1/MAX_RADIUS;
+				float curvature = (minCurv
+						+(Math.abs(spin)-SPIN_INCR)*(maxCurv-minCurv)/(1-SPIN_INCR));
+				if ( spin > 0 ) {
+					radius = (int)(1/curvature);
+				}
+				else {
+					radius = -(int)(1/curvature);
 				}
 			}
 		}
