@@ -72,7 +72,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				m_roomba = new RoombaCreate(ioio_);
 				m_roomba.connect();
 
-				m_roomba.safe();
+				m_roomba.safeControl();
 				
 				if ( s_listen ) {
 					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
@@ -134,32 +134,36 @@ public class TestRoombaCreate extends IOIOSwingApp {
 						switch ( e.getKeyCode() ) {
 						case KeyEvent.VK_UP: 
 							if ( speed < 1-SPEED_INCR/2 ) speed += SPEED_INCR;
-							s_logger.debug("UP pressed -> speed="+speed+" / spin="+spin);
+							s_logger.trace("UP pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_DOWN:
 							if ( speed > -1+SPEED_INCR/2 ) speed -= SPEED_INCR;
-							s_logger.debug("DOWN pressed -> speed="+speed+" / spin="+spin);
+							s_logger.trace("DOWN pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_LEFT: 
 							if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
-							s_logger.debug("LEFT pressed -> speed="+speed+" / spin="+spin);
+							s_logger.trace("LEFT pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_RIGHT:
 							if ( spin < 1-SPIN_INCR/2 ) spin += SPIN_INCR;
-							s_logger.debug("RIGHT pressed -> speed="+speed+" / spin="+spin);
+							s_logger.trace("RIGHT pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_SPACE:
 							speed = 0;
 							spin = 0;
-							s_logger.debug("SPACE pressed -> speed="+speed+" / spin="+spin);
+							s_logger.trace("SPACE pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
+						case KeyEvent.VK_CONTROL:
+							s_logger.trace("CONTROL pressed -> print telemetry");
+							m_roomba.printRawTelemetry();
+							break;
 						default:
-							s_logger.debug("Key " + e.getKeyChar() + " not processed");
+							s_logger.trace("Key " + e.getKeyChar() + " not processed");
 						}
 					}
 				} 

@@ -53,7 +53,6 @@ public abstract class SerialIoioRoomba {
 
 	public enum CtrlModes { DISCONNECTED, PASSIVE, CONTROL, FULL };
 	protected CtrlModes m_mode;
-
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
 	//	public enum CHARCHING_STATES { NOT_CHARGING, CHARGING_RECOVERY, CHARGING, TRICKLE_CHARGE, WAITING, CHARGING_ERROR }
@@ -96,26 +95,13 @@ public abstract class SerialIoioRoomba {
 
 	}
 
-	public void driveForward() throws ConnectionLostException {
-		s_logger.info("Drive Forward");
-		writeByte( CMD_CONTROL );
-		delay(50);
-
-		writeByte( CMD_DRIVE );
-		writeByte( 0x00 );
-		writeByte( 0xC8 );
-		writeByte( 0x80 );
-		writeByte( 0x00 );
-		writeByte( 0 );
-	}
-
-	public void safe() throws ConnectionLostException {
+	public void safeControl() throws ConnectionLostException {
 		s_logger.info("Switch to SAFE mode.");
 		writeByte( CMD_SAFE );
 		delay(CMD_WAIT_MS);
 	}
 
-	public void full() throws ConnectionLostException {
+	public void fullControl() throws ConnectionLostException {
 		s_logger.info("Switch to FULL mode");
 		writeByte( CMD_FULL );
 		delay(CMD_WAIT_MS);

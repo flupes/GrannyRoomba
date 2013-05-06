@@ -123,7 +123,7 @@ public class TestRoombaSerie400 extends IOIOConsoleApp {
 				m_roomba.power();
 			}
 			else if ( line.equals("d")) {
-				m_roomba.driveForward();
+				m_roomba.drive(200, 0x8000);
 			}
 			else if ( line.equals("s")) {
 				m_roomba.spot();
