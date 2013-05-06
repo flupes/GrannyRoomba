@@ -177,16 +177,17 @@ public class RoombaCreate extends SerialIoioRoomba {
 	private class TelemetryListening implements Runnable {
 
 		private boolean checksumOk(Deque<Integer> q) {
-			byte checksum = 0;
+			// Note: the documentation is wrong: the checksum also
+			// includes the message header (19)
+			byte checksum = TELEM_MSG_HEADER;
 			for ( Iterator<Integer> it = q.iterator(); it.hasNext(); ) {
-				checksum = it.next().byteValue();
+				checksum += it.next().byteValue();
 			}
 			return ( (checksum & 0xFF) == 0); 
 		}
 
 		protected int processMessage(byte buffer[]) {
 			int processed = 0;
-			s_logger.info("processMessage " + buffer.toString());
 			ByteArrayInputStream input = new ByteArrayInputStream(buffer, 0, telemetryMessageLength()-1);
 			int numBytes = ByteUtils.readByte(input);
 			if ( numBytes != (numberOfSensorPackets()+sizeOfSensorsData()) ) {
@@ -242,9 +243,17 @@ public class RoombaCreate extends SerialIoioRoomba {
 					else {
 						message.add(dataByte);
 						if ( message.size() == telemetryMessageLength()-1) {
+							if ( s_logger.isTraceEnabled() ) {
+								String str = new String("MSG: ");
+								for ( Iterator<Integer> it = message.iterator(); 
+										it.hasNext(); ) {
+									str += it.next() + ", ";
+								}
+								s_logger.trace(str);
+							}
 							// we did not insert the header, hence the -1
 							if ( checksumOk(message) ) {
-								s_logger.debug("We have a new valid message!");
+								s_logger.trace("We have a new valid message!");
 								// Copy to a byte buffer
 								int b=0;
 								for ( Iterator<Integer> it = message.iterator(); 
@@ -255,7 +264,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 								msgComplete=true;
 							}
 							else {
-								s_logger.debug("Not the right message header...");
+								s_logger.trace("Not the right message header...");
 								// this was not a real header, drop
 								// the bytes until the next potential start
 								Integer b;
