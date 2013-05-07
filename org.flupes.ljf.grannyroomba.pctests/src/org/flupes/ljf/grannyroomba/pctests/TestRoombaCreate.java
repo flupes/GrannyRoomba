@@ -43,9 +43,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 	private static float SPEED_INCR = 0.2f;
 	private static float SPIN_INCR = 0.2f;
 	private static float MAX_VELOCITY = 500;
-	private static float MIN_VELOCITY = 50;
 	private static float MAX_RADIUS = 2000;
-	private static float MIN_RADIUS = 40;
 
 	private static boolean s_listen = false;
 
@@ -130,33 +128,36 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				new KeyAdapter() {
 					private float speed = 0;
 					private float spin = 0;
+					private float prevSpeed = 0;
 					public void keyPressed(KeyEvent e) {
+						prevSpeed = speed;
+						boolean newDrive = false; 
 						switch ( e.getKeyCode() ) {
 						case KeyEvent.VK_UP: 
 							if ( speed < 1-SPEED_INCR/2 ) speed += SPEED_INCR;
 							s_logger.trace("UP pressed -> speed="+speed+" / spin="+spin);
-							changeDrive(speed, spin);
+							newDrive=true;
 							break;
 						case KeyEvent.VK_DOWN:
 							if ( speed > -1+SPEED_INCR/2 ) speed -= SPEED_INCR;
 							s_logger.trace("DOWN pressed -> speed="+speed+" / spin="+spin);
-							changeDrive(speed, spin);
+							newDrive=true;
 							break;
 						case KeyEvent.VK_RIGHT:
 							if ( spin < 1-SPIN_INCR/2 ) spin += SPIN_INCR;
 							s_logger.trace("RIGHT pressed -> speed="+speed+" / spin="+spin);
-							changeDrive(speed, spin);
+							newDrive=true;
 							break;
 						case KeyEvent.VK_LEFT: 
 							if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
 							s_logger.trace("LEFT pressed -> speed="+speed+" / spin="+spin);
-							changeDrive(speed, spin);
+							newDrive=true;
 							break;
 						case KeyEvent.VK_SPACE:
 							speed = 0;
 							spin = 0;
 							s_logger.trace("SPACE pressed -> speed="+speed+" / spin="+spin);
-							changeDrive(speed, spin);
+							newDrive=true;
 							break;
 						case KeyEvent.VK_CONTROL:
 							s_logger.trace("CONTROL pressed -> print telemetry");
@@ -164,6 +165,24 @@ public class TestRoombaCreate extends IOIOSwingApp {
 							break;
 						default:
 							s_logger.trace("Key " + e.getKeyChar() + " not processed");
+						}
+						// From a slow speed, small radius, we shoudl transition
+						// to a slow point turn when speed becomes zero (without 
+						// this check, small radius is transformed into high point
+						// turn rate!)
+						s_logger.trace("prevSpeed=" + prevSpeed + " / currSpeed=" + speed);
+						if ( (Math.abs(prevSpeed)>SPEED_INCR/2) && (Math.abs(speed)<SPEED_INCR/2) ) {
+							float absSpin = Math.abs(prevSpeed);
+							if ( spin > SPIN_INCR/2 ) {
+								spin = absSpin;
+							}
+							else if ( spin < -SPIN_INCR/2 ) {
+								spin = -absSpin;
+							}
+							s_logger.trace("reset spin to :" + spin);
+						}
+						if ( newDrive ) {
+							changeDrive(speed, spin);
 						}
 					}
 				} 
@@ -202,7 +221,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				// for each increment of the spin (starting at 2000).
 				float steps = 1/SPIN_INCR;
 				float factor = MAX_RADIUS / (float)Math.pow(2, steps-1);
-				float absRadius = factor*(float)Math.pow(2, Math.abs(spin)*steps-1);
+				float absRadius = factor*(float)Math.pow(2, steps*(1-Math.abs(spin)));
 				if ( spin > 0 ) {
 					radius = -(int)absRadius;
 				}
