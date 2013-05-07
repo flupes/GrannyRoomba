@@ -142,14 +142,14 @@ public class TestRoombaCreate extends IOIOSwingApp {
 							s_logger.trace("DOWN pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
-						case KeyEvent.VK_LEFT: 
-							if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
-							s_logger.trace("LEFT pressed -> speed="+speed+" / spin="+spin);
-							changeDrive(speed, spin);
-							break;
 						case KeyEvent.VK_RIGHT:
 							if ( spin < 1-SPIN_INCR/2 ) spin += SPIN_INCR;
 							s_logger.trace("RIGHT pressed -> speed="+speed+" / spin="+spin);
+							changeDrive(speed, spin);
+							break;
+						case KeyEvent.VK_LEFT: 
+							if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
+							s_logger.trace("LEFT pressed -> speed="+speed+" / spin="+spin);
 							changeDrive(speed, spin);
 							break;
 						case KeyEvent.VK_SPACE:
@@ -198,17 +198,16 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				radius = 0x8000;
 			}
 			else {
-				// We map linearly the spin to the curvature,
-				// and then get the radius from it.
-				float maxCurv = 1/MIN_RADIUS;
-				float minCurv = 1/MAX_RADIUS;
-				float curvature = (minCurv
-						+(Math.abs(spin)-SPIN_INCR)*(maxCurv-minCurv)/(1-SPIN_INCR));
+				// We want the radius to decay exponentially, reduced by half
+				// for each increment of the spin (starting at 2000).
+				float steps = 1/SPIN_INCR;
+				float factor = MAX_RADIUS / (float)Math.pow(2, steps-1);
+				float absRadius = factor*(float)Math.pow(2, Math.abs(spin)*steps-1);
 				if ( spin > 0 ) {
-					radius = (int)(1/curvature);
+					radius = -(int)absRadius;
 				}
 				else {
-					radius = -(int)(1/curvature);
+					radius = (int)absRadius;
 				}
 			}
 		}
