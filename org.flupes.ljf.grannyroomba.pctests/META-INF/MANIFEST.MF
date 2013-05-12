@@ -9,3 +9,4 @@ Require-Bundle: org.slf4j.api;bundle-version="1.6.4",
  org.slf4j.log4j;bundle-version="1.6.4"
 Bundle-ClassPath: lib/slf4j-log4j12-1.7.5.jar,
  .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
