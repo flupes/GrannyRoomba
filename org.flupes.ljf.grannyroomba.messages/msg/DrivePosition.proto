@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package org.flupes.ljf.grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "DrivePositionMsg";
+
+message DrivePosition {
+
+	optional float distance = 1 [ default = 0 ];
+	optional float angle = 2 [ default = 0 ];
+	optional float velocity = 3 [ default = 1 ];
+}

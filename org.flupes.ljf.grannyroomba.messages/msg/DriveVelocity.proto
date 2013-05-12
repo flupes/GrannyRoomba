@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package org.flupes.ljf.grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "DriveVelocityMsg";
+
+message DriveVelocity {
+
+	optional float speed = 1 [ default = 0 ];
+	optional float radius = 2 [ default = 1000 ];
+	optional float timeout = 3 [ default = 0 ];
+
+}

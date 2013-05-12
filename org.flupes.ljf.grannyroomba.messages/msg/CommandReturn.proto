@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package org.flupes.ljf.grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "CommandReturnMsg";
+
+message CommandReturn {
+
+	required sfixed64 id = 1;
+
+}

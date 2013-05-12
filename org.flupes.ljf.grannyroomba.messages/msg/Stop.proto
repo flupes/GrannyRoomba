@@ -1,0 +1,17 @@
+syntax = "proto2";
+
+package org.flupes.ljf.grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "StopMsg";
+
+message Stop {
+
+	enum Mode {
+		NORMAL = 0;
+		EMMERGENCY = 1;
+	}
+
+	optional Mode mode = 1 [ default = NORMAL ];
+
+}
