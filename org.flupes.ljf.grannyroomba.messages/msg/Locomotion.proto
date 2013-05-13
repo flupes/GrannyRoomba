@@ -1,15 +1,15 @@
 syntax = "proto2";
 
-package org.flupes.ljf.grannyroomba.messages;
+package grannyroomba.messages;
 
 import "Stop.proto";
 import "DrivePosition.proto";
 import "DriveVelocity.proto";
 
 option java_package = "org.flupes.ljf.grannyroomba.messages";
-option java_outer_classname = "LocomotionCmd";
+option java_outer_classname = "LocomotionProto";
 
-message Locomotion {
+message LocomotionCmd {
 
 	enum Command {
 		STOP = 1;
@@ -19,8 +19,8 @@ message Locomotion {
 
 	required Command cmd = 1;
 
-	optional Stop stop = 2;
-	optional DrivePosition drivePosition = 3;
-	optional DriveVelocity driveVelocity = 4;
+	optional StopMsg stop = 2;
+	optional DrivePositionMsg drivePosition = 3;
+	optional DriveVelocityMsg driveVelocity = 4;
 
 }

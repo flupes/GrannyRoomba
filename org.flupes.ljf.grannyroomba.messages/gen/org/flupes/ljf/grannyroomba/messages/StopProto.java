@@ -3,43 +3,43 @@
 
 package org.flupes.ljf.grannyroomba.messages;
 
-public final class StopMsg {
-  private StopMsg() {}
+public final class StopProto {
+  private StopProto() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface StopOrBuilder
+  public interface StopMsgOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];
+    // optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+     * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
      */
     boolean hasMode();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+     * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
      */
-    org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode getMode();
+    org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode getMode();
   }
   /**
-   * Protobuf type {@code org.flupes.ljf.grannyroomba.messages.Stop}
+   * Protobuf type {@code grannyroomba.messages.StopMsg}
    */
-  public static final class Stop extends
+  public static final class StopMsg extends
       com.google.protobuf.GeneratedMessage
-      implements StopOrBuilder {
-    // Use Stop.newBuilder() to construct.
-    private Stop(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements StopMsgOrBuilder {
+    // Use StopMsg.newBuilder() to construct.
+    private StopMsg(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private Stop(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private StopMsg(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final Stop defaultInstance;
-    public static Stop getDefaultInstance() {
+    private static final StopMsg defaultInstance;
+    public static StopMsg getDefaultInstance() {
       return defaultInstance;
     }
 
-    public Stop getDefaultInstanceForType() {
+    public StopMsg getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -49,7 +49,7 @@ public final class StopMsg {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private Stop(
+    private StopMsg(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -74,7 +74,7 @@ public final class StopMsg {
             }
             case 8: {
               int rawValue = input.readEnum();
-              org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode value = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode.valueOf(rawValue);
+              org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode value = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
@@ -97,33 +97,33 @@ public final class StopMsg {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.flupes.ljf.grannyroomba.messages.StopMsg.internal_static_org_flupes_ljf_grannyroomba_messages_Stop_descriptor;
+      return org.flupes.ljf.grannyroomba.messages.StopProto.internal_static_grannyroomba_messages_StopMsg_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.flupes.ljf.grannyroomba.messages.StopMsg.internal_static_org_flupes_ljf_grannyroomba_messages_Stop_fieldAccessorTable
+      return org.flupes.ljf.grannyroomba.messages.StopProto.internal_static_grannyroomba_messages_StopMsg_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.class, org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder.class);
+              org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.class, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<Stop> PARSER =
-        new com.google.protobuf.AbstractParser<Stop>() {
-      public Stop parsePartialFrom(
+    public static com.google.protobuf.Parser<StopMsg> PARSER =
+        new com.google.protobuf.AbstractParser<StopMsg>() {
+      public StopMsg parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Stop(input, extensionRegistry);
+        return new StopMsg(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Stop> getParserForType() {
+    public com.google.protobuf.Parser<StopMsg> getParserForType() {
       return PARSER;
     }
 
     /**
-     * Protobuf enum {@code org.flupes.ljf.grannyroomba.messages.Stop.Mode}
+     * Protobuf enum {@code grannyroomba.messages.StopMsg.Mode}
      */
     public enum Mode
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -179,7 +179,7 @@ public final class StopMsg {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDescriptor().getEnumTypes().get(0);
+        return org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Mode[] VALUES = values();
@@ -201,28 +201,28 @@ public final class StopMsg {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:org.flupes.ljf.grannyroomba.messages.Stop.Mode)
+      // @@protoc_insertion_point(enum_scope:grannyroomba.messages.StopMsg.Mode)
     }
 
     private int bitField0_;
-    // optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];
+    // optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];
     public static final int MODE_FIELD_NUMBER = 1;
-    private org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode mode_;
+    private org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode mode_;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+     * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
      */
     public boolean hasMode() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+     * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode getMode() {
+    public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode getMode() {
       return mode_;
     }
 
     private void initFields() {
-      mode_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode.NORMAL;
+      mode_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode.NORMAL;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -264,53 +264,53 @@ public final class StopMsg {
       return super.writeReplace();
     }
 
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(byte[] data)
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseDelimitedFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseDelimitedFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -319,7 +319,7 @@ public final class StopMsg {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.StopMsg.Stop prototype) {
+    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -331,24 +331,24 @@ public final class StopMsg {
       return builder;
     }
     /**
-     * Protobuf type {@code org.flupes.ljf.grannyroomba.messages.Stop}
+     * Protobuf type {@code grannyroomba.messages.StopMsg}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder {
+       implements org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.StopMsg.internal_static_org_flupes_ljf_grannyroomba_messages_Stop_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.StopProto.internal_static_grannyroomba_messages_StopMsg_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return org.flupes.ljf.grannyroomba.messages.StopMsg.internal_static_org_flupes_ljf_grannyroomba_messages_Stop_fieldAccessorTable
+        return org.flupes.ljf.grannyroomba.messages.StopProto.internal_static_grannyroomba_messages_StopMsg_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.class, org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder.class);
+                org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.class, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder.class);
       }
 
-      // Construct using org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.newBuilder()
+      // Construct using org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -368,7 +368,7 @@ public final class StopMsg {
 
       public Builder clear() {
         super.clear();
-        mode_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode.NORMAL;
+        mode_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode.NORMAL;
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
@@ -379,23 +379,23 @@ public final class StopMsg {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return org.flupes.ljf.grannyroomba.messages.StopMsg.internal_static_org_flupes_ljf_grannyroomba_messages_Stop_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.StopProto.internal_static_grannyroomba_messages_StopMsg_descriptor;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop getDefaultInstanceForType() {
-        return org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance();
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg getDefaultInstanceForType() {
+        return org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance();
       }
 
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop build() {
-        org.flupes.ljf.grannyroomba.messages.StopMsg.Stop result = buildPartial();
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg build() {
+        org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop buildPartial() {
-        org.flupes.ljf.grannyroomba.messages.StopMsg.Stop result = new org.flupes.ljf.grannyroomba.messages.StopMsg.Stop(this);
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg buildPartial() {
+        org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg result = new org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -408,16 +408,16 @@ public final class StopMsg {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.flupes.ljf.grannyroomba.messages.StopMsg.Stop) {
-          return mergeFrom((org.flupes.ljf.grannyroomba.messages.StopMsg.Stop)other);
+        if (other instanceof org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg) {
+          return mergeFrom((org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.StopMsg.Stop other) {
-        if (other == org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg other) {
+        if (other == org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance()) return this;
         if (other.hasMode()) {
           setMode(other.getMode());
         }
@@ -433,11 +433,11 @@ public final class StopMsg {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        org.flupes.ljf.grannyroomba.messages.StopMsg.Stop parsedMessage = null;
+        org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.flupes.ljf.grannyroomba.messages.StopMsg.Stop) e.getUnfinishedMessage();
+          parsedMessage = (org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -448,24 +448,24 @@ public final class StopMsg {
       }
       private int bitField0_;
 
-      // optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];
-      private org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode mode_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode.NORMAL;
+      // optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];
+      private org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode mode_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode.NORMAL;
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+       * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
        */
       public boolean hasMode() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+       * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode getMode() {
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode getMode() {
         return mode_;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+       * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
        */
-      public Builder setMode(org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode value) {
+      public Builder setMode(org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -475,31 +475,31 @@ public final class StopMsg {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop.Mode mode = 1 [default = NORMAL];</code>
+       * <code>optional .grannyroomba.messages.StopMsg.Mode mode = 1 [default = NORMAL];</code>
        */
       public Builder clearMode() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        mode_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Mode.NORMAL;
+        mode_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode.NORMAL;
         onChanged();
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:org.flupes.ljf.grannyroomba.messages.Stop)
+      // @@protoc_insertion_point(builder_scope:grannyroomba.messages.StopMsg)
     }
 
     static {
-      defaultInstance = new Stop(true);
+      defaultInstance = new StopMsg(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:org.flupes.ljf.grannyroomba.messages.Stop)
+    // @@protoc_insertion_point(class_scope:grannyroomba.messages.StopMsg)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_org_flupes_ljf_grannyroomba_messages_Stop_descriptor;
+    internal_static_grannyroomba_messages_StopMsg_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_org_flupes_ljf_grannyroomba_messages_Stop_fieldAccessorTable;
+      internal_static_grannyroomba_messages_StopMsg_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -509,23 +509,22 @@ public final class StopMsg {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nStop.proto\022$org.flupes.ljf.grannyroomb" +
-      "a.messages\"q\n\004Stop\022E\n\004mode\030\001 \001(\0162/.org.f" +
-      "lupes.ljf.grannyroomba.messages.Stop.Mod" +
-      "e:\006NORMAL\"\"\n\004Mode\022\n\n\006NORMAL\020\000\022\016\n\nEMMERGE" +
-      "NCY\020\001B/\n$org.flupes.ljf.grannyroomba.mes" +
-      "sagesB\007StopMsg"
+      "\n\nStop.proto\022\025grannyroomba.messages\"h\n\007S" +
+      "topMsg\0229\n\004mode\030\001 \001(\0162#.grannyroomba.mess" +
+      "ages.StopMsg.Mode:\006NORMAL\"\"\n\004Mode\022\n\n\006NOR" +
+      "MAL\020\000\022\016\n\nEMMERGENCY\020\001B1\n$org.flupes.ljf." +
+      "grannyroomba.messagesB\tStopProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_org_flupes_ljf_grannyroomba_messages_Stop_descriptor =
+          internal_static_grannyroomba_messages_StopMsg_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_org_flupes_ljf_grannyroomba_messages_Stop_fieldAccessorTable = new
+          internal_static_grannyroomba_messages_StopMsg_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_org_flupes_ljf_grannyroomba_messages_Stop_descriptor,
+              internal_static_grannyroomba_messages_StopMsg_descriptor,
               new java.lang.String[] { "Mode", });
           return null;
         }

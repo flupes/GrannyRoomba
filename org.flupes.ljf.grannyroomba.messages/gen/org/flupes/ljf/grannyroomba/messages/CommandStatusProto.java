@@ -3,8 +3,8 @@
 
 package org.flupes.ljf.grannyroomba.messages;
 
-public final class CommandStatusMsg {
-  private CommandStatusMsg() {}
+public final class CommandStatusProto {
+  private CommandStatusProto() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
@@ -21,18 +21,18 @@ public final class CommandStatusMsg {
      */
     int getId();
 
-    // required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;
+    // required .grannyroomba.messages.CommandStatus.Status status = 2;
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+     * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
      */
     boolean hasStatus();
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+     * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status getStatus();
+    org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status getStatus();
   }
   /**
-   * Protobuf type {@code org.flupes.ljf.grannyroomba.messages.CommandStatus}
+   * Protobuf type {@code grannyroomba.messages.CommandStatus}
    */
   public static final class CommandStatus extends
       com.google.protobuf.GeneratedMessage
@@ -89,7 +89,7 @@ public final class CommandStatusMsg {
             }
             case 16: {
               int rawValue = input.readEnum();
-              org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status value = org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status.valueOf(rawValue);
+              org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status value = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
@@ -112,14 +112,14 @@ public final class CommandStatusMsg {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_descriptor;
+      return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_CommandStatus_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_fieldAccessorTable
+      return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_CommandStatus_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.class, org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Builder.class);
+              org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.class, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Builder.class);
     }
 
     public static com.google.protobuf.Parser<CommandStatus> PARSER =
@@ -138,7 +138,7 @@ public final class CommandStatusMsg {
     }
 
     /**
-     * Protobuf enum {@code org.flupes.ljf.grannyroomba.messages.CommandStatus.Status}
+     * Protobuf enum {@code grannyroomba.messages.CommandStatus.Status}
      */
     public enum Status
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -221,7 +221,7 @@ public final class CommandStatusMsg {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.getDescriptor().getEnumTypes().get(0);
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Status[] VALUES = values();
@@ -243,7 +243,7 @@ public final class CommandStatusMsg {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:org.flupes.ljf.grannyroomba.messages.CommandStatus.Status)
+      // @@protoc_insertion_point(enum_scope:grannyroomba.messages.CommandStatus.Status)
     }
 
     private int bitField0_;
@@ -263,25 +263,25 @@ public final class CommandStatusMsg {
       return id_;
     }
 
-    // required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;
+    // required .grannyroomba.messages.CommandStatus.Status status = 2;
     public static final int STATUS_FIELD_NUMBER = 2;
-    private org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status status_;
+    private org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status status_;
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+     * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
      */
     public boolean hasStatus() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+     * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status getStatus() {
+    public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status getStatus() {
       return status_;
     }
 
     private void initFields() {
       id_ = 0;
-      status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status.IDLE;
+      status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status.IDLE;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -338,53 +338,53 @@ public final class CommandStatusMsg {
       return super.writeReplace();
     }
 
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(byte[] data)
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseDelimitedFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseDelimitedFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -393,7 +393,7 @@ public final class CommandStatusMsg {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus prototype) {
+    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -405,24 +405,24 @@ public final class CommandStatusMsg {
       return builder;
     }
     /**
-     * Protobuf type {@code org.flupes.ljf.grannyroomba.messages.CommandStatus}
+     * Protobuf type {@code grannyroomba.messages.CommandStatus}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatusOrBuilder {
+       implements org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatusOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_CommandStatus_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_fieldAccessorTable
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_CommandStatus_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.class, org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Builder.class);
+                org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.class, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Builder.class);
       }
 
-      // Construct using org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.newBuilder()
+      // Construct using org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -444,7 +444,7 @@ public final class CommandStatusMsg {
         super.clear();
         id_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status.IDLE;
+        status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status.IDLE;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -455,23 +455,23 @@ public final class CommandStatusMsg {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_CommandStatus_descriptor;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus getDefaultInstanceForType() {
-        return org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.getDefaultInstance();
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus getDefaultInstanceForType() {
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.getDefaultInstance();
       }
 
-      public org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus build() {
-        org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus result = buildPartial();
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus build() {
+        org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus buildPartial() {
-        org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus result = new org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus(this);
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus buildPartial() {
+        org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus result = new org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -488,16 +488,16 @@ public final class CommandStatusMsg {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus) {
-          return mergeFrom((org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus)other);
+        if (other instanceof org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus) {
+          return mergeFrom((org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus other) {
-        if (other == org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus other) {
+        if (other == org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.getDefaultInstance()) return this;
         if (other.hasId()) {
           setId(other.getId());
         }
@@ -524,11 +524,11 @@ public final class CommandStatusMsg {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus parsedMessage = null;
+        org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus) e.getUnfinishedMessage();
+          parsedMessage = (org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -572,24 +572,24 @@ public final class CommandStatusMsg {
         return this;
       }
 
-      // required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;
-      private org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status.IDLE;
+      // required .grannyroomba.messages.CommandStatus.Status status = 2;
+      private org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status.IDLE;
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+       * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
        */
       public boolean hasStatus() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+       * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status getStatus() {
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status getStatus() {
         return status_;
       }
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+       * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
        */
-      public Builder setStatus(org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status value) {
+      public Builder setStatus(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -599,16 +599,16 @@ public final class CommandStatusMsg {
         return this;
       }
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.CommandStatus.Status status = 2;</code>
+       * <code>required .grannyroomba.messages.CommandStatus.Status status = 2;</code>
        */
       public Builder clearStatus() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusMsg.CommandStatus.Status.IDLE;
+        status_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status.IDLE;
         onChanged();
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:org.flupes.ljf.grannyroomba.messages.CommandStatus)
+      // @@protoc_insertion_point(builder_scope:grannyroomba.messages.CommandStatus)
     }
 
     static {
@@ -616,14 +616,14 @@ public final class CommandStatusMsg {
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:org.flupes.ljf.grannyroomba.messages.CommandStatus)
+    // @@protoc_insertion_point(class_scope:grannyroomba.messages.CommandStatus)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_descriptor;
+    internal_static_grannyroomba_messages_CommandStatus_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_fieldAccessorTable;
+      internal_static_grannyroomba_messages_CommandStatus_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -633,25 +633,24 @@ public final class CommandStatusMsg {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\023CommandReturn.proto\022$org.flupes.ljf.gr" +
-      "annyroomba.messages\"\261\001\n\rCommandStatus\022\n\n" +
-      "\002id\030\001 \002(\017\022J\n\006status\030\002 \002(\0162:.org.flupes.l" +
-      "jf.grannyroomba.messages.CommandStatus.S" +
-      "tatus\"H\n\006Status\022\010\n\004IDLE\020\001\022\010\n\004BUSY\020\002\022\n\n\006F" +
-      "AILED\020\003\022\r\n\tCOMPLETED\020\005\022\017\n\013INTERRUPTED\020\004B" +
-      "8\n$org.flupes.ljf.grannyroomba.messagesB" +
-      "\020CommandStatusMsg"
+      "\n\023CommandReturn.proto\022\025grannyroomba.mess" +
+      "ages\"\242\001\n\rCommandStatus\022\n\n\002id\030\001 \002(\017\022;\n\006st" +
+      "atus\030\002 \002(\0162+.grannyroomba.messages.Comma" +
+      "ndStatus.Status\"H\n\006Status\022\010\n\004IDLE\020\001\022\010\n\004B" +
+      "USY\020\002\022\n\n\006FAILED\020\003\022\r\n\tCOMPLETED\020\005\022\017\n\013INTE" +
+      "RRUPTED\020\004B:\n$org.flupes.ljf.grannyroomba" +
+      ".messagesB\022CommandStatusProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_descriptor =
+          internal_static_grannyroomba_messages_CommandStatus_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_fieldAccessorTable = new
+          internal_static_grannyroomba_messages_CommandStatus_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_org_flupes_ljf_grannyroomba_messages_CommandStatus_descriptor,
+              internal_static_grannyroomba_messages_CommandStatus_descriptor,
               new java.lang.String[] { "Id", "Status", });
           return null;
         }

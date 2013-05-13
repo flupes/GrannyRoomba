@@ -1,11 +1,11 @@
 syntax = "proto2";
 
-package org.flupes.ljf.grannyroomba.messages;
+package grannyroomba.messages;
 
 option java_package = "org.flupes.ljf.grannyroomba.messages";
-option java_outer_classname = "DriveVelocityMsg";
+option java_outer_classname = "DriveVelocityProto";
 
-message DriveVelocity {
+message DriveVelocityMsg {
 
 	optional float speed = 1 [ default = 0 ];
 	optional float radius = 2 [ default = 1000 ];

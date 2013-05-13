@@ -3,85 +3,85 @@
 
 package org.flupes.ljf.grannyroomba.messages;
 
-public final class LocomotionCmd {
-  private LocomotionCmd() {}
+public final class LocomotionProto {
+  private LocomotionProto() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface LocomotionOrBuilder
+  public interface LocomotionCmdOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;
+    // required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+     * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
      */
     boolean hasCmd();
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+     * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command getCmd();
+    org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command getCmd();
 
-    // optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;
+    // optional .grannyroomba.messages.StopMsg stop = 2;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+     * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
      */
     boolean hasStop();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+     * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.StopMsg.Stop getStop();
+    org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg getStop();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+     * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder getStopOrBuilder();
+    org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder getStopOrBuilder();
 
-    // optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;
+    // optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+     * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
      */
     boolean hasDrivePosition();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+     * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition getDrivePosition();
+    org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg getDrivePosition();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+     * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePositionOrBuilder getDrivePositionOrBuilder();
+    org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsgOrBuilder getDrivePositionOrBuilder();
 
-    // optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;
+    // optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+     * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
     boolean hasDriveVelocity();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+     * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity getDriveVelocity();
+    org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg getDriveVelocity();
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+     * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
-    org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocityOrBuilder getDriveVelocityOrBuilder();
+    org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder getDriveVelocityOrBuilder();
   }
   /**
-   * Protobuf type {@code org.flupes.ljf.grannyroomba.messages.Locomotion}
+   * Protobuf type {@code grannyroomba.messages.LocomotionCmd}
    */
-  public static final class Locomotion extends
+  public static final class LocomotionCmd extends
       com.google.protobuf.GeneratedMessage
-      implements LocomotionOrBuilder {
-    // Use Locomotion.newBuilder() to construct.
-    private Locomotion(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements LocomotionCmdOrBuilder {
+    // Use LocomotionCmd.newBuilder() to construct.
+    private LocomotionCmd(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private Locomotion(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private LocomotionCmd(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final Locomotion defaultInstance;
-    public static Locomotion getDefaultInstance() {
+    private static final LocomotionCmd defaultInstance;
+    public static LocomotionCmd getDefaultInstance() {
       return defaultInstance;
     }
 
-    public Locomotion getDefaultInstanceForType() {
+    public LocomotionCmd getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -91,7 +91,7 @@ public final class LocomotionCmd {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private Locomotion(
+    private LocomotionCmd(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -116,7 +116,7 @@ public final class LocomotionCmd {
             }
             case 8: {
               int rawValue = input.readEnum();
-              org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command value = org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command.valueOf(rawValue);
+              org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command value = org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
@@ -126,11 +126,11 @@ public final class LocomotionCmd {
               break;
             }
             case 18: {
-              org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder subBuilder = null;
+              org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = stop_.toBuilder();
               }
-              stop_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.PARSER, extensionRegistry);
+              stop_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(stop_);
                 stop_ = subBuilder.buildPartial();
@@ -139,11 +139,11 @@ public final class LocomotionCmd {
               break;
             }
             case 26: {
-              org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.Builder subBuilder = null;
+              org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.Builder subBuilder = null;
               if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = drivePosition_.toBuilder();
               }
-              drivePosition_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.PARSER, extensionRegistry);
+              drivePosition_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(drivePosition_);
                 drivePosition_ = subBuilder.buildPartial();
@@ -152,11 +152,11 @@ public final class LocomotionCmd {
               break;
             }
             case 34: {
-              org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.Builder subBuilder = null;
+              org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.Builder subBuilder = null;
               if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 subBuilder = driveVelocity_.toBuilder();
               }
-              driveVelocity_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.PARSER, extensionRegistry);
+              driveVelocity_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(driveVelocity_);
                 driveVelocity_ = subBuilder.buildPartial();
@@ -178,33 +178,33 @@ public final class LocomotionCmd {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_descriptor;
+      return org.flupes.ljf.grannyroomba.messages.LocomotionProto.internal_static_grannyroomba_messages_LocomotionCmd_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_fieldAccessorTable
+      return org.flupes.ljf.grannyroomba.messages.LocomotionProto.internal_static_grannyroomba_messages_LocomotionCmd_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.class, org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Builder.class);
+              org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.class, org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<Locomotion> PARSER =
-        new com.google.protobuf.AbstractParser<Locomotion>() {
-      public Locomotion parsePartialFrom(
+    public static com.google.protobuf.Parser<LocomotionCmd> PARSER =
+        new com.google.protobuf.AbstractParser<LocomotionCmd>() {
+      public LocomotionCmd parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Locomotion(input, extensionRegistry);
+        return new LocomotionCmd(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Locomotion> getParserForType() {
+    public com.google.protobuf.Parser<LocomotionCmd> getParserForType() {
       return PARSER;
     }
 
     /**
-     * Protobuf enum {@code org.flupes.ljf.grannyroomba.messages.Locomotion.Command}
+     * Protobuf enum {@code grannyroomba.messages.LocomotionCmd.Command}
      */
     public enum Command
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -269,7 +269,7 @@ public final class LocomotionCmd {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.getDescriptor().getEnumTypes().get(0);
+        return org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Command[] VALUES = values();
@@ -291,97 +291,97 @@ public final class LocomotionCmd {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:org.flupes.ljf.grannyroomba.messages.Locomotion.Command)
+      // @@protoc_insertion_point(enum_scope:grannyroomba.messages.LocomotionCmd.Command)
     }
 
     private int bitField0_;
-    // required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;
+    // required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;
     public static final int CMD_FIELD_NUMBER = 1;
-    private org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command cmd_;
+    private org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command cmd_;
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+     * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
      */
     public boolean hasCmd() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+     * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command getCmd() {
+    public org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command getCmd() {
       return cmd_;
     }
 
-    // optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;
+    // optional .grannyroomba.messages.StopMsg stop = 2;
     public static final int STOP_FIELD_NUMBER = 2;
-    private org.flupes.ljf.grannyroomba.messages.StopMsg.Stop stop_;
+    private org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg stop_;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+     * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
      */
     public boolean hasStop() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+     * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop getStop() {
+    public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg getStop() {
       return stop_;
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+     * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder getStopOrBuilder() {
+    public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder getStopOrBuilder() {
       return stop_;
     }
 
-    // optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;
+    // optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;
     public static final int DRIVEPOSITION_FIELD_NUMBER = 3;
-    private org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition drivePosition_;
+    private org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg drivePosition_;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+     * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
      */
     public boolean hasDrivePosition() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+     * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition getDrivePosition() {
+    public org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg getDrivePosition() {
       return drivePosition_;
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+     * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePositionOrBuilder getDrivePositionOrBuilder() {
+    public org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsgOrBuilder getDrivePositionOrBuilder() {
       return drivePosition_;
     }
 
-    // optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;
+    // optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;
     public static final int DRIVEVELOCITY_FIELD_NUMBER = 4;
-    private org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity driveVelocity_;
+    private org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg driveVelocity_;
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+     * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
     public boolean hasDriveVelocity() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+     * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity getDriveVelocity() {
+    public org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg getDriveVelocity() {
       return driveVelocity_;
     }
     /**
-     * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+     * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
-    public org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocityOrBuilder getDriveVelocityOrBuilder() {
+    public org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder getDriveVelocityOrBuilder() {
       return driveVelocity_;
     }
 
     private void initFields() {
-      cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command.STOP;
-      stop_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance();
-      drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.getDefaultInstance();
-      driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.getDefaultInstance();
+      cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command.STOP;
+      stop_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance();
+      drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.getDefaultInstance();
+      driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -448,53 +448,53 @@ public final class LocomotionCmd {
       return super.writeReplace();
     }
 
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(byte[] data)
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseDelimitedFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseDelimitedFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -503,7 +503,7 @@ public final class LocomotionCmd {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion prototype) {
+    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -515,24 +515,24 @@ public final class LocomotionCmd {
       return builder;
     }
     /**
-     * Protobuf type {@code org.flupes.ljf.grannyroomba.messages.Locomotion}
+     * Protobuf type {@code grannyroomba.messages.LocomotionCmd}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements org.flupes.ljf.grannyroomba.messages.LocomotionCmd.LocomotionOrBuilder {
+       implements org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmdOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.LocomotionProto.internal_static_grannyroomba_messages_LocomotionCmd_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_fieldAccessorTable
+        return org.flupes.ljf.grannyroomba.messages.LocomotionProto.internal_static_grannyroomba_messages_LocomotionCmd_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.class, org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Builder.class);
+                org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.class, org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Builder.class);
       }
 
-      // Construct using org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.newBuilder()
+      // Construct using org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -555,22 +555,22 @@ public final class LocomotionCmd {
 
       public Builder clear() {
         super.clear();
-        cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command.STOP;
+        cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command.STOP;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (stopBuilder_ == null) {
-          stop_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance();
+          stop_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance();
         } else {
           stopBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         if (drivePositionBuilder_ == null) {
-          drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.getDefaultInstance();
+          drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.getDefaultInstance();
         } else {
           drivePositionBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
         if (driveVelocityBuilder_ == null) {
-          driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.getDefaultInstance();
+          driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.getDefaultInstance();
         } else {
           driveVelocityBuilder_.clear();
         }
@@ -584,23 +584,23 @@ public final class LocomotionCmd {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.LocomotionProto.internal_static_grannyroomba_messages_LocomotionCmd_descriptor;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion getDefaultInstanceForType() {
-        return org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.getDefaultInstance();
+      public org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd getDefaultInstanceForType() {
+        return org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.getDefaultInstance();
       }
 
-      public org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion build() {
-        org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion result = buildPartial();
+      public org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd build() {
+        org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion buildPartial() {
-        org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion result = new org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion(this);
+      public org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd buildPartial() {
+        org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd result = new org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -637,16 +637,16 @@ public final class LocomotionCmd {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion) {
-          return mergeFrom((org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion)other);
+        if (other instanceof org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd) {
+          return mergeFrom((org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion other) {
-        if (other == org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd other) {
+        if (other == org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.getDefaultInstance()) return this;
         if (other.hasCmd()) {
           setCmd(other.getCmd());
         }
@@ -675,11 +675,11 @@ public final class LocomotionCmd {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion parsedMessage = null;
+        org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion) e.getUnfinishedMessage();
+          parsedMessage = (org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -690,24 +690,24 @@ public final class LocomotionCmd {
       }
       private int bitField0_;
 
-      // required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;
-      private org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command.STOP;
+      // required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;
+      private org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command.STOP;
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+       * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
        */
       public boolean hasCmd() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+       * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command getCmd() {
+      public org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command getCmd() {
         return cmd_;
       }
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+       * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
        */
-      public Builder setCmd(org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command value) {
+      public Builder setCmd(org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -717,29 +717,29 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>required .org.flupes.ljf.grannyroomba.messages.Locomotion.Command cmd = 1;</code>
+       * <code>required .grannyroomba.messages.LocomotionCmd.Command cmd = 1;</code>
        */
       public Builder clearCmd() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionCmd.Locomotion.Command.STOP;
+        cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command.STOP;
         onChanged();
         return this;
       }
 
-      // optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;
-      private org.flupes.ljf.grannyroomba.messages.StopMsg.Stop stop_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance();
+      // optional .grannyroomba.messages.StopMsg stop = 2;
+      private org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg stop_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          org.flupes.ljf.grannyroomba.messages.StopMsg.Stop, org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder, org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder> stopBuilder_;
+          org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder> stopBuilder_;
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
       public boolean hasStop() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop getStop() {
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg getStop() {
         if (stopBuilder_ == null) {
           return stop_;
         } else {
@@ -747,9 +747,9 @@ public final class LocomotionCmd {
         }
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
-      public Builder setStop(org.flupes.ljf.grannyroomba.messages.StopMsg.Stop value) {
+      public Builder setStop(org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg value) {
         if (stopBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -763,10 +763,10 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
       public Builder setStop(
-          org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder builderForValue) {
+          org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder builderForValue) {
         if (stopBuilder_ == null) {
           stop_ = builderForValue.build();
           onChanged();
@@ -777,14 +777,14 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
-      public Builder mergeStop(org.flupes.ljf.grannyroomba.messages.StopMsg.Stop value) {
+      public Builder mergeStop(org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg value) {
         if (stopBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              stop_ != org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance()) {
+              stop_ != org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance()) {
             stop_ =
-              org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.newBuilder(stop_).mergeFrom(value).buildPartial();
+              org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.newBuilder(stop_).mergeFrom(value).buildPartial();
           } else {
             stop_ = value;
           }
@@ -796,11 +796,11 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
       public Builder clearStop() {
         if (stopBuilder_ == null) {
-          stop_ = org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.getDefaultInstance();
+          stop_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance();
           onChanged();
         } else {
           stopBuilder_.clear();
@@ -809,17 +809,17 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder getStopBuilder() {
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder getStopBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getStopFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder getStopOrBuilder() {
+      public org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder getStopOrBuilder() {
         if (stopBuilder_ != null) {
           return stopBuilder_.getMessageOrBuilder();
         } else {
@@ -827,14 +827,14 @@ public final class LocomotionCmd {
         }
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.Stop stop = 2;</code>
+       * <code>optional .grannyroomba.messages.StopMsg stop = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          org.flupes.ljf.grannyroomba.messages.StopMsg.Stop, org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder, org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder> 
+          org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder> 
           getStopFieldBuilder() {
         if (stopBuilder_ == null) {
           stopBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              org.flupes.ljf.grannyroomba.messages.StopMsg.Stop, org.flupes.ljf.grannyroomba.messages.StopMsg.Stop.Builder, org.flupes.ljf.grannyroomba.messages.StopMsg.StopOrBuilder>(
+              org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Builder, org.flupes.ljf.grannyroomba.messages.StopProto.StopMsgOrBuilder>(
                   stop_,
                   getParentForChildren(),
                   isClean());
@@ -843,20 +843,20 @@ public final class LocomotionCmd {
         return stopBuilder_;
       }
 
-      // optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;
-      private org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.getDefaultInstance();
+      // optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;
+      private org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition, org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.Builder, org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePositionOrBuilder> drivePositionBuilder_;
+          org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg, org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.Builder, org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsgOrBuilder> drivePositionBuilder_;
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
       public boolean hasDrivePosition() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition getDrivePosition() {
+      public org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg getDrivePosition() {
         if (drivePositionBuilder_ == null) {
           return drivePosition_;
         } else {
@@ -864,9 +864,9 @@ public final class LocomotionCmd {
         }
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
-      public Builder setDrivePosition(org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition value) {
+      public Builder setDrivePosition(org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg value) {
         if (drivePositionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -880,10 +880,10 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
       public Builder setDrivePosition(
-          org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.Builder builderForValue) {
+          org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.Builder builderForValue) {
         if (drivePositionBuilder_ == null) {
           drivePosition_ = builderForValue.build();
           onChanged();
@@ -894,14 +894,14 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
-      public Builder mergeDrivePosition(org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition value) {
+      public Builder mergeDrivePosition(org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg value) {
         if (drivePositionBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              drivePosition_ != org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.getDefaultInstance()) {
+              drivePosition_ != org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.getDefaultInstance()) {
             drivePosition_ =
-              org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.newBuilder(drivePosition_).mergeFrom(value).buildPartial();
+              org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.newBuilder(drivePosition_).mergeFrom(value).buildPartial();
           } else {
             drivePosition_ = value;
           }
@@ -913,11 +913,11 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
       public Builder clearDrivePosition() {
         if (drivePositionBuilder_ == null) {
-          drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.getDefaultInstance();
+          drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.getDefaultInstance();
           onChanged();
         } else {
           drivePositionBuilder_.clear();
@@ -926,17 +926,17 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.Builder getDrivePositionBuilder() {
+      public org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.Builder getDrivePositionBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getDrivePositionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePositionOrBuilder getDrivePositionOrBuilder() {
+      public org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsgOrBuilder getDrivePositionOrBuilder() {
         if (drivePositionBuilder_ != null) {
           return drivePositionBuilder_.getMessageOrBuilder();
         } else {
@@ -944,14 +944,14 @@ public final class LocomotionCmd {
         }
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DrivePosition drivePosition = 3;</code>
+       * <code>optional .grannyroomba.messages.DrivePositionMsg drivePosition = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition, org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.Builder, org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePositionOrBuilder> 
+          org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg, org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.Builder, org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsgOrBuilder> 
           getDrivePositionFieldBuilder() {
         if (drivePositionBuilder_ == null) {
           drivePositionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition, org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePosition.Builder, org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.DrivePositionOrBuilder>(
+              org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg, org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.Builder, org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsgOrBuilder>(
                   drivePosition_,
                   getParentForChildren(),
                   isClean());
@@ -960,20 +960,20 @@ public final class LocomotionCmd {
         return drivePositionBuilder_;
       }
 
-      // optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;
-      private org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.getDefaultInstance();
+      // optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;
+      private org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity, org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.Builder, org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocityOrBuilder> driveVelocityBuilder_;
+          org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg, org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.Builder, org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder> driveVelocityBuilder_;
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
       public boolean hasDriveVelocity() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity getDriveVelocity() {
+      public org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg getDriveVelocity() {
         if (driveVelocityBuilder_ == null) {
           return driveVelocity_;
         } else {
@@ -981,9 +981,9 @@ public final class LocomotionCmd {
         }
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
-      public Builder setDriveVelocity(org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity value) {
+      public Builder setDriveVelocity(org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg value) {
         if (driveVelocityBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -997,10 +997,10 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
       public Builder setDriveVelocity(
-          org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.Builder builderForValue) {
+          org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.Builder builderForValue) {
         if (driveVelocityBuilder_ == null) {
           driveVelocity_ = builderForValue.build();
           onChanged();
@@ -1011,14 +1011,14 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
-      public Builder mergeDriveVelocity(org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity value) {
+      public Builder mergeDriveVelocity(org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg value) {
         if (driveVelocityBuilder_ == null) {
           if (((bitField0_ & 0x00000008) == 0x00000008) &&
-              driveVelocity_ != org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.getDefaultInstance()) {
+              driveVelocity_ != org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.getDefaultInstance()) {
             driveVelocity_ =
-              org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.newBuilder(driveVelocity_).mergeFrom(value).buildPartial();
+              org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.newBuilder(driveVelocity_).mergeFrom(value).buildPartial();
           } else {
             driveVelocity_ = value;
           }
@@ -1030,11 +1030,11 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
       public Builder clearDriveVelocity() {
         if (driveVelocityBuilder_ == null) {
-          driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.getDefaultInstance();
+          driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.getDefaultInstance();
           onChanged();
         } else {
           driveVelocityBuilder_.clear();
@@ -1043,17 +1043,17 @@ public final class LocomotionCmd {
         return this;
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.Builder getDriveVelocityBuilder() {
+      public org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.Builder getDriveVelocityBuilder() {
         bitField0_ |= 0x00000008;
         onChanged();
         return getDriveVelocityFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
-      public org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocityOrBuilder getDriveVelocityOrBuilder() {
+      public org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder getDriveVelocityOrBuilder() {
         if (driveVelocityBuilder_ != null) {
           return driveVelocityBuilder_.getMessageOrBuilder();
         } else {
@@ -1061,14 +1061,14 @@ public final class LocomotionCmd {
         }
       }
       /**
-       * <code>optional .org.flupes.ljf.grannyroomba.messages.DriveVelocity driveVelocity = 4;</code>
+       * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity, org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.Builder, org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocityOrBuilder> 
+          org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg, org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.Builder, org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder> 
           getDriveVelocityFieldBuilder() {
         if (driveVelocityBuilder_ == null) {
           driveVelocityBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity, org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocity.Builder, org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.DriveVelocityOrBuilder>(
+              org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg, org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.Builder, org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder>(
                   driveVelocity_,
                   getParentForChildren(),
                   isClean());
@@ -1077,22 +1077,22 @@ public final class LocomotionCmd {
         return driveVelocityBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:org.flupes.ljf.grannyroomba.messages.Locomotion)
+      // @@protoc_insertion_point(builder_scope:grannyroomba.messages.LocomotionCmd)
     }
 
     static {
-      defaultInstance = new Locomotion(true);
+      defaultInstance = new LocomotionCmd(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:org.flupes.ljf.grannyroomba.messages.Locomotion)
+    // @@protoc_insertion_point(class_scope:grannyroomba.messages.LocomotionCmd)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_descriptor;
+    internal_static_grannyroomba_messages_LocomotionCmd_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_fieldAccessorTable;
+      internal_static_grannyroomba_messages_LocomotionCmd_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1102,31 +1102,29 @@ public final class LocomotionCmd {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020Locomotion.proto\022$org.flupes.ljf.grann" +
-      "yroomba.messages\032\nStop.proto\032\023DrivePosit" +
-      "ion.proto\032\023DriveVelocity.proto\"\342\002\n\nLocom" +
-      "otion\022E\n\003cmd\030\001 \002(\01628.org.flupes.ljf.gran" +
-      "nyroomba.messages.Locomotion.Command\0228\n\004" +
-      "stop\030\002 \001(\0132*.org.flupes.ljf.grannyroomba" +
-      ".messages.Stop\022J\n\rdrivePosition\030\003 \001(\01323." +
-      "org.flupes.ljf.grannyroomba.messages.Dri" +
-      "vePosition\022J\n\rdriveVelocity\030\004 \001(\01323.org." +
-      "flupes.ljf.grannyroomba.messages.DriveVe",
-      "locity\";\n\007Command\022\010\n\004STOP\020\001\022\022\n\016DRIVE_POS" +
-      "ITION\020\002\022\022\n\016DRIVE_VELOCITY\020\003B5\n$org.flupe" +
-      "s.ljf.grannyroomba.messagesB\rLocomotionC" +
-      "md"
+      "\n\020Locomotion.proto\022\025grannyroomba.message" +
+      "s\032\nStop.proto\032\023DrivePosition.proto\032\023Driv" +
+      "eVelocity.proto\"\265\002\n\rLocomotionCmd\0229\n\003cmd" +
+      "\030\001 \002(\0162,.grannyroomba.messages.Locomotio" +
+      "nCmd.Command\022,\n\004stop\030\002 \001(\0132\036.grannyroomb" +
+      "a.messages.StopMsg\022>\n\rdrivePosition\030\003 \001(" +
+      "\0132\'.grannyroomba.messages.DrivePositionM" +
+      "sg\022>\n\rdriveVelocity\030\004 \001(\0132\'.grannyroomba" +
+      ".messages.DriveVelocityMsg\";\n\007Command\022\010\n" +
+      "\004STOP\020\001\022\022\n\016DRIVE_POSITION\020\002\022\022\n\016DRIVE_VEL",
+      "OCITY\020\003B7\n$org.flupes.ljf.grannyroomba.m" +
+      "essagesB\017LocomotionProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_descriptor =
+          internal_static_grannyroomba_messages_LocomotionCmd_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_fieldAccessorTable = new
+          internal_static_grannyroomba_messages_LocomotionCmd_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_org_flupes_ljf_grannyroomba_messages_Locomotion_descriptor,
+              internal_static_grannyroomba_messages_LocomotionCmd_descriptor,
               new java.lang.String[] { "Cmd", "Stop", "DrivePosition", "DriveVelocity", });
           return null;
         }
@@ -1134,9 +1132,9 @@ public final class LocomotionCmd {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          org.flupes.ljf.grannyroomba.messages.StopMsg.getDescriptor(),
-          org.flupes.ljf.grannyroomba.messages.DrivePositionMsg.getDescriptor(),
-          org.flupes.ljf.grannyroomba.messages.DriveVelocityMsg.getDescriptor(),
+          org.flupes.ljf.grannyroomba.messages.StopProto.getDescriptor(),
+          org.flupes.ljf.grannyroomba.messages.DrivePositionProto.getDescriptor(),
+          org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.getDescriptor(),
         }, assigner);
   }
 
