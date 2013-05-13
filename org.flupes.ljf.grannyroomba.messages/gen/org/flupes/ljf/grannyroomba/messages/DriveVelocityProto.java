@@ -14,35 +14,107 @@ public final class DriveVelocityProto {
     // optional float speed = 1 [default = 0];
     /**
      * <code>optional float speed = 1 [default = 0];</code>
+     *
+     * <pre>
+     * Speed of the drive
+     * By convention, the speed is defined as a ratio of the vehicle
+     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     *   - a positive speed will make the mobile base move forward
+     *   - a negative speed will make the mobile base move backward
+     *   - a zero speed correspond to a stop (and ignores the curvature)
+     *   - if the speed argument is omitted, the command is equivalent
+     *     to a stop (speed=0 by default).
+     * </pre>
      */
     boolean hasSpeed();
     /**
      * <code>optional float speed = 1 [default = 0];</code>
+     *
+     * <pre>
+     * Speed of the drive
+     * By convention, the speed is defined as a ratio of the vehicle
+     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     *   - a positive speed will make the mobile base move forward
+     *   - a negative speed will make the mobile base move backward
+     *   - a zero speed correspond to a stop (and ignores the curvature)
+     *   - if the speed argument is omitted, the command is equivalent
+     *     to a stop (speed=0 by default).
+     * </pre>
      */
     float getSpeed();
 
-    // optional float radius = 2 [default = 1000];
+    // optional float curvature = 2 [default = 0];
     /**
-     * <code>optional float radius = 2 [default = 1000];</code>
+     * <code>optional float curvature = 2 [default = 0];</code>
+     *
+     * <pre>
+     * Curvature of the drive (the curvature is defined as 1/radius)
+     *   - a curvature of 0 correspond to a straight line drive
+     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *     generate a point turn
+     *   - a positive curvature correspond to a turn to the left
+     *   - a negative curvature correspond to a turn to the right
+     *   - if the curvature argument is omitted, the command is equivalent
+     *     to a straight drive (curvature=0 by default).
+     * </pre>
      */
-    boolean hasRadius();
+    boolean hasCurvature();
     /**
-     * <code>optional float radius = 2 [default = 1000];</code>
+     * <code>optional float curvature = 2 [default = 0];</code>
+     *
+     * <pre>
+     * Curvature of the drive (the curvature is defined as 1/radius)
+     *   - a curvature of 0 correspond to a straight line drive
+     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *     generate a point turn
+     *   - a positive curvature correspond to a turn to the left
+     *   - a negative curvature correspond to a turn to the right
+     *   - if the curvature argument is omitted, the command is equivalent
+     *     to a straight drive (curvature=0 by default).
+     * </pre>
      */
-    float getRadius();
+    float getCurvature();
 
     // optional float timeout = 3 [default = 0];
     /**
      * <code>optional float timeout = 3 [default = 0];</code>
+     *
+     * <pre>
+     * Optional time out in seconds.
+     * The command will expire after the given time and then the mobile
+     * base should normally stop (by convention).
+     * A time out of zero indicate that the command should never expire,
+     * it is the default behavior is the argument is omitted.
+     * </pre>
      */
     boolean hasTimeout();
     /**
      * <code>optional float timeout = 3 [default = 0];</code>
+     *
+     * <pre>
+     * Optional time out in seconds.
+     * The command will expire after the given time and then the mobile
+     * base should normally stop (by convention).
+     * A time out of zero indicate that the command should never expire,
+     * it is the default behavior is the argument is omitted.
+     * </pre>
      */
     float getTimeout();
   }
   /**
    * Protobuf type {@code grannyroomba.messages.DriveVelocityMsg}
+   *
+   * <pre>
+   *
+   * Message to specify a velocity drive command.
+   *
+   * The unified velocity drive message allow to command
+   * the mobile base at the given velocity for the following
+   * 3 types of move:
+   *   - straight line (curvature = 0)
+   *   - arc circle
+   *   - spin in place (curvature = 1000)
+   * </pre>
    */
   public static final class DriveVelocityMsg extends
       com.google.protobuf.GeneratedMessage
@@ -99,7 +171,7 @@ public final class DriveVelocityProto {
             }
             case 21: {
               bitField0_ |= 0x00000002;
-              radius_ = input.readFloat();
+              curvature_ = input.readFloat();
               break;
             }
             case 29: {
@@ -152,31 +224,75 @@ public final class DriveVelocityProto {
     private float speed_;
     /**
      * <code>optional float speed = 1 [default = 0];</code>
+     *
+     * <pre>
+     * Speed of the drive
+     * By convention, the speed is defined as a ratio of the vehicle
+     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     *   - a positive speed will make the mobile base move forward
+     *   - a negative speed will make the mobile base move backward
+     *   - a zero speed correspond to a stop (and ignores the curvature)
+     *   - if the speed argument is omitted, the command is equivalent
+     *     to a stop (speed=0 by default).
+     * </pre>
      */
     public boolean hasSpeed() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
      * <code>optional float speed = 1 [default = 0];</code>
+     *
+     * <pre>
+     * Speed of the drive
+     * By convention, the speed is defined as a ratio of the vehicle
+     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     *   - a positive speed will make the mobile base move forward
+     *   - a negative speed will make the mobile base move backward
+     *   - a zero speed correspond to a stop (and ignores the curvature)
+     *   - if the speed argument is omitted, the command is equivalent
+     *     to a stop (speed=0 by default).
+     * </pre>
      */
     public float getSpeed() {
       return speed_;
     }
 
-    // optional float radius = 2 [default = 1000];
-    public static final int RADIUS_FIELD_NUMBER = 2;
-    private float radius_;
+    // optional float curvature = 2 [default = 0];
+    public static final int CURVATURE_FIELD_NUMBER = 2;
+    private float curvature_;
     /**
-     * <code>optional float radius = 2 [default = 1000];</code>
+     * <code>optional float curvature = 2 [default = 0];</code>
+     *
+     * <pre>
+     * Curvature of the drive (the curvature is defined as 1/radius)
+     *   - a curvature of 0 correspond to a straight line drive
+     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *     generate a point turn
+     *   - a positive curvature correspond to a turn to the left
+     *   - a negative curvature correspond to a turn to the right
+     *   - if the curvature argument is omitted, the command is equivalent
+     *     to a straight drive (curvature=0 by default).
+     * </pre>
      */
-    public boolean hasRadius() {
+    public boolean hasCurvature() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional float radius = 2 [default = 1000];</code>
+     * <code>optional float curvature = 2 [default = 0];</code>
+     *
+     * <pre>
+     * Curvature of the drive (the curvature is defined as 1/radius)
+     *   - a curvature of 0 correspond to a straight line drive
+     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *     generate a point turn
+     *   - a positive curvature correspond to a turn to the left
+     *   - a negative curvature correspond to a turn to the right
+     *   - if the curvature argument is omitted, the command is equivalent
+     *     to a straight drive (curvature=0 by default).
+     * </pre>
      */
-    public float getRadius() {
-      return radius_;
+    public float getCurvature() {
+      return curvature_;
     }
 
     // optional float timeout = 3 [default = 0];
@@ -184,12 +300,28 @@ public final class DriveVelocityProto {
     private float timeout_;
     /**
      * <code>optional float timeout = 3 [default = 0];</code>
+     *
+     * <pre>
+     * Optional time out in seconds.
+     * The command will expire after the given time and then the mobile
+     * base should normally stop (by convention).
+     * A time out of zero indicate that the command should never expire,
+     * it is the default behavior is the argument is omitted.
+     * </pre>
      */
     public boolean hasTimeout() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>optional float timeout = 3 [default = 0];</code>
+     *
+     * <pre>
+     * Optional time out in seconds.
+     * The command will expire after the given time and then the mobile
+     * base should normally stop (by convention).
+     * A time out of zero indicate that the command should never expire,
+     * it is the default behavior is the argument is omitted.
+     * </pre>
      */
     public float getTimeout() {
       return timeout_;
@@ -197,7 +329,7 @@ public final class DriveVelocityProto {
 
     private void initFields() {
       speed_ = 0F;
-      radius_ = 1000F;
+      curvature_ = 0F;
       timeout_ = 0F;
     }
     private byte memoizedIsInitialized = -1;
@@ -216,7 +348,7 @@ public final class DriveVelocityProto {
         output.writeFloat(1, speed_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFloat(2, radius_);
+        output.writeFloat(2, curvature_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeFloat(3, timeout_);
@@ -236,7 +368,7 @@ public final class DriveVelocityProto {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, radius_);
+          .computeFloatSize(2, curvature_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
@@ -322,6 +454,18 @@ public final class DriveVelocityProto {
     }
     /**
      * Protobuf type {@code grannyroomba.messages.DriveVelocityMsg}
+     *
+     * <pre>
+     *
+     * Message to specify a velocity drive command.
+     *
+     * The unified velocity drive message allow to command
+     * the mobile base at the given velocity for the following
+     * 3 types of move:
+     *   - straight line (curvature = 0)
+     *   - arc circle
+     *   - spin in place (curvature = 1000)
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -360,7 +504,7 @@ public final class DriveVelocityProto {
         super.clear();
         speed_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000001);
-        radius_ = 1000F;
+        curvature_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000002);
         timeout_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -399,7 +543,7 @@ public final class DriveVelocityProto {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.radius_ = radius_;
+        result.curvature_ = curvature_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
@@ -423,8 +567,8 @@ public final class DriveVelocityProto {
         if (other.hasSpeed()) {
           setSpeed(other.getSpeed());
         }
-        if (other.hasRadius()) {
-          setRadius(other.getRadius());
+        if (other.hasCurvature()) {
+          setCurvature(other.getCurvature());
         }
         if (other.hasTimeout()) {
           setTimeout(other.getTimeout());
@@ -460,18 +604,51 @@ public final class DriveVelocityProto {
       private float speed_ ;
       /**
        * <code>optional float speed = 1 [default = 0];</code>
+       *
+       * <pre>
+       * Speed of the drive
+       * By convention, the speed is defined as a ratio of the vehicle
+       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       *   - a positive speed will make the mobile base move forward
+       *   - a negative speed will make the mobile base move backward
+       *   - a zero speed correspond to a stop (and ignores the curvature)
+       *   - if the speed argument is omitted, the command is equivalent
+       *     to a stop (speed=0 by default).
+       * </pre>
        */
       public boolean hasSpeed() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>optional float speed = 1 [default = 0];</code>
+       *
+       * <pre>
+       * Speed of the drive
+       * By convention, the speed is defined as a ratio of the vehicle
+       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       *   - a positive speed will make the mobile base move forward
+       *   - a negative speed will make the mobile base move backward
+       *   - a zero speed correspond to a stop (and ignores the curvature)
+       *   - if the speed argument is omitted, the command is equivalent
+       *     to a stop (speed=0 by default).
+       * </pre>
        */
       public float getSpeed() {
         return speed_;
       }
       /**
        * <code>optional float speed = 1 [default = 0];</code>
+       *
+       * <pre>
+       * Speed of the drive
+       * By convention, the speed is defined as a ratio of the vehicle
+       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       *   - a positive speed will make the mobile base move forward
+       *   - a negative speed will make the mobile base move backward
+       *   - a zero speed correspond to a stop (and ignores the curvature)
+       *   - if the speed argument is omitted, the command is equivalent
+       *     to a stop (speed=0 by default).
+       * </pre>
        */
       public Builder setSpeed(float value) {
         bitField0_ |= 0x00000001;
@@ -481,6 +658,17 @@ public final class DriveVelocityProto {
       }
       /**
        * <code>optional float speed = 1 [default = 0];</code>
+       *
+       * <pre>
+       * Speed of the drive
+       * By convention, the speed is defined as a ratio of the vehicle
+       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       *   - a positive speed will make the mobile base move forward
+       *   - a negative speed will make the mobile base move backward
+       *   - a zero speed correspond to a stop (and ignores the curvature)
+       *   - if the speed argument is omitted, the command is equivalent
+       *     to a stop (speed=0 by default).
+       * </pre>
        */
       public Builder clearSpeed() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -489,35 +677,79 @@ public final class DriveVelocityProto {
         return this;
       }
 
-      // optional float radius = 2 [default = 1000];
-      private float radius_ = 1000F;
+      // optional float curvature = 2 [default = 0];
+      private float curvature_ ;
       /**
-       * <code>optional float radius = 2 [default = 1000];</code>
+       * <code>optional float curvature = 2 [default = 0];</code>
+       *
+       * <pre>
+       * Curvature of the drive (the curvature is defined as 1/radius)
+       *   - a curvature of 0 correspond to a straight line drive
+       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *     generate a point turn
+       *   - a positive curvature correspond to a turn to the left
+       *   - a negative curvature correspond to a turn to the right
+       *   - if the curvature argument is omitted, the command is equivalent
+       *     to a straight drive (curvature=0 by default).
+       * </pre>
        */
-      public boolean hasRadius() {
+      public boolean hasCurvature() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional float radius = 2 [default = 1000];</code>
+       * <code>optional float curvature = 2 [default = 0];</code>
+       *
+       * <pre>
+       * Curvature of the drive (the curvature is defined as 1/radius)
+       *   - a curvature of 0 correspond to a straight line drive
+       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *     generate a point turn
+       *   - a positive curvature correspond to a turn to the left
+       *   - a negative curvature correspond to a turn to the right
+       *   - if the curvature argument is omitted, the command is equivalent
+       *     to a straight drive (curvature=0 by default).
+       * </pre>
        */
-      public float getRadius() {
-        return radius_;
+      public float getCurvature() {
+        return curvature_;
       }
       /**
-       * <code>optional float radius = 2 [default = 1000];</code>
+       * <code>optional float curvature = 2 [default = 0];</code>
+       *
+       * <pre>
+       * Curvature of the drive (the curvature is defined as 1/radius)
+       *   - a curvature of 0 correspond to a straight line drive
+       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *     generate a point turn
+       *   - a positive curvature correspond to a turn to the left
+       *   - a negative curvature correspond to a turn to the right
+       *   - if the curvature argument is omitted, the command is equivalent
+       *     to a straight drive (curvature=0 by default).
+       * </pre>
        */
-      public Builder setRadius(float value) {
+      public Builder setCurvature(float value) {
         bitField0_ |= 0x00000002;
-        radius_ = value;
+        curvature_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float radius = 2 [default = 1000];</code>
+       * <code>optional float curvature = 2 [default = 0];</code>
+       *
+       * <pre>
+       * Curvature of the drive (the curvature is defined as 1/radius)
+       *   - a curvature of 0 correspond to a straight line drive
+       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *     generate a point turn
+       *   - a positive curvature correspond to a turn to the left
+       *   - a negative curvature correspond to a turn to the right
+       *   - if the curvature argument is omitted, the command is equivalent
+       *     to a straight drive (curvature=0 by default).
+       * </pre>
        */
-      public Builder clearRadius() {
+      public Builder clearCurvature() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        radius_ = 1000F;
+        curvature_ = 0F;
         onChanged();
         return this;
       }
@@ -526,18 +758,42 @@ public final class DriveVelocityProto {
       private float timeout_ ;
       /**
        * <code>optional float timeout = 3 [default = 0];</code>
+       *
+       * <pre>
+       * Optional time out in seconds.
+       * The command will expire after the given time and then the mobile
+       * base should normally stop (by convention).
+       * A time out of zero indicate that the command should never expire,
+       * it is the default behavior is the argument is omitted.
+       * </pre>
        */
       public boolean hasTimeout() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>optional float timeout = 3 [default = 0];</code>
+       *
+       * <pre>
+       * Optional time out in seconds.
+       * The command will expire after the given time and then the mobile
+       * base should normally stop (by convention).
+       * A time out of zero indicate that the command should never expire,
+       * it is the default behavior is the argument is omitted.
+       * </pre>
        */
       public float getTimeout() {
         return timeout_;
       }
       /**
        * <code>optional float timeout = 3 [default = 0];</code>
+       *
+       * <pre>
+       * Optional time out in seconds.
+       * The command will expire after the given time and then the mobile
+       * base should normally stop (by convention).
+       * A time out of zero indicate that the command should never expire,
+       * it is the default behavior is the argument is omitted.
+       * </pre>
        */
       public Builder setTimeout(float value) {
         bitField0_ |= 0x00000004;
@@ -547,6 +803,14 @@ public final class DriveVelocityProto {
       }
       /**
        * <code>optional float timeout = 3 [default = 0];</code>
+       *
+       * <pre>
+       * Optional time out in seconds.
+       * The command will expire after the given time and then the mobile
+       * base should normally stop (by convention).
+       * A time out of zero indicate that the command should never expire,
+       * it is the default behavior is the argument is omitted.
+       * </pre>
        */
       public Builder clearTimeout() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -582,7 +846,7 @@ public final class DriveVelocityProto {
     java.lang.String[] descriptorData = {
       "\n\023DriveVelocity.proto\022\025grannyroomba.mess" +
       "ages\"N\n\020DriveVelocityMsg\022\020\n\005speed\030\001 \001(\002:" +
-      "\0010\022\024\n\006radius\030\002 \001(\002:\0041000\022\022\n\007timeout\030\003 \001(" +
+      "\0010\022\024\n\tcurvature\030\002 \001(\002:\0010\022\022\n\007timeout\030\003 \001(" +
       "\002:\0010B:\n$org.flupes.ljf.grannyroomba.mess" +
       "agesB\022DriveVelocityProto"
     };
@@ -596,7 +860,7 @@ public final class DriveVelocityProto {
           internal_static_grannyroomba_messages_DriveVelocityMsg_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_grannyroomba_messages_DriveVelocityMsg_descriptor,
-              new java.lang.String[] { "Speed", "Radius", "Timeout", });
+              new java.lang.String[] { "Speed", "Curvature", "Timeout", });
           return null;
         }
       };

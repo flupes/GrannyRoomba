@@ -5,10 +5,43 @@ package grannyroomba.messages;
 option java_package = "org.flupes.ljf.grannyroomba.messages";
 option java_outer_classname = "DriveVelocityProto";
 
+/*
+ * Message to specify a velocity drive command.
+ *
+ * The unified velocity drive message allow to command
+ * the mobile base at the given velocity for the following
+ * 3 types of move:
+ *   - straight line (curvature = 0)
+ *   - arc circle
+ *   - spin in place (curvature = 1000)
+ */
 message DriveVelocityMsg {
 
+	// Speed of the drive
+	// By convention, the speed is defined as a ratio of the vehicle
+	// maximum speed. So the speed range is normally comprised in [-1; 1].
+	//   - a positive speed will make the mobile base move forward
+	//   - a negative speed will make the mobile base move backward
+	//   - a zero speed correspond to a stop (and ignores the curvature)
+	//   - if the speed argument is omitted, the command is equivalent
+	//     to a stop (speed=0 by default).
 	optional float speed = 1 [ default = 0 ];
-	optional float radius = 2 [ default = 1000 ];
+
+	// Curvature of the drive (the curvature is defined as 1/radius)
+	//   - a curvature of 0 correspond to a straight line drive
+	//   - by convention, a curvature > 1000 (=1mm radius) will
+	//     generate a point turn
+	//   - a positive curvature correspond to a turn to the left
+	//   - a negative curvature correspond to a turn to the right
+	//   - if the curvature argument is omitted, the command is equivalent
+	//     to a straight drive (curvature=0 by default).
+	optional float curvature = 2 [ default = 0 ];
+
+	// Optional time out in seconds.
+	// The command will expire after the given time and then the mobile
+	// base should normally stop (by convention).
+	// A time out of zero indicate that the command should never expire,
+	// it is the default behavior is the argument is omitted.
 	optional float timeout = 3 [ default = 0 ];
 
 }
