@@ -3,10 +3,20 @@ syntax = "proto2";
 package org.flupes.ljf.grannyroomba.messages;
 
 option java_package = "org.flupes.ljf.grannyroomba.messages";
-option java_outer_classname = "CommandReturnMsg";
+option java_outer_classname = "CommandStatusMsg";
 
-message CommandReturn {
+message CommandStatus {
 
-	required sfixed64 id = 1;
+	enum Status {
+		IDLE = 1;
+		BUSY = 2;
+		FAILED = 3;
+		COMPLETED = 5;
+		INTERRUPTED = 4;
+	}
+
+	required sfixed32 id = 1;
+
+	required Status status = 2;
 
 }
