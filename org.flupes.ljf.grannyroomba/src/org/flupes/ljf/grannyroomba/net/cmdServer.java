@@ -46,6 +46,7 @@ public class cmdServer{
 			}
 			CommandStatus reply = builder.build();
 			socket.send(reply.toByteArray(), 0);
+			id++;
 		}
 
 		socket.close();

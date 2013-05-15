@@ -5,7 +5,10 @@ package org.flupes.ljf.grannyroomba.net;
 // using the REQ/REP pattern
 //
 
+import java.io.BufferedReader;
 import java.io.Console;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.zeromq.ZMQ;
 
@@ -31,7 +34,7 @@ public class cmdClient{
 		ZMQ.Socket socket = context.socket(ZMQ.REQ);
 		socket.connect ("tcp://localhost:5555");
 
-		Console console = System.console();
+		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		boolean up = true;
 		while ( up ) {
 			System.out.println("Available commands:");
@@ -39,8 +42,15 @@ public class cmdClient{
 			System.out.println("  1: STOP");
 			System.out.println("  2: DRIVE_POSITION");
 			System.out.println("  3: DRIVE_VELOCITY");
-			String str = console.readLine("Choice? ");
-			int r = Integer.parseInt(str);
+			System.out.println("Choice = ");
+			String str;
+			int r = 0;
+			try {
+				str = input.readLine();
+				r = Integer.parseInt(str);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			LocomotionCmd.Builder builder = null;
 			switch (r) {
 			case 0: up=false; break; 
@@ -70,6 +80,7 @@ public class cmdClient{
 						.setCurvature(1)
 						.build()
 						);
+				break;
 			default: System.err.println("Not a valid entry!");
 			}
 			if ( builder != null ) {
