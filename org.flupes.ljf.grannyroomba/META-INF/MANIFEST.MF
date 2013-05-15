@@ -4,6 +4,8 @@ Bundle-Name: Grannyroomba
 Bundle-SymbolicName: org.flupes.ljf.grannyroomba
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.flupes.ljf.grannyroomba,
- org.flupes.ljf.grannyroomba.hw
+ org.flupes.ljf.grannyroomba.hw,
+ org.flupes.ljf.grannyroomba.net
 Require-Bundle: org.slf4j.api
+Import-Package: org.flupes.ljf.grannyroomba.messages
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
