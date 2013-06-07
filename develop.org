@@ -1,0 +1,50 @@
+* ZeroMQ for Android
+http://www.zeromq.org/build:android
+#+BEGIN_SRC bash
+# Create the standalone toolchain
+$NDK/build/tools/make-standalone-toolchain.sh \
+    --system=darwin-x86_64 \
+    --platform=android-14 \
+    --install-dir=/Users/Shared/pkgs/android-toolchain_14
+
+# Configure and build ZeroMQ
+export OUTPUT_DIR=/Users/Shared/android
+cd /Users/Shared/android/src
+tar xzvf ../../tarballs/zeromq-3.2.2.tar.gz
+cd zeromq-3.2.2
+./configure --enable-static --disable-shared --host=arm-linux-androideabi \
+    --prefix=$OUTPUT_DIR LDFLAGS="-L$OUTPUT_DIR/lib" CPPFLAGS="-fPIC \
+    -I$OUTPUT_DIR/include" LIBS="-lgcc"
+make
+make install
+
+# Configure and build jzmq
+cd /Users/Shared/android/src
+git clone https://github.com/zeromq/jzmq.git
+cd jzmq
+export OUTPUT_DIR=/Users/Shared/android
+export JAVAC="javac -source 5 -target 5"
+./autogen.sh
+# Edit the configure script (does not locate correctly the java headers)
+15929,15930c15929,15930
+< case "$host_os" in
+<         darwin*)        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[^/]*$::'`
+---
+> case `uname -s` in
+>         Darwin*)        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[^/]*$::'`
+./configure --enable-static --disable-shared --host=arm-linux-androideabi \
+    --prefix=$OUTPUT_DIR --with-zeromq=$OUTPUT_DIR --disable-version
+make
+make install
+
+# Reduce size (remove debug info only)
+cd $OUTPUT_DIR/lib
+arm-linux-androideabi-strip -g libzmq.a libjzmq.a
+#+END_SRC
+* Android Platform
+** ADT
+http://developer.android.com/sdk/installing/bundle.html
+** NDK
+http://developer.android.com/tools/sdk/ndk/index.html
+** APIs Levels
+http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
