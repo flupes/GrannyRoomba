@@ -12,9 +12,10 @@ export OUTPUT_DIR=/Users/Shared/android
 cd /Users/Shared/android/src
 tar xzvf ../../tarballs/zeromq-3.2.2.tar.gz
 cd zeromq-3.2.2
-./configure --enable-static --disable-shared --host=arm-linux-androideabi \
+./configure --enable-static --disable-version --host=arm-linux-androideabi \
     --prefix=$OUTPUT_DIR LDFLAGS="-L$OUTPUT_DIR/lib" CPPFLAGS="-fPIC \
     -I$OUTPUT_DIR/include" LIBS="-lgcc"
+# What to do with --disable-shared ???
 make
 make install
 
@@ -32,8 +33,8 @@ export JAVAC="javac -source 5 -target 5"
 ---
 > case `uname -s` in
 >         Darwin*)        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[^/]*$::'`
-./configure --enable-static --disable-shared --host=arm-linux-androideabi \
-    --prefix=$OUTPUT_DIR --with-zeromq=$OUTPUT_DIR --disable-version
+./configure --enable-static --disable-version --host=arm-linux-androideabi \
+    --prefix=$OUTPUT_DIR --with-zeromq=$OUTPUT_DIR
 make
 make install
 
@@ -48,3 +49,40 @@ http://developer.android.com/sdk/installing/bundle.html
 http://developer.android.com/tools/sdk/ndk/index.html
 ** APIs Levels
 http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+** Direct Links
+*** API Guide
+http://developer.android.com/guide/components/index.html
+*** Virtual device port forwarding
+http://developer.android.com/tools/help/adb.html#forwardports
+*** Processes and threads
+http://developer.android.com/guide/components/processes-and-threads.html
+* Workspace creation
+** Clone manually jeromq
+*** Get the source code for PC
+    git clone https://github.com/zeromq/jeromq.git 
+    - File -> Import -> Maven -> Existing Maven projects
+    - Rename the project as jeromqLibPC
+**** Create a new Android Library
+     - File -> New -> Others -> Android -> Android Application Project
+     - name: jeromqLibAndroid, minimum SDK: 8, target SDK 17
+     - Configure Project tab: Uncheck all but "Mark this project as library"
+     - Copy the 4 packages under src/main/java in jeromqLibPC to the src
+       folder under jeromqLibAndroid (org.jeromq, org.zeromq.codec,
+       org.zeromq, zmq)
+     - In the Manifest, change the package name to org.zeromq
+** Download the v3.3 (for OTG) of the  IOIO Software from:
+   https://github.com/ytai/ioio/wiki/Downloads
+   - Unpack under /Users/Shared/pkgs/App-IOIO330
+   - File -> Import -> General -> Existing Projects into Workspace
+   - Select All but IOIOlibBT
+** Clone in Eclipse the GrannyRoomba repo (with EGit)
+   https://github.com/flupes/GrannyRoomba.git
+   - clone the repo under /Volumes/ljfdev/git/GrannyRoomba
+   - import all the projects from the git repo
+* Random Stuff
+** How to add the license headers:
+copyright-header -n --license GPL3 --copyright-holder "Lorenzo Flueckiger"
+--copyright-year=2013 --copyright-software="GrannyRoomba"
+--copyright-software-description "Telepresence robot based on a Roomba
+and Android tablet" --add-path org.flupes.ljf.grannyroomba/src
+
