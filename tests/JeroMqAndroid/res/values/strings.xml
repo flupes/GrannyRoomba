@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">HelloJzmqAndroid</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="togglebutton">ToggleButton</string>
+    <string name="toggleOn">Start Server</string>
+    <string name="toggleOff">Stop Server</string>
+
+</resources>
