@@ -53,6 +53,16 @@ http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLeve
 *** API Guide
 http://developer.android.com/guide/components/index.html
 *** Virtual device port forwarding
+** Connect to Android Device over TCP
+http://stackoverflow.com/questions/2604727/how-can-i-connect-to-android-with-adb-over-tcp
+#+BEGIN_SRC
+# connect device with USB
+adb tcpip 5555
+# disconnect usb
+adb connect 192.168.0.101:5555
+# to go back to usb mode
+adb usb
+#+END_SRC
 http://developer.android.com/tools/help/adb.html#forwardports
 *** Processes and threads
 http://developer.android.com/guide/components/processes-and-threads.html
@@ -79,6 +89,9 @@ http://developer.android.com/guide/components/processes-and-threads.html
    https://github.com/flupes/GrannyRoomba.git
    - clone the repo under /Volumes/ljfdev/git/GrannyRoomba
    - import all the projects from the git repo
+* IOIO
+** Running IOIO connected to an Android Virtual Device
+https://github.com/ytai/ioio/wiki/IOIO-Bridge
 * Random Stuff
 ** How to add the license headers:
 copyright-header -n --license GPL3 --copyright-holder "Lorenzo Flueckiger"
