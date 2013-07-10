@@ -1,0 +1,56 @@
+syntax = "proto2";
+
+package grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "MotorProto";
+
+message MotorCmd {
+
+	/** Available control modes */
+	enum Mode {
+		/** Turn the motor off (remove power) */
+		CTRL_OFF = 1;
+
+		/** Stop the motor (servo as soon as possible to zero velocity) */
+		CTRL_STOP = 2;
+
+		/** Servo the motor to the absolute given position */
+		CTRL_ABS_POS = 3;
+
+		/** Servo the motor to the relative (from current) position */
+		CTRL_REL_POS = 4;
+
+		/** Servo the motor at a constant velocity */
+		CTRL_VELOCITY = 5;
+
+		/** Servo the motor at a constant torque/linear force */
+		CTRL_FORCE = 6;
+	}
+
+	/** Type of motor command */
+	required Mode mode = 1;
+
+	/** Position to achieved
+	 * (absolute or relative depending the mode)
+	 * Will be ignored in "velocity" mode
+	 */
+	optional float position = 2;
+
+	/** Target velocity
+	 * (can be ignored for position mode if the motor implementation
+	 * does not support it)
+	 */
+	optional float velocity = 3;
+
+	/** Target acceleration
+	 * (can be ignored if the motor implementation does not support it)
+	 */
+	optional float acceleration = 4;
+
+	/** Target force
+	 * (only here for future use)
+	 */
+	optional float foce = 5;
+
+}

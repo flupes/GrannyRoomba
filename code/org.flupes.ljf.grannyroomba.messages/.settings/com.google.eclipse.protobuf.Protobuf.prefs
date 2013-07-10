@@ -1,0 +1,9 @@
+compiler.compileProtoFiles=true
+compiler.descriptorFilePath=/Users/Shared/pkgs/include/google/protobuf/descriptor.proto
+compiler.enableProjectSettings=true
+compiler.javaCodeGenerationEnabled=true
+compiler.javaOutputDirectory=gen
+compiler.protocFilePath=/Users/Shared/pkgs/bin/protoc
+compiler.useProtocInCustomPath=true
+compiler.useProtocInSystemPath=false
+eclipse.preferences.version=1
