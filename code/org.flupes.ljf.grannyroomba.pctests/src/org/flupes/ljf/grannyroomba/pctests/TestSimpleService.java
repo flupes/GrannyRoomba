@@ -1,7 +1,5 @@
 package org.flupes.ljf.grannyroomba.pctests;
 
-import java.util.concurrent.TimeUnit;
-
 import org.flupes.ljf.grannyroomba.SimpleService;
 
 public class TestSimpleService {
@@ -10,20 +8,16 @@ public class TestSimpleService {
 
 		private int m_counter;
 		private String m_name;
-		private int m_period;
 		
 		HelloService(String name, int period) {
-			super(1);
+			super(1000*period);
 			m_name = name;
-			m_period = period;
 		}
 		
 		@Override
-		public int loop() throws InterruptedException {
+		public void loop() throws InterruptedException {
 			m_counter++;
 			System.out.println("Hello [" + m_name + "] : " +m_counter);
-			TimeUnit.SECONDS.sleep(m_period);
-			return 0;
 		}
 
 		@Override
