@@ -1,5 +1,10 @@
 package org.flupes.ljf.grannyroomba.pctests;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.TTCCLayout;
 import org.flupes.ljf.grannyroomba.SimpleService;
 
 public class TestSimpleService {
@@ -55,6 +60,10 @@ public class TestSimpleService {
 	
 	
 	public static void main(String[] args) {
+		Logger logger = Logger.getLogger("grannyroomba");
+		logger.setLevel(Level.TRACE);
+		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
+		logger.addAppender(appender);
 		new TestSimpleService();
 	}
 

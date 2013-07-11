@@ -3,6 +3,9 @@ package org.flupes.ljf.grannyroomba;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** Helper class to start a looper service with one 
  * initialization phase and a cleanup phase.
  * 
@@ -28,8 +31,10 @@ import java.util.concurrent.Executors;
  */
 public abstract class SimpleService extends Thread {
 
-	static private int DEFAULT_PERIOD = 10;
-	static private ExecutorService m_executor = Executors.newCachedThreadPool();
+	private static int DEFAULT_PERIOD = 10;
+
+	protected static ExecutorService s_executor = Executors.newCachedThreadPool();
+	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
 	enum State {
 		RUNNING, STARTED, STOPPED
@@ -53,9 +58,10 @@ public abstract class SimpleService extends Thread {
 		launch(msdelay);
 	}
 
-	private void launch(int msdelay) {
+	private synchronized void launch(int msdelay) {
+		s_logger.trace("Starting SimpleService Thread");
 		m_msDelay = msdelay;
-		m_executor.execute(this);
+		s_executor.execute(this);
 		m_state = State.RUNNING;
 	}
 
@@ -64,24 +70,29 @@ public abstract class SimpleService extends Thread {
 		try {
 			// Wait for the client to call "start"
 			synchronized(this) {
+				s_logger.trace("SimpleService wating to be started");
 				if ( m_state != State.STARTED  ) {
 					wait();
 				}
 				// Perform initialization
+				s_logger.trace("SimpleService calling init code");
 				init();
 				m_state = State.STARTED;
 			}
 			
 			// Start looping
+			s_logger.trace("SimpleService starting looping");
 			while ( m_state == State.STARTED ) {
 				loop();
 				sleep(m_msDelay);
 			}
 
 		} catch (InterruptedException e1) {
+			s_logger.trace("SimpleService was interrupted");
 			// thread was interrupted...
 		}
 		// Cleanup
+		s_logger.trace("SimpleService calling fini code");
 		fini();
 	} 
 
@@ -96,6 +107,7 @@ public abstract class SimpleService extends Thread {
 		// because the start method is synchronized, 
 		// it grabs the object monitor first, which 
 		// is required to notify a thread.
+		s_logger.trace("starting the service");
 		notify();
 	}
 
@@ -105,16 +117,21 @@ public abstract class SimpleService extends Thread {
 	 * will be called, then the thread will stop.
 	 */
 	public synchronized void cancel() {
+		s_logger.trace("terminating the service");
 		m_state = State.STOPPED;
 		interrupt();
 	}
 
+	public synchronized boolean isLooping() {
+		return m_state==State.STARTED;
+	}
+	
 	/**
 	 * Notify all SimpleServices to cancel their threads.
 	 * @throws InterruptedException
 	 */
 	public static void terminateAll() throws InterruptedException {
-		m_executor.shutdownNow();
+		s_executor.shutdownNow();
 	}
 
 	public abstract void loop() throws InterruptedException;
