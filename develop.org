@@ -1,4 +1,66 @@
-* ZeroMQ for Android
+* Android Platform
+** ADT
+http://developer.android.com/sdk/installing/bundle.html
+** NDK
+http://developer.android.com/tools/sdk/ndk/index.html
+** APIs Levels
+http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+** Direct Links
+*** API Guide
+http://developer.android.com/guide/components/index.html
+*** Virtual device port forwarding
+** Connect to Android Device over TCP
+http://stackoverflow.com/questions/2604727/how-can-i-connect-to-android-with-adb-over-tcp
+#+BEGIN_SRC
+# connect device with USB
+adb tcpip 5555
+# disconnect usb
+adb connect 192.168.0.101:5555
+# to go back to usb mode
+adb usb
+#+END_SRC
+http://developer.android.com/tools/help/adb.html#forwardports
+*** Processes and threads
+http://developer.android.com/guide/components/processes-and-threads.html
+* GrannyRoomba Workspace creation
+** Clone manually jeromq
+*** Get the source code for PC
+    git clone https://github.com/zeromq/jeromq.git 
+    - File -> Import -> Maven -> Existing Maven projects
+    - Rename the project as jeromqLibPC
+**** Create a new Android Library
+     - File -> New -> Others -> Android -> Android Application Project
+     - name: jeromqLibAndroid, minimum SDK: 8, target SDK 17
+     - Configure Project tab: Uncheck all but "Mark this project as library"
+     - Copy the 4 packages under src/main/java in jeromqLibPC to the src
+       folder under jeromqLibAndroid (org.jeromq, org.zeromq.codec,
+       org.zeromq, zmq)
+     - In the Manifest, change the package name to org.zeromq
+** Download the v3.3 (for OTG) of the  IOIO Software from:
+   https://github.com/ytai/ioio/wiki/Downloads
+   - Unpack under /Users/Shared/pkgs/App-IOIO330
+   - File -> Import -> General -> Existing Projects into Workspace
+   - Select All but IOIOlibBT
+** Clone in Eclipse the GrannyRoomba repo (with EGit)
+   https://github.com/flupes/GrannyRoomba.git
+   - clone the repo under /Volumes/ljfdev/git/GrannyRoomba
+   - import all the projects from the git repo
+* IOIO
+** Running IOIO connected to an Android Virtual Device
+https://github.com/ytai/ioio/wiki/IOIO-Bridge
+* Basic tests that work
+** Testing jeromq server on Android and client on PC
+#+BEGIN_EXAMPLE
+# launch the server on the virtual device:
+/JeroMqAndroid/AndroidManifest.xml
+
+# connect to the Virtual Android Device which runs a server on port 8888:
+adb forward tcp:6666 tcp:8888
+
+# run the following exec on the PC
+/JZeroMqPC/src/org/flupes/grannyroomba/test/zmqpc/helloclient/hwclient.java
+#+END_EXAMPLE
+* ZeroMQ for Android (deprecated now that we use JeroMQ)
 http://www.zeromq.org/build:android
 #+BEGIN_SRC bash
 # Create the standalone toolchain
@@ -42,56 +104,6 @@ make install
 cd $OUTPUT_DIR/lib
 arm-linux-androideabi-strip -g libzmq.a libjzmq.a
 #+END_SRC
-* Android Platform
-** ADT
-http://developer.android.com/sdk/installing/bundle.html
-** NDK
-http://developer.android.com/tools/sdk/ndk/index.html
-** APIs Levels
-http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
-** Direct Links
-*** API Guide
-http://developer.android.com/guide/components/index.html
-*** Virtual device port forwarding
-** Connect to Android Device over TCP
-http://stackoverflow.com/questions/2604727/how-can-i-connect-to-android-with-adb-over-tcp
-#+BEGIN_SRC
-# connect device with USB
-adb tcpip 5555
-# disconnect usb
-adb connect 192.168.0.101:5555
-# to go back to usb mode
-adb usb
-#+END_SRC
-http://developer.android.com/tools/help/adb.html#forwardports
-*** Processes and threads
-http://developer.android.com/guide/components/processes-and-threads.html
-* Workspace creation
-** Clone manually jeromq
-*** Get the source code for PC
-    git clone https://github.com/zeromq/jeromq.git 
-    - File -> Import -> Maven -> Existing Maven projects
-    - Rename the project as jeromqLibPC
-**** Create a new Android Library
-     - File -> New -> Others -> Android -> Android Application Project
-     - name: jeromqLibAndroid, minimum SDK: 8, target SDK 17
-     - Configure Project tab: Uncheck all but "Mark this project as library"
-     - Copy the 4 packages under src/main/java in jeromqLibPC to the src
-       folder under jeromqLibAndroid (org.jeromq, org.zeromq.codec,
-       org.zeromq, zmq)
-     - In the Manifest, change the package name to org.zeromq
-** Download the v3.3 (for OTG) of the  IOIO Software from:
-   https://github.com/ytai/ioio/wiki/Downloads
-   - Unpack under /Users/Shared/pkgs/App-IOIO330
-   - File -> Import -> General -> Existing Projects into Workspace
-   - Select All but IOIOlibBT
-** Clone in Eclipse the GrannyRoomba repo (with EGit)
-   https://github.com/flupes/GrannyRoomba.git
-   - clone the repo under /Volumes/ljfdev/git/GrannyRoomba
-   - import all the projects from the git repo
-* IOIO
-** Running IOIO connected to an Android Virtual Device
-https://github.com/ytai/ioio/wiki/IOIO-Bridge
 * Random Stuff
 ** How to add the license headers:
 copyright-header -n --license GPL3 --copyright-holder "Lorenzo Flueckiger"
