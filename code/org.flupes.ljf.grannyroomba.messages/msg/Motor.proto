@@ -51,6 +51,6 @@ message MotorCmd {
 	/** Target force
 	 * (only here for future use)
 	 */
-	optional float foce = 5;
+	optional float force = 5;
 
 }

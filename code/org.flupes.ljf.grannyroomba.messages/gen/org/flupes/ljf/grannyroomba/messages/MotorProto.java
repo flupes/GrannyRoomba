@@ -93,25 +93,25 @@ public final class MotorProto {
      */
     float getAcceleration();
 
-    // optional float foce = 5;
+    // optional float force = 5;
     /**
-     * <code>optional float foce = 5;</code>
+     * <code>optional float force = 5;</code>
      *
      * <pre>
      ** Target force
      * (only here for future use)
      * </pre>
      */
-    boolean hasFoce();
+    boolean hasForce();
     /**
-     * <code>optional float foce = 5;</code>
+     * <code>optional float force = 5;</code>
      *
      * <pre>
      ** Target force
      * (only here for future use)
      * </pre>
      */
-    float getFoce();
+    float getForce();
   }
   /**
    * Protobuf type {@code grannyroomba.messages.MotorCmd}
@@ -192,7 +192,7 @@ public final class MotorProto {
             }
             case 45: {
               bitField0_ |= 0x00000010;
-              foce_ = input.readFloat();
+              force_ = input.readFloat();
               break;
             }
           }
@@ -511,30 +511,30 @@ public final class MotorProto {
       return acceleration_;
     }
 
-    // optional float foce = 5;
-    public static final int FOCE_FIELD_NUMBER = 5;
-    private float foce_;
+    // optional float force = 5;
+    public static final int FORCE_FIELD_NUMBER = 5;
+    private float force_;
     /**
-     * <code>optional float foce = 5;</code>
+     * <code>optional float force = 5;</code>
      *
      * <pre>
      ** Target force
      * (only here for future use)
      * </pre>
      */
-    public boolean hasFoce() {
+    public boolean hasForce() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional float foce = 5;</code>
+     * <code>optional float force = 5;</code>
      *
      * <pre>
      ** Target force
      * (only here for future use)
      * </pre>
      */
-    public float getFoce() {
-      return foce_;
+    public float getForce() {
+      return force_;
     }
 
     private void initFields() {
@@ -542,7 +542,7 @@ public final class MotorProto {
       position_ = 0F;
       velocity_ = 0F;
       acceleration_ = 0F;
-      foce_ = 0F;
+      force_ = 0F;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -573,7 +573,7 @@ public final class MotorProto {
         output.writeFloat(4, acceleration_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeFloat(5, foce_);
+        output.writeFloat(5, force_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -602,7 +602,7 @@ public final class MotorProto {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(5, foce_);
+          .computeFloatSize(5, force_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -728,7 +728,7 @@ public final class MotorProto {
         bitField0_ = (bitField0_ & ~0x00000004);
         acceleration_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000008);
-        foce_ = 0F;
+        force_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
@@ -777,7 +777,7 @@ public final class MotorProto {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.foce_ = foce_;
+        result.force_ = force_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -806,8 +806,8 @@ public final class MotorProto {
         if (other.hasAcceleration()) {
           setAcceleration(other.getAcceleration());
         }
-        if (other.hasFoce()) {
-          setFoce(other.getFoce());
+        if (other.hasForce()) {
+          setForce(other.getForce());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1059,55 +1059,55 @@ public final class MotorProto {
         return this;
       }
 
-      // optional float foce = 5;
-      private float foce_ ;
+      // optional float force = 5;
+      private float force_ ;
       /**
-       * <code>optional float foce = 5;</code>
+       * <code>optional float force = 5;</code>
        *
        * <pre>
        ** Target force
        * (only here for future use)
        * </pre>
        */
-      public boolean hasFoce() {
+      public boolean hasForce() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional float foce = 5;</code>
+       * <code>optional float force = 5;</code>
        *
        * <pre>
        ** Target force
        * (only here for future use)
        * </pre>
        */
-      public float getFoce() {
-        return foce_;
+      public float getForce() {
+        return force_;
       }
       /**
-       * <code>optional float foce = 5;</code>
+       * <code>optional float force = 5;</code>
        *
        * <pre>
        ** Target force
        * (only here for future use)
        * </pre>
        */
-      public Builder setFoce(float value) {
+      public Builder setForce(float value) {
         bitField0_ |= 0x00000010;
-        foce_ = value;
+        force_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float foce = 5;</code>
+       * <code>optional float force = 5;</code>
        *
        * <pre>
        ** Target force
        * (only here for future use)
        * </pre>
        */
-      public Builder clearFoce() {
+      public Builder clearForce() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        foce_ = 0F;
+        force_ = 0F;
         onChanged();
         return this;
       }
@@ -1137,15 +1137,15 @@ public final class MotorProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013Motor.proto\022\025grannyroomba.messages\"\362\001\n" +
+      "\n\013Motor.proto\022\025grannyroomba.messages\"\363\001\n" +
       "\010MotorCmd\0222\n\004mode\030\001 \002(\0162$.grannyroomba.m" +
       "essages.MotorCmd.Mode\022\020\n\010position\030\002 \001(\002\022" +
       "\020\n\010velocity\030\003 \001(\002\022\024\n\014acceleration\030\004 \001(\002\022" +
-      "\014\n\004foce\030\005 \001(\002\"j\n\004Mode\022\014\n\010CTRL_OFF\020\001\022\r\n\tC" +
-      "TRL_STOP\020\002\022\020\n\014CTRL_ABS_POS\020\003\022\020\n\014CTRL_REL" +
-      "_POS\020\004\022\021\n\rCTRL_VELOCITY\020\005\022\016\n\nCTRL_FORCE\020" +
-      "\006B2\n$org.flupes.ljf.grannyroomba.message" +
-      "sB\nMotorProto"
+      "\r\n\005force\030\005 \001(\002\"j\n\004Mode\022\014\n\010CTRL_OFF\020\001\022\r\n\t" +
+      "CTRL_STOP\020\002\022\020\n\014CTRL_ABS_POS\020\003\022\020\n\014CTRL_RE" +
+      "L_POS\020\004\022\021\n\rCTRL_VELOCITY\020\005\022\016\n\nCTRL_FORCE" +
+      "\020\006B2\n$org.flupes.ljf.grannyroomba.messag" +
+      "esB\nMotorProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1157,7 +1157,7 @@ public final class MotorProto {
           internal_static_grannyroomba_messages_MotorCmd_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_grannyroomba_messages_MotorCmd_descriptor,
-              new java.lang.String[] { "Mode", "Position", "Velocity", "Acceleration", "Foce", });
+              new java.lang.String[] { "Mode", "Position", "Velocity", "Acceleration", "Force", });
           return null;
         }
       };
