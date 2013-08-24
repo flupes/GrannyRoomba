@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+@Deprecated
 public class HelloServerService extends Service {
 
 	private ServerRunnable m_server;
