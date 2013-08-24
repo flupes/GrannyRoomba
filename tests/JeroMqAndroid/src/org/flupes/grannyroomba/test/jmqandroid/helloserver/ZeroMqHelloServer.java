@@ -39,12 +39,12 @@ public class ZeroMqHelloServer extends Activity {
 			if ( button.isChecked() ) {
 				m_text.append("Current state is ON\n");
 				Log.d("GrannyRoomba", "Trying to start the service...");
-				startService(new Intent(this, HelloServerService.class));
+				startService(new Intent(this, HelloSimpleService.class));
 			}
 			else {
 				m_text.append("Current state is OFF\n");
 				Log.d("GrannyRoomba", "Now stopping the service...");
-				stopService(new Intent(this, HelloServerService.class));
+				stopService(new Intent(this, HelloSimpleService.class));
 			}
 		}
 	}
