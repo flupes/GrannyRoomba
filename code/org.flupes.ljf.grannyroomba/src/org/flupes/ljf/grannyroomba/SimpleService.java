@@ -59,7 +59,7 @@ public abstract class SimpleService extends Thread {
 	}
 
 	private synchronized void launch(int msdelay) {
-		s_logger.trace("Starting SimpleService Thread");
+		s_logger.info("Starting SimpleService Thread");
 		m_msDelay = msdelay;
 		s_executor.execute(this);
 		m_state = State.RUNNING;
@@ -70,29 +70,28 @@ public abstract class SimpleService extends Thread {
 		try {
 			// Wait for the client to call "start"
 			synchronized(this) {
-				s_logger.trace("SimpleService wating to be started");
+				s_logger.info("SimpleService wating to be started");
 				if ( m_state != State.STARTED  ) {
 					wait();
 				}
 				// Perform initialization
-				s_logger.trace("SimpleService calling init code");
+				s_logger.info("SimpleService calling init code");
 				init();
-				m_state = State.STARTED;
 			}
 			
 			// Start looping
-			s_logger.trace("SimpleService starting looping");
-			while ( m_state == State.STARTED ) {
+			s_logger.info("SimpleService starting looping");
+			while ( m_state != State.STOPPED ) {
 				loop();
 				sleep(m_msDelay);
 			}
 
 		} catch (InterruptedException e1) {
-			s_logger.trace("SimpleService was interrupted");
+			s_logger.info("SimpleService was interrupted");
 			// thread was interrupted...
 		}
 		// Cleanup
-		s_logger.trace("SimpleService calling fini code");
+		s_logger.info("SimpleService calling fini code");
 		fini();
 	} 
 
@@ -107,8 +106,9 @@ public abstract class SimpleService extends Thread {
 		// because the start method is synchronized, 
 		// it grabs the object monitor first, which 
 		// is required to notify a thread.
-		s_logger.trace("starting the service");
+		s_logger.info("starting the service");
 		notify();
+		m_state = State.STARTED;
 	}
 
 	/**
@@ -117,7 +117,7 @@ public abstract class SimpleService extends Thread {
 	 * will be called, then the thread will stop.
 	 */
 	public synchronized void cancel() {
-		s_logger.trace("terminating the service");
+		s_logger.info("terminating the service");
 		m_state = State.STOPPED;
 		interrupt();
 	}
