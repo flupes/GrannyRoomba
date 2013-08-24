@@ -1,12 +1,11 @@
 package org.flupes.ljf.grannyroomba.net;
 
 //
-// Send commands to tcp://localhost:5555
+// Send commands to tcp://localhost:4444
 // using the REQ/REP pattern
 //
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -23,7 +22,7 @@ import org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 
-public class cmdClient{
+public class LocomotorCmdClientTest {
 
 	public static void main (String[] args){
 		ZMQ.Context context = ZMQ.context(1);
@@ -32,7 +31,7 @@ public class cmdClient{
 		System.out.println("Connecting to command server");
 
 		ZMQ.Socket socket = context.socket(ZMQ.REQ);
-		socket.connect ("tcp://localhost:5555");
+		socket.connect ("tcp://localhost:4444");
 
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		boolean up = true;

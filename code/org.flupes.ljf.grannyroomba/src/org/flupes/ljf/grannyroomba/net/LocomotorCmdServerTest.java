@@ -1,7 +1,7 @@
 package org.flupes.ljf.grannyroomba.net;
 
 //
-// Binds REP socket to tcp://*:5555
+// Binds REP socket to tcp://*:4444
 // Expects LocomotionCmd and returns a CommandStatus
 //
 
@@ -10,7 +10,7 @@ import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Sta
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd;
 import org.zeromq.ZMQ;
 
-public class cmdServer{
+public class LocomotorCmdServerTest {
 
 	public static void main (String[] args) throws Exception{
 		ZMQ.Context context = ZMQ.context(1);
@@ -19,7 +19,7 @@ public class cmdServer{
 		System.out.println("Starting command server...");
 		
 		ZMQ.Socket socket = context.socket(ZMQ.REP);
-		socket.bind ("tcp://*:5555");
+		socket.bind ("tcp://*:4444");
 
 		int id = 1;
 		while (!Thread.currentThread ().isInterrupted ()) {
