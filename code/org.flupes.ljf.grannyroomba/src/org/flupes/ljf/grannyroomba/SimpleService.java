@@ -36,11 +36,11 @@ public abstract class SimpleService extends Thread {
 	protected static ExecutorService s_executor = Executors.newCachedThreadPool();
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
-	enum State {
+	public enum State {
 		RUNNING, STARTED, STOPPED
 	}
 
-	private volatile State m_state;
+	protected volatile State m_state;
 	protected int m_msDelay;
 
 	/** Create a SimpleService with the default waiting period

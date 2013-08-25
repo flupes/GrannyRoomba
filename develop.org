@@ -38,6 +38,11 @@ http://developer.android.com/guide/components/processes-and-threads.html
 * IOIO
 ** Running IOIO connected to an Android Virtual Device
 https://github.com/ytai/ioio/wiki/IOIO-Bridge
+* JeroMq for PC under Eclipse
+  - Checkout the repo (command line) from:
+  https://github.com/zeromq/jeromq.git
+  - Import the projects from the repo with Eclipse
+  - Convert to plugin (right click menu)
 * JeroMq for Android under Eclipse
 *Only if not using the pre-package project under thirdparty*
 ** Get the source code for PC
