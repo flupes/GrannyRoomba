@@ -82,8 +82,8 @@ public abstract class SimpleService extends Thread {
 			// Start looping
 			s_logger.info("SimpleService starting looping");
 			while ( m_state != State.STOPPED ) {
-				loop();
 				sleep(m_msDelay);
+				loop();
 			}
 
 		} catch (InterruptedException e1) {
