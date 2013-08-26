@@ -56,8 +56,11 @@ public abstract class Server extends SimpleService {
 	@Override
 	public int init() {
 		if ( ! m_active ) {
+			s_logger.info("Creating ZMQ context...");
 			m_context = ZMQ.context(1);
+			s_logger.info("Creating ZMQ socket...");
 			m_socket = m_context.socket(ZMQ.REP);
+			s_logger.info("Binding socket to port...");
 			m_socket.bind (m_url);
 			s_logger.info("Started server on ["+m_url+"]");
 		}
@@ -69,6 +72,8 @@ public abstract class Server extends SimpleService {
 		s_logger.info("entering Server.fini");
 //		m_socket.close();
 //		m_context.term();
+		m_socket = null;
+		m_context = null;
 		m_active = false;
 		s_logger.info("Server running on ["+m_url+"] termintated.");
 		return 0;
