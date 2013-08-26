@@ -91,7 +91,7 @@ public class KeyboardController {
 		logger.addAppender(appender);
 
 		// Create client and keyboard dispatcher
-		ServoClient client = new ServoClient("localhost", 3333);
+		ServoClient client = new ServoClient("172.16.0.39", 3333);
 		ControlListener control = new ControlListener(client);
 		shell.addKeyListener(control);
 		client.connect();
