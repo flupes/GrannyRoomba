@@ -81,7 +81,9 @@ public class HelloSimpleService extends Service {
 		public Integer call() throws Exception {
 			s_logger.info("ServerStop called");
 			if ( m_context != null ) {
+				s_logger.info("ServerStop call term...");
 				m_context.term();
+				s_logger.info("ServerStop returns errno");
 				return ZError.errno();
 			}
 			return null;
