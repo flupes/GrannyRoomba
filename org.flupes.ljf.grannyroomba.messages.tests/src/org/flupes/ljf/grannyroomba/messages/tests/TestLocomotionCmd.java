@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command;
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.*;
 import org.flupes.ljf.grannyroomba.messages.StopProto.*;
-import org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.Mode;
 
 import org.junit.Test;
 
