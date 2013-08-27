@@ -20,3 +20,11 @@ message CommandStatus {
 	required Status status = 2;
 
 }
+
+message SystemState {
+
+	optional int32 state = 1;
+
+	repeated float values = 2;
+
+}

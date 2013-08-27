@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "MotorStateProto";
+
+message MotorState {
+
+	optional int32 status = 1;
+
+	optional float position = 2;
+
+	optional float velocity = 3;
+
+	optional float error = 4;
+
+}

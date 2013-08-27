@@ -5,7 +5,7 @@ package grannyroomba.messages;
 option java_package = "org.flupes.ljf.grannyroomba.messages";
 option java_outer_classname = "MotorProto";
 
-message MotorCmd {
+message MotorMsg {
 
 	/** Available control modes */
 	enum Mode {

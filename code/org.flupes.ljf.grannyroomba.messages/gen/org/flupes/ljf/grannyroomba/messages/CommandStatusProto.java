@@ -619,11 +619,566 @@ public final class CommandStatusProto {
     // @@protoc_insertion_point(class_scope:grannyroomba.messages.CommandStatus)
   }
 
+  public interface SystemStateOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional int32 state = 1;
+    /**
+     * <code>optional int32 state = 1;</code>
+     */
+    boolean hasState();
+    /**
+     * <code>optional int32 state = 1;</code>
+     */
+    int getState();
+
+    // repeated float values = 2;
+    /**
+     * <code>repeated float values = 2;</code>
+     */
+    java.util.List<java.lang.Float> getValuesList();
+    /**
+     * <code>repeated float values = 2;</code>
+     */
+    int getValuesCount();
+    /**
+     * <code>repeated float values = 2;</code>
+     */
+    float getValues(int index);
+  }
+  /**
+   * Protobuf type {@code grannyroomba.messages.SystemState}
+   */
+  public static final class SystemState extends
+      com.google.protobuf.GeneratedMessage
+      implements SystemStateOrBuilder {
+    // Use SystemState.newBuilder() to construct.
+    private SystemState(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SystemState(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SystemState defaultInstance;
+    public static SystemState getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SystemState getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SystemState(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              state_ = input.readInt32();
+              break;
+            }
+            case 21: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                values_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              values_.add(input.readFloat());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                values_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                values_.add(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          values_ = java.util.Collections.unmodifiableList(values_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_SystemState_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_SystemState_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.class, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SystemState> PARSER =
+        new com.google.protobuf.AbstractParser<SystemState>() {
+      public SystemState parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SystemState(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SystemState> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional int32 state = 1;
+    public static final int STATE_FIELD_NUMBER = 1;
+    private int state_;
+    /**
+     * <code>optional int32 state = 1;</code>
+     */
+    public boolean hasState() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int32 state = 1;</code>
+     */
+    public int getState() {
+      return state_;
+    }
+
+    // repeated float values = 2;
+    public static final int VALUES_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Float> values_;
+    /**
+     * <code>repeated float values = 2;</code>
+     */
+    public java.util.List<java.lang.Float>
+        getValuesList() {
+      return values_;
+    }
+    /**
+     * <code>repeated float values = 2;</code>
+     */
+    public int getValuesCount() {
+      return values_.size();
+    }
+    /**
+     * <code>repeated float values = 2;</code>
+     */
+    public float getValues(int index) {
+      return values_.get(index);
+    }
+
+    private void initFields() {
+      state_ = 0;
+      values_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, state_);
+      }
+      for (int i = 0; i < values_.size(); i++) {
+        output.writeFloat(2, values_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, state_);
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getValuesList().size();
+        size += dataSize;
+        size += 1 * getValuesList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code grannyroomba.messages.SystemState}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemStateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_SystemState_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_SystemState_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.class, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.Builder.class);
+      }
+
+      // Construct using org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        state_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        values_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.internal_static_grannyroomba_messages_SystemState_descriptor;
+      }
+
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState getDefaultInstanceForType() {
+        return org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.getDefaultInstance();
+      }
+
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState build() {
+        org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState buildPartial() {
+        org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState result = new org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.state_ = state_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          values_ = java.util.Collections.unmodifiableList(values_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.values_ = values_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState) {
+          return mergeFrom((org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState other) {
+        if (other == org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState.getDefaultInstance()) return this;
+        if (other.hasState()) {
+          setState(other.getState());
+        }
+        if (!other.values_.isEmpty()) {
+          if (values_.isEmpty()) {
+            values_ = other.values_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureValuesIsMutable();
+            values_.addAll(other.values_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.flupes.ljf.grannyroomba.messages.CommandStatusProto.SystemState) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional int32 state = 1;
+      private int state_ ;
+      /**
+       * <code>optional int32 state = 1;</code>
+       */
+      public boolean hasState() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional int32 state = 1;</code>
+       */
+      public int getState() {
+        return state_;
+      }
+      /**
+       * <code>optional int32 state = 1;</code>
+       */
+      public Builder setState(int value) {
+        bitField0_ |= 0x00000001;
+        state_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 state = 1;</code>
+       */
+      public Builder clearState() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        state_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // repeated float values = 2;
+      private java.util.List<java.lang.Float> values_ = java.util.Collections.emptyList();
+      private void ensureValuesIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          values_ = new java.util.ArrayList<java.lang.Float>(values_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public java.util.List<java.lang.Float>
+          getValuesList() {
+        return java.util.Collections.unmodifiableList(values_);
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public int getValuesCount() {
+        return values_.size();
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public float getValues(int index) {
+        return values_.get(index);
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public Builder setValues(
+          int index, float value) {
+        ensureValuesIsMutable();
+        values_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public Builder addValues(float value) {
+        ensureValuesIsMutable();
+        values_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public Builder addAllValues(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureValuesIsMutable();
+        super.addAll(values, values_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float values = 2;</code>
+       */
+      public Builder clearValues() {
+        values_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:grannyroomba.messages.SystemState)
+    }
+
+    static {
+      defaultInstance = new SystemState(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:grannyroomba.messages.SystemState)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_grannyroomba_messages_CommandStatus_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_grannyroomba_messages_CommandStatus_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_grannyroomba_messages_SystemState_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_grannyroomba_messages_SystemState_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -638,8 +1193,9 @@ public final class CommandStatusProto {
       "atus\030\002 \002(\0162+.grannyroomba.messages.Comma" +
       "ndStatus.Status\"H\n\006Status\022\010\n\004IDLE\020\001\022\010\n\004B" +
       "USY\020\002\022\n\n\006FAILED\020\003\022\r\n\tCOMPLETED\020\005\022\017\n\013INTE" +
-      "RRUPTED\020\004B:\n$org.flupes.ljf.grannyroomba" +
-      ".messagesB\022CommandStatusProto"
+      "RRUPTED\020\004\",\n\013SystemState\022\r\n\005state\030\001 \001(\005\022" +
+      "\016\n\006values\030\002 \003(\002B:\n$org.flupes.ljf.granny" +
+      "roomba.messagesB\022CommandStatusProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -652,6 +1208,12 @@ public final class CommandStatusProto {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_grannyroomba_messages_CommandStatus_descriptor,
               new java.lang.String[] { "Id", "Status", });
+          internal_static_grannyroomba_messages_SystemState_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+          internal_static_grannyroomba_messages_SystemState_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_grannyroomba_messages_SystemState_descriptor,
+              new java.lang.String[] { "State", "Values", });
           return null;
         }
       };

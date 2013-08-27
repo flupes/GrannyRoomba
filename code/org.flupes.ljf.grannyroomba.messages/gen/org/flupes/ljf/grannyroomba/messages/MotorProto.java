@@ -8,12 +8,12 @@ public final class MotorProto {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface MotorCmdOrBuilder
+  public interface MotorMsgOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required .grannyroomba.messages.MotorCmd.Mode mode = 1;
+    // required .grannyroomba.messages.MotorMsg.Mode mode = 1;
     /**
-     * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+     * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
      *
      * <pre>
      ** Type of motor command 
@@ -21,13 +21,13 @@ public final class MotorProto {
      */
     boolean hasMode();
     /**
-     * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+     * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
      *
      * <pre>
      ** Type of motor command 
      * </pre>
      */
-    org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode getMode();
+    org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode getMode();
 
     // optional float position = 2;
     /**
@@ -114,24 +114,24 @@ public final class MotorProto {
     float getForce();
   }
   /**
-   * Protobuf type {@code grannyroomba.messages.MotorCmd}
+   * Protobuf type {@code grannyroomba.messages.MotorMsg}
    */
-  public static final class MotorCmd extends
+  public static final class MotorMsg extends
       com.google.protobuf.GeneratedMessage
-      implements MotorCmdOrBuilder {
-    // Use MotorCmd.newBuilder() to construct.
-    private MotorCmd(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements MotorMsgOrBuilder {
+    // Use MotorMsg.newBuilder() to construct.
+    private MotorMsg(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private MotorCmd(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private MotorMsg(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final MotorCmd defaultInstance;
-    public static MotorCmd getDefaultInstance() {
+    private static final MotorMsg defaultInstance;
+    public static MotorMsg getDefaultInstance() {
       return defaultInstance;
     }
 
-    public MotorCmd getDefaultInstanceForType() {
+    public MotorMsg getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -141,7 +141,7 @@ public final class MotorProto {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private MotorCmd(
+    private MotorMsg(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -166,7 +166,7 @@ public final class MotorProto {
             }
             case 8: {
               int rawValue = input.readEnum();
-              org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode value = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode.valueOf(rawValue);
+              org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode value = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
@@ -209,33 +209,33 @@ public final class MotorProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorCmd_descriptor;
+      return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorMsg_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorCmd_fieldAccessorTable
+      return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorMsg_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.class, org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Builder.class);
+              org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.class, org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<MotorCmd> PARSER =
-        new com.google.protobuf.AbstractParser<MotorCmd>() {
-      public MotorCmd parsePartialFrom(
+    public static com.google.protobuf.Parser<MotorMsg> PARSER =
+        new com.google.protobuf.AbstractParser<MotorMsg>() {
+      public MotorMsg parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new MotorCmd(input, extensionRegistry);
+        return new MotorMsg(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<MotorCmd> getParserForType() {
+    public com.google.protobuf.Parser<MotorMsg> getParserForType() {
       return PARSER;
     }
 
     /**
-     * Protobuf enum {@code grannyroomba.messages.MotorCmd.Mode}
+     * Protobuf enum {@code grannyroomba.messages.MotorMsg.Mode}
      *
      * <pre>
      ** Available control modes 
@@ -379,7 +379,7 @@ public final class MotorProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.getDescriptor().getEnumTypes().get(0);
+        return org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Mode[] VALUES = values();
@@ -401,15 +401,15 @@ public final class MotorProto {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:grannyroomba.messages.MotorCmd.Mode)
+      // @@protoc_insertion_point(enum_scope:grannyroomba.messages.MotorMsg.Mode)
     }
 
     private int bitField0_;
-    // required .grannyroomba.messages.MotorCmd.Mode mode = 1;
+    // required .grannyroomba.messages.MotorMsg.Mode mode = 1;
     public static final int MODE_FIELD_NUMBER = 1;
-    private org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode mode_;
+    private org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode mode_;
     /**
-     * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+     * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
      *
      * <pre>
      ** Type of motor command 
@@ -419,13 +419,13 @@ public final class MotorProto {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+     * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
      *
      * <pre>
      ** Type of motor command 
      * </pre>
      */
-    public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode getMode() {
+    public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode getMode() {
       return mode_;
     }
 
@@ -538,7 +538,7 @@ public final class MotorProto {
     }
 
     private void initFields() {
-      mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode.CTRL_OFF;
+      mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode.CTRL_OFF;
       position_ = 0F;
       velocity_ = 0F;
       acceleration_ = 0F;
@@ -616,53 +616,53 @@ public final class MotorProto {
       return super.writeReplace();
     }
 
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(byte[] data)
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseDelimitedFrom(java.io.InputStream input)
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseDelimitedFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parseFrom(
+    public static org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -671,7 +671,7 @@ public final class MotorProto {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd prototype) {
+    public static Builder newBuilder(org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -683,24 +683,24 @@ public final class MotorProto {
       return builder;
     }
     /**
-     * Protobuf type {@code grannyroomba.messages.MotorCmd}
+     * Protobuf type {@code grannyroomba.messages.MotorMsg}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmdOrBuilder {
+       implements org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsgOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorCmd_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorMsg_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorCmd_fieldAccessorTable
+        return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorMsg_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.class, org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Builder.class);
+                org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.class, org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Builder.class);
       }
 
-      // Construct using org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.newBuilder()
+      // Construct using org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -720,7 +720,7 @@ public final class MotorProto {
 
       public Builder clear() {
         super.clear();
-        mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode.CTRL_OFF;
+        mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode.CTRL_OFF;
         bitField0_ = (bitField0_ & ~0x00000001);
         position_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -739,23 +739,23 @@ public final class MotorProto {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorCmd_descriptor;
+        return org.flupes.ljf.grannyroomba.messages.MotorProto.internal_static_grannyroomba_messages_MotorMsg_descriptor;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd getDefaultInstanceForType() {
-        return org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.getDefaultInstance();
+      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg getDefaultInstanceForType() {
+        return org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.getDefaultInstance();
       }
 
-      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd build() {
-        org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd result = buildPartial();
+      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg build() {
+        org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd buildPartial() {
-        org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd result = new org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd(this);
+      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg buildPartial() {
+        org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg result = new org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -784,16 +784,16 @@ public final class MotorProto {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd) {
-          return mergeFrom((org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd)other);
+        if (other instanceof org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg) {
+          return mergeFrom((org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd other) {
-        if (other == org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg other) {
+        if (other == org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.getDefaultInstance()) return this;
         if (other.hasMode()) {
           setMode(other.getMode());
         }
@@ -825,11 +825,11 @@ public final class MotorProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd parsedMessage = null;
+        org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd) e.getUnfinishedMessage();
+          parsedMessage = (org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -840,10 +840,10 @@ public final class MotorProto {
       }
       private int bitField0_;
 
-      // required .grannyroomba.messages.MotorCmd.Mode mode = 1;
-      private org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode.CTRL_OFF;
+      // required .grannyroomba.messages.MotorMsg.Mode mode = 1;
+      private org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode.CTRL_OFF;
       /**
-       * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+       * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
        *
        * <pre>
        ** Type of motor command 
@@ -853,23 +853,23 @@ public final class MotorProto {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+       * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
        *
        * <pre>
        ** Type of motor command 
        * </pre>
        */
-      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode getMode() {
+      public org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode getMode() {
         return mode_;
       }
       /**
-       * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+       * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
        *
        * <pre>
        ** Type of motor command 
        * </pre>
        */
-      public Builder setMode(org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode value) {
+      public Builder setMode(org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -879,7 +879,7 @@ public final class MotorProto {
         return this;
       }
       /**
-       * <code>required .grannyroomba.messages.MotorCmd.Mode mode = 1;</code>
+       * <code>required .grannyroomba.messages.MotorMsg.Mode mode = 1;</code>
        *
        * <pre>
        ** Type of motor command 
@@ -887,7 +887,7 @@ public final class MotorProto {
        */
       public Builder clearMode() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd.Mode.CTRL_OFF;
+        mode_ = org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg.Mode.CTRL_OFF;
         onChanged();
         return this;
       }
@@ -1112,22 +1112,22 @@ public final class MotorProto {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:grannyroomba.messages.MotorCmd)
+      // @@protoc_insertion_point(builder_scope:grannyroomba.messages.MotorMsg)
     }
 
     static {
-      defaultInstance = new MotorCmd(true);
+      defaultInstance = new MotorMsg(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:grannyroomba.messages.MotorCmd)
+    // @@protoc_insertion_point(class_scope:grannyroomba.messages.MotorMsg)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_grannyroomba_messages_MotorCmd_descriptor;
+    internal_static_grannyroomba_messages_MotorMsg_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_grannyroomba_messages_MotorCmd_fieldAccessorTable;
+      internal_static_grannyroomba_messages_MotorMsg_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1138,8 +1138,8 @@ public final class MotorProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\013Motor.proto\022\025grannyroomba.messages\"\363\001\n" +
-      "\010MotorCmd\0222\n\004mode\030\001 \002(\0162$.grannyroomba.m" +
-      "essages.MotorCmd.Mode\022\020\n\010position\030\002 \001(\002\022" +
+      "\010MotorMsg\0222\n\004mode\030\001 \002(\0162$.grannyroomba.m" +
+      "essages.MotorMsg.Mode\022\020\n\010position\030\002 \001(\002\022" +
       "\020\n\010velocity\030\003 \001(\002\022\024\n\014acceleration\030\004 \001(\002\022" +
       "\r\n\005force\030\005 \001(\002\"j\n\004Mode\022\014\n\010CTRL_OFF\020\001\022\r\n\t" +
       "CTRL_STOP\020\002\022\020\n\014CTRL_ABS_POS\020\003\022\020\n\014CTRL_RE" +
@@ -1152,11 +1152,11 @@ public final class MotorProto {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_grannyroomba_messages_MotorCmd_descriptor =
+          internal_static_grannyroomba_messages_MotorMsg_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_grannyroomba_messages_MotorCmd_fieldAccessorTable = new
+          internal_static_grannyroomba_messages_MotorMsg_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_grannyroomba_messages_MotorCmd_descriptor,
+              internal_static_grannyroomba_messages_MotorMsg_descriptor,
               new java.lang.String[] { "Mode", "Position", "Velocity", "Acceleration", "Force", });
           return null;
         }

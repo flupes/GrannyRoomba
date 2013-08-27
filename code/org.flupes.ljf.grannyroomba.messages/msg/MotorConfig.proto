@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "MotorConfigProto";
+
+message MotorConfig {
+
+	optional float low_limit = 1;
+	optional float high_limitl = 2;
+	optional float max_velocity = 3;
+	optional float max_acceleration = 4;
+	optional string name = 5;
+
+}
