@@ -27,7 +27,7 @@ http://developer.android.com/guide/components/processes-and-threads.html
    https://github.com/ytai/ioio/wiki/Downloads
    - Unpack under /Users/Shared/pkgs/App-IOIO330
    - File -> Import -> General -> Existing Projects into Workspace
-   - Select All but IOIOlibBT
+   - Select All but IOIOlibBT and IOIOLibAccessory
 ** Clone in Eclipse the GrannyRoomba repo (with EGit)
    https://github.com/flupes/GrannyRoomba.git
    - clone the repo under /Volumes/ljfdev/git/GrannyRoomba
@@ -35,6 +35,9 @@ http://developer.android.com/guide/components/processes-and-threads.html
      - jeromqLibAndroid
      - slf4jLibAndroid
    - import all the projects under code
+** JeroMQ for PC
+   - From git: https://github.com/zeromq/jeromq.git
+   - Import from Maven to Eclipse
 * IOIO
 ** Running IOIO connected to an Android Virtual Device
 https://github.com/ytai/ioio/wiki/IOIO-Bridge
