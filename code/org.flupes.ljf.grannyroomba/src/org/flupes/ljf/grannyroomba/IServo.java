@@ -7,13 +7,13 @@ public interface IServo {
 	 * (based on the last command, not on an external sensor)
 	 * @return
 	 */
-	float getPosition();
+	Float getPosition();
 	
 	/**
 	 * Returns the limits (low and high stop) of the servo.
 	 * @return
 	 */
-	float[] getLimits();
+	float[] getLimits(float[] store);
 	
 	/**
 	 * Drive the servo to the desired position.

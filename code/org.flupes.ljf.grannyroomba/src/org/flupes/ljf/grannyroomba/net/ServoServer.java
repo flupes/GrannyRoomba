@@ -3,7 +3,11 @@ package org.flupes.ljf.grannyroomba.net;
 import org.flupes.ljf.grannyroomba.IServo;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status;
-import org.flupes.ljf.grannyroomba.messages.MotorProto.MotorCmd;
+import org.flupes.ljf.grannyroomba.messages.MotorConfigProto.MotorConfig;
+import org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg;
+import org.flupes.ljf.grannyroomba.messages.MotorStateProto.MotorState;
+import org.flupes.ljf.grannyroomba.messages.SingleAxisProto.SingleAxisCmd;
+
 import org.zeromq.ZMQException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -24,32 +28,58 @@ public class ServoServer extends Server {
 	@Override
 	public void loop() throws InterruptedException {
 		boolean response = false;
-		MotorCmd cmd = null;
+		SingleAxisCmd cmd = null;
 		try {
 			byte[] data = m_socket.recv();
-			cmd = MotorCmd.parseFrom(data); 
+			cmd = SingleAxisCmd.parseFrom(data); 
 			m_cmdid += 1;
-			switch ( cmd.getMode() ) {
-			case CTRL_ABS_POS:
-				response = m_servo.setPosition(cmd.getPosition());
-				break;	
-			case CTRL_REL_POS:
-				response = m_servo.setPosition(cmd.getPosition());
-				break;	
-			default:	
-				s_logger.error("Command "+cmd.getMode()+" not supported!");
-			}
+			switch ( cmd.getCmd() ) {
 
+			case SET_MOTOR:
+				MotorMsg msg = cmd.getMsg();
+				switch ( msg.getMode() ) {
+				case CTRL_ABS_POS:
+					response = m_servo.setPosition(msg.getPosition());
+					break;	
+				case CTRL_REL_POS:
+					response = m_servo.setPosition(msg.getPosition());
+					break;	
+				default:	
+					s_logger.error("MotorMsg mode "+msg.getMode()+" not supported!");
+				} // switch msg.getMode
+				CommandStatus.Builder builder = CommandStatus.newBuilder();
+				builder.setId(m_cmdid).setStatus(response?Status.COMPLETED:Status.FAILED);
+				CommandStatus reply = builder.build();
+				s_logger.info("servo server send reply");
+				m_socket.send(reply.toByteArray());
+				break;
+
+			case GET_STATE:
+				MotorState state = MotorState.newBuilder().setPosition(m_servo.getPosition()).build();
+				m_socket.send(state.toByteArray());
+				break;
+
+			case GET_CONFIG:
+				float[] limits = m_servo.getLimits(null);
+				MotorConfig config = MotorConfig.newBuilder().
+						setLowLimit(limits[0]).setHighLimitl(limits[1]).
+						build();
+				m_socket.send(config.toByteArray());
+				break;
+
+			default:
+				s_logger.warn("SingleAxisCmd " + cmd.getCmd() + " not supported!");
+			} // switch cmd.getCmd
 		}
 		catch (ZMQException e) {
-//			if ( zmq.ZError.EAGAIN != e.getErrorCode() ) {
-//				s_logger.info("loop received an exception different from EAGAIN -> stop now!");
-//			}
+			//			if ( zmq.ZError.EAGAIN != e.getErrorCode() ) {
+			//				s_logger.info("loop received an exception different from EAGAIN -> stop now!");
+			//			}
 			if ( zmq.ZError.ETERM == e.getErrorCode() ) {
 				s_logger.info("Received ETERM exception while waiting for command");
 				// Mark the service has stopped in case of the ETERM was not issued
 				// internally by cancel, but by another process
-//				m_state = State.STOPPED;
+				//				m_state = State.STOPPED;
 			}
 			else {
 				s_logger.warn("Received unexpected exception: " + e.getErrorCode());
@@ -57,16 +87,11 @@ public class ServoServer extends Server {
 			}
 		}
 		catch (InvalidProtocolBufferException e) {
-			s_logger.warn("Could not decode MotorCmd message properly!");
+			s_logger.warn("Could not decode SingleAxisCmd message properly!");
 			s_logger.warn("  -> ignore silently for now!");
 		}
 		if ( cmd != null ) {
 			// is_Alive may have changed while in the blocking recv
-			CommandStatus.Builder builder = CommandStatus.newBuilder();
-			builder.setId(m_cmdid).setStatus(response?Status.COMPLETED:Status.FAILED);
-			CommandStatus reply = builder.build();
-			s_logger.info("servo server send reply");
-			m_socket.send(reply.toByteArray(), 0);
 		}
 		else {
 			s_logger.info("server was not looping anymore -> this should be correct!");

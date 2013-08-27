@@ -25,9 +25,6 @@ public abstract class Server extends SimpleService {
 		@Override
 		public Integer call() throws Exception {
 			s_logger.info("ServerStop called");
-			if ( m_socket != null ) {
-				m_socket.close();
-			}
 			if ( m_context != null ) {
 				m_context.term();
 				s_logger.info("ServerStop now returns errno");
@@ -72,6 +69,9 @@ public abstract class Server extends SimpleService {
 		s_logger.info("entering Server.fini");
 //		m_socket.close();
 //		m_context.term();
+		if ( m_socket != null ) {
+			m_socket.close();
+		}
 		m_socket = null;
 		m_context = null;
 		m_active = false;
@@ -92,7 +92,7 @@ public abstract class Server extends SimpleService {
 		// interrupt the recv.
 		// However, because Context.term needs NETWORK access, it cannot run
 		// on the main thread: we launch the stop in a separate thread!
-		Future<Integer> future = Executors.newFixedThreadPool(1).submit(new ServerStop());
+		Future<Integer> future = s_executor.submit(new ServerStop());
 		try {
 			int result = future.get(1, TimeUnit.SECONDS);
 			if ( result > 0 ) {

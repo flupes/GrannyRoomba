@@ -33,7 +33,8 @@ public abstract class SimpleService extends Thread {
 
 	private static int DEFAULT_PERIOD = 10;
 
-	protected static ExecutorService s_executor = Executors.newCachedThreadPool();
+//	protected static ExecutorService s_executor = Executors.newCachedThreadPool();
+	protected static ExecutorService s_executor = Executors.newFixedThreadPool(7);
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
 	public enum State {

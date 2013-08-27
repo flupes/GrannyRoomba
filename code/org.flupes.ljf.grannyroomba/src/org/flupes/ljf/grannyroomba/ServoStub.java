@@ -11,22 +11,32 @@ public class ServoStub implements IServo {
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 	
 	public ServoStub() {
-		m_low = -90;
-		m_high = 90;
-		m_position = 0;
+		init(-90, 90, 0);
+	}
+	
+	public ServoStub(float low, float high, float start) {
+		init(low, high, start);
+	}
+	
+	private void init(float low, float high, float start) {
+		m_low = low;
+		m_high = high;
+		m_position = start;
 	}
 	
 	@Override
-	public float getPosition() {
+	public Float getPosition() {
 		return m_position;
 	}
 
 	@Override
-	public float[] getLimits() {
-		float[] limits = new float[2];
-		limits[0] = m_low;
-		limits[1] = m_high;
-		return limits;
+	public float[] getLimits(float[] store) {
+		if ( store == null ) {
+			store = new float[2];
+		}
+		store[0] = m_low;
+		store[1] = m_high;
+		return store;
 	}
 
 	@Override
