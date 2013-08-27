@@ -18,39 +18,56 @@ import org.flupes.ljf.grannyroomba.net.ServoClient;
 
 public class KeyboardController {
 	
-	static Logger logger = Logger.getLogger("grannyroomba");
+	static Logger s_logger = Logger.getLogger("grannyroomba");
 
 	// Static inner class because we do not create an instance of the
 	// outer class since it is a main entry point
 	static class ControlListener extends KeyAdapter {
 
 		private ServoClient m_client;
-		private float m_position;
+		private Float m_position;
 		private float m_increment;
 		
 		public ControlListener(ServoClient client) {
 				m_client = client;
 				m_increment = 5;
-				// get position is not yet implemented, thus returns 0 
-				// however it does not matter since we only go absolute commands
-				m_position = m_client.getPosition();
 		}
 		
 		@Override
 		public void keyPressed(KeyEvent e) {
 		
+			if ( m_position == null ) {
+				m_position = m_client.getPosition();
+			}
 			boolean ret;
 			switch (e.keyCode) {
 			case SWT.PAGE_UP:
 				m_position += m_increment;
 				ret = m_client.setPosition(m_position);
-				logger.info("PAGE_UP -> setPosition("+m_position+") => "+((ret)?"true":"false"));
+				s_logger.info("PAGE_UP -> setPosition("+m_position+") => "+((ret)?"true":"false"));
 				break;
 			case SWT.PAGE_DOWN:
 				m_position -= m_increment;
 				ret = m_client.setPosition(m_position);
-				logger.info("PAGE_DOWN -> setPosition("+m_position+") => "+((ret)?"true":"false"));
+				s_logger.info("PAGE_DOWN -> setPosition("+m_position+") => "+((ret)?"true":"false"));
 				break;
+			case SWT.HELP:
+				s_logger.info("HELP -> get config and state");
+				float[] limits = m_client.getLimits(null);
+				m_position = m_client.getPosition();
+				if ( limits != null ) {
+					s_logger.info("  low limit = " + limits[0]);
+					s_logger.info("  high limit = " + limits[1]);
+				}
+				else {
+					s_logger.warn("  not motor limits returned!");
+				}
+				if ( m_position != null ) {
+					s_logger.info("  current position = " + m_position);
+				}
+				else {
+					s_logger.warn("  invalid position returned!");
+				}
 			default:
 				// just ignore silently
 			}
@@ -86,16 +103,16 @@ public class KeyboardController {
 		group.setBackgroundImage(image);
 
 		// initialize logger
-		logger.setLevel(Level.TRACE);
+		s_logger.setLevel(Level.TRACE);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
-		logger.addAppender(appender);
+		s_logger.addAppender(appender);
 
 		// Create client and keyboard dispatcher
 		ServoClient client = new ServoClient("172.16.0.39", 3333);
 		ControlListener control = new ControlListener(client);
 		shell.addKeyListener(control);
 		client.connect();
-		
+
 		shell.pack ();
 		//	shell.setSize(300, 400);
 		shell.open ();

@@ -22,7 +22,7 @@ public class GrannyRoombaService extends Service {
 	@Override
 	public void onCreate() {
 		s_logger.debug("GrannyRoombaService.onCreate");
-		m_servoImpl = new ServoStub();
+		m_servoImpl = new ServoStub(-45, 90, 45);
 		m_servoService = new ServoServer(3333, m_servoImpl);
 	}
 
