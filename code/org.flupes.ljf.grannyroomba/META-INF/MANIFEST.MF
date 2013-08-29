@@ -8,5 +8,4 @@ Export-Package: org.flupes.ljf.grannyroomba,
  org.flupes.ljf.grannyroomba.net
 Import-Package: org.flupes.ljf.grannyroomba.messages
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.slf4j.api;bundle-version="1.6.4",
- jeromqLibPC;bundle-version="1.0.0"
+Require-Bundle: org.slf4j.api;bundle-version="1.6.4"

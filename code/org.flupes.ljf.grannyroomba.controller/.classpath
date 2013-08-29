@@ -6,10 +6,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.flupes.ljf.grannyroomba.messages"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/slf4jLibAndroid"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/jeromqLibAndroid"/>
-	<classpathentry exported="true" kind="lib" path="/Users/Shared/apps/eclipse-juno-SR2-macosx-cocoa-x86_64/eclipse/plugins/org.slf4j.api_1.6.4.v20120130-2120.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/Shared/pkgs/share/java/protobuf-java-2.5.0.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
