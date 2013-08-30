@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Messages
-Bundle-SymbolicName: org.flupes.ljf.grannyroomba.messages
-Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.flupes.ljf.grannyroomba.messages;uses:="com.google.protobuf"
