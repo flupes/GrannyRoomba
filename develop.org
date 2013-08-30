@@ -72,6 +72,62 @@ adb forward tcp:6666 tcp:8888
 # run the following exec on the PC
 /JZeroMqPC/src/org/flupes/grannyroomba/test/zmqpc/helloclient/hwclient.java
 #+END_EXAMPLE
+* Creating the Eclipse projects required for GR
+** slf4j
+*** Clone the git repo
+    https://github.com/qos-ch/slf4j.git 
+*** Import the Maven projects into Eclipe:
+    - need a list of required projects here
+*** Modify the slf4j-api.pom.xml to remoe the error
+diff --git a/slf4j-api/pom.xml b/slf4j-api/pom.xml
+index 63a489c..49250ef 100644
+--- a/slf4j-api/pom.xml
++++ b/slf4j-api/pom.xml
+@@ -67,12 +67,15 @@
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-antrun-plugin</artifactId>
+         <executions>
++            <ignore />
++            <!-- 
+           <execution>
+             <phase>process-classes</phase>
+             <goals>
+              <goal>run</goal>
+             </goals>
+           </execution>
++           -->
+         </executions>
+         <configuration>
+           <tasks>
+** jeromq
+*** Clone the git repo
+    https://github.com/zeromq/jeromq.git
+*** IMport the Maven project into Eclipse
+*** Remove the src/test directory
+*** Modify the pom.xm to get rid of the junit dependency
+diff --git a/pom.xml b/pom.xml
+index 1729d45..d68ae95 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -42,12 +42,6 @@
+         </exclusion>
+       </exclusions>
+     </dependency>
+-    <dependency>
+-      <groupId>junit</groupId>
+-      <artifactId>junit</artifactId>
+-      <version>4.8.2</version>
+-      <scope>test</scope>
+-    </dependency>
+   </dependencies>
+   <build>
+     <plugins>
+** ioio
+*** Clone the git repo
+    https://github.com/ytai/ioio.git
+*** Import "Projects from Git" into Eclipse
+    - a list here is needed
+*** Resolve the libraries path for IOIOBridge
 * ZeroMQ for Android 
 *deprecated now that we use JeroMQ*
 http://www.zeromq.org/build:android
