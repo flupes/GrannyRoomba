@@ -29,8 +29,6 @@ public class GrannyRoombaService extends IOIOService {
 	protected Server m_servoService;
 	protected IServo m_servoImpl;
 
-	protected IOIO m_ioio = null;
-	
 	@Override
 	public void onCreate() {
 		super.onCreate();	// IOIO things
@@ -41,8 +39,7 @@ public class GrannyRoombaService extends IOIOService {
 		logger.setLevel(ch.qos.logback.classic.Level.TRACE);
 */
 		s_logger.info("GrannyRoombaService.onCreate");
-		m_servoImpl = new ServoStub(-45, 90, 45);		
-		m_servoService = new ServoServer(3333, m_servoImpl);
+//		m_servoImpl = new ServoStub(-45, 90, 45);		
 	}
 
 	@Override
@@ -79,8 +76,6 @@ public class GrannyRoombaService extends IOIOService {
 			
 			nm.notify(0, notification);
 		}
-		m_servoService.start();
-		s_logger.info("now we should be running...");
 	}
 
 	@Override
@@ -99,7 +94,10 @@ public class GrannyRoombaService extends IOIOService {
 			protected void setup() throws ConnectionLostException,
 					InterruptedException {
 				m_onboardLed = ioio_.openDigitalOutput(IOIO.LED_PIN);
-				m_ioio = ioio_;
+				m_servoImpl = new IoioServo(10, ioio_, 1500, 2000, -180, 180);
+				m_servoService = new ServoServer(3333, m_servoImpl);
+				m_servoService.start();
+				s_logger.warn("IOIO looper started the ServoService");
 			}
 
 			@Override

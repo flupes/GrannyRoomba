@@ -7,6 +7,8 @@ import ioio.lib.api.DigitalOutput.Spec.Mode;
 import ioio.lib.api.exception.ConnectionLostException;
 
 import org.flupes.ljf.grannyroomba.IServo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IoioServo implements IServo {
 
@@ -27,7 +29,9 @@ public class IoioServo implements IServo {
 	protected PwmOutput m_servoPwmOutput;
 	protected final int PWM_FREQ = 100;
 
-	IoioServo(int ctrlPin, IOIO ioio) {
+	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
+
+	public IoioServo(int ctrlPin, IOIO ioio) {
 		m_servoPin = ctrlPin;
 		m_centerPulseWidth = DEFAULT_CENTER_PULSE_WIDTH;
 		m_pulseRange = DEFAULT_PULSE_RANGE;
@@ -38,7 +42,7 @@ public class IoioServo implements IServo {
 		init();
 	}
 	
-	IoioServo(int ctrlPin, IOIO ioio, int center, int range, float low, float high) {
+	public IoioServo(int ctrlPin, IOIO ioio, int center, int range, float low, float high) {
 		m_servoPin = ctrlPin;
 		m_centerPulseWidth = center;
 		m_pulseRange = range;
@@ -50,6 +54,15 @@ public class IoioServo implements IServo {
 	}
 	
 	protected boolean init() {
+		while ( m_ioio == null ) {
+			s_logger.info("Waiting for IOIO to come up...");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		try {
 			m_servoPwmOutput = m_ioio.openPwmOutput(new DigitalOutput.Spec(m_servoPin, Mode.OPEN_DRAIN), PWM_FREQ);
 			m_currentPositionDegrees = 0;
@@ -86,6 +99,7 @@ public class IoioServo implements IServo {
 
 	@Override
 	public synchronized boolean setPosition(float position) {
+		if ( m_ioio == null ) return false;
 		if ( m_lowLimitDegrees <= position && position <= m_highLimitDegrees ) {
 			try {
 				m_servoPwmOutput.setPulseWidth(position2pulse(position));
