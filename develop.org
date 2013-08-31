@@ -15,7 +15,7 @@ http://stackoverflow.com/questions/2604727/how-can-i-connect-to-android-with-adb
 # connect device with USB
 adb tcpip 5555
 # disconnect usb
-adb connect 192.168.0.101:5555
+adb connect 172.16.0.39:5555
 # to go back to usb mode
 adb usb
 #+END_SRC

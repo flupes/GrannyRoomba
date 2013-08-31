@@ -9,9 +9,14 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
 
+import org.flupes.ljf.grannyroomba.ILocomotor;
 import org.flupes.ljf.grannyroomba.IServo;
+import org.flupes.ljf.grannyroomba.LocomotorStub;
 import org.flupes.ljf.grannyroomba.ServoStub;
+import org.flupes.ljf.grannyroomba.hw.IoioRoombaLocomotor;
 import org.flupes.ljf.grannyroomba.hw.IoioServo;
+import org.flupes.ljf.grannyroomba.hw.RoombaCreate;
+import org.flupes.ljf.grannyroomba.net.LocomotorServer;
 import org.flupes.ljf.grannyroomba.net.Server;
 import org.flupes.ljf.grannyroomba.net.ServoServer;
 
@@ -28,18 +33,31 @@ public class GrannyRoombaService extends IOIOService {
 
 	protected Server m_servoService;
 	protected IServo m_servoImpl;
+	
+	protected Server m_locoService;
+	protected ILocomotor m_locoImpl;
+
+	protected static final boolean m_debug = false;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();	// IOIO things
-/*
+		/*
 		ch.qos.logback.classic.Logger logger =
 		        (ch.qos.logback.classic.Logger)LoggerFactory.getLogger("grannyroomba");
 		//set its Level to INFO. The setLevel() method requires a logback logger
 		logger.setLevel(ch.qos.logback.classic.Level.TRACE);
-*/
+		 */
 		s_logger.info("GrannyRoombaService.onCreate");
-//		m_servoImpl = new ServoStub(-45, 90, 45);		
+		if ( m_debug ) {
+			m_servoImpl = new ServoStub(-45, 90, 45);
+			m_servoService = new ServoServer(3333, m_servoImpl);
+			m_servoService.start();
+			
+			m_locoImpl = new LocomotorStub();
+			m_locoService = new LocomotorServer(4444, m_locoImpl);
+			m_locoService.start();
+		}
 	}
 
 	@Override
@@ -53,7 +71,7 @@ public class GrannyRoombaService extends IOIOService {
 	public void onStart(Intent intent, int startid) {
 		super.onStart(intent, startid);	// IOIO things
 		s_logger.info("GrannyRoombaService.onStart");
-		
+
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		if (intent != null && intent.getAction() != null && intent.getAction().equals("stop")) {
 			// User clicked the notification. Need to stop the service.
@@ -73,7 +91,7 @@ public class GrannyRoombaService extends IOIOService {
 			.addAction(R.drawable.ic_launcher, "Stop", notifMsg)
 			.setProgress(0, 0, true)
 			.build();
-			
+
 			nm.notify(0, notification);
 		}
 	}
@@ -83,32 +101,44 @@ public class GrannyRoombaService extends IOIOService {
 		s_logger.warn("onBind should not be called!");
 		return null;
 	}
-	
+
 	@Override
 	protected IOIOLooper createIOIOLooper() {
 		return new BaseIOIOLooper() {
 			private DigitalOutput m_onboardLed;
 			private int count = 0;
-			
+
 			@Override
 			protected void setup() throws ConnectionLostException,
-					InterruptedException {
+			InterruptedException {
 				m_onboardLed = ioio_.openDigitalOutput(IOIO.LED_PIN);
-				m_servoImpl = new IoioServo(10, ioio_, 1500, 2000, -180, 180);
-				m_servoService = new ServoServer(3333, m_servoImpl);
-				m_servoService.start();
-				s_logger.warn("IOIO looper started the ServoService");
+				if ( ! m_debug ) {
+					m_servoImpl = new IoioServo(10, ioio_, 1500, 2000, -180, 180);
+					m_servoService = new ServoServer(3333, m_servoImpl);
+					m_servoService.start();
+					s_logger.warn("IOIO looper started the ServoService");
+					
+					RoombaCreate roomba = new RoombaCreate(ioio_);
+					roomba.connect(2, 1);
+					roomba.safeControl();
+					roomba.startTelemetry();
+
+					m_locoImpl = new IoioRoombaLocomotor(roomba);
+					m_locoService = new LocomotorServer(4444, m_locoImpl);
+					m_locoService.start();
+					s_logger.warn("IOIO looper starte the LocomotorService");
+				}
 			}
 
 			@Override
 			public void loop() throws ConnectionLostException,
-					InterruptedException {
+			InterruptedException {
 				m_onboardLed.write(false);
 				Thread.sleep(100);
 				m_onboardLed.write(true);
 				Thread.sleep(900);
 				count += 1;
-				s_logger.info("loop #"+count);
+//				s_logger.info("loop #"+count);
 			}
 		};
 	}
