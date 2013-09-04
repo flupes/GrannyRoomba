@@ -1,0 +1,45 @@
+* Iteration 1: proof of concept
+** Goal
+   Obtain a system that allows to command wirelessly the Roomba and Tilt-Servo from
+   the PC, this while running Skype on the tablet.
+** Work items
+*** DONE Create a basic serial "driver" to command the Roomba
+*** DONE Test a IOIO Service running together with Skype
+*** DONE Setup and read the telemetry from the Roomba
+*** DONE Test commanding Roomba from IOIO
+*** DONE Build and test ZeroMQ from PC to Android
+*** DONE Use slf4j for logging with implementation of log4j on PC and slf4j-android on Android
+*** DONE Configure and test JeroMQ on PC and on Android
+*** DONE Create a board to power the IOIO from the Roomba and provide communication lines
+*** DONE Find a realistic Android debug solution with the IOIO
+    - System for Android Virtual Device that works:
+      - use IOIO bridge to allow the AVD talk to the IOIO connected to the PC
+      - use adb port forwarding to bridge the localhost port required by
+        zeromq to the AVD
+      - use regular ADB to debug
+    - Still no success using the Nexus-7:
+      - it should work with ADB over wifi and using the IOIO as an
+        Open-Accessory device, but the way I trigger ADB over wifi still
+        requires "USB Debug" enabled... I think the Nexus need to be
+        rooted to go otherwise
+*** DONE Create protocol-buffer messages to support Locomotion and SingleAxis commands
+*** DONE Create framework to run the client / server system
+*** DONE Create the clients and servers for locomotion and single axis
+*** DONE Create a Eclipse workspace where JeroMQ, slf4j, IOIO, the generic part of the project code and the specific Android app code is happy
+*** DONE Create a simple UI to command the robot (keyboard based)
+*** DONE Create a framework to start the GrannyRoomba controller as a Android Service
+* Iteration 2: stabilize the system and fill huge gaps
+** Goal
+   Make the system more usable, mostly by working on the lifecycle of the
+   application. Some critical features also need to be implemented to
+   avoid breaking the Roomba: bump detection (and position drive to backup)
+** Work items
+*** TODO Implement safe guarded locomotion (using bumpers)
+*** TODO Refine the start/stop of the system and lifecyle of the GrannyRoomba servive
+*** TODO Implement position drive
+* Iteration 3: clean up the system and document
+* Iteration 4: add some features
+** Goal
+** Work items
+*** TODO Implement a joystick controller
+*** TODO Create a broker service to allow bi-directional communication between to hosts, each between firewalls
