@@ -87,10 +87,14 @@ iRobot Roomba Serial Command Interface (SCI) Specification:
   - [[http://www.irobot.com/images/consumer/hacker/Roomba_SCI_Spec_Manual.pdf][broken link from iRobot]]
   - [[./refdocs/Roomba_SCI_Spec_Manual.pdf][local copy of the file]].
 
+*Update:*
+It turned out that I never could get the Roomba 400 to work, so I switched
+to the iCreate (see Update section).
+
 The Roomba Create has a different set of capabilities and access to more
 internal information. The Create Open Interface is described in:
   - [[http://www.irobot.com/hrd_right_rail/create_rr/create_fam/createFam_rr_manuals.html][online version of the specification]]
-  - [[./refdocs/Create_OpenInterface_v2.pdf][local copy]] just in case the iRobot link also disapears
+  - [[./refdocs/Create_OpenInterface_v2.pdf][local copy]] just in case the iRobot link also disappears
 
 *** Android interface with hardware
 Communication between the tablet and the Roomba can happen in different
@@ -117,29 +121,35 @@ project next generation of GrannyRoomba.
 
 ROS? RoombaCMD, custom?
 
+*Update:*
+Since I did not proceed with ROS because its complexity and very partial
+support on Android, I went with my custom Roomba interface. The commanding
+part is pretty trivial, but the telemetry listening was slightly more
+challenging. It seems function and serve my need for now.
+
 *** User interface
 
 A physical interface like a joystick would be great, but I think that this
 mode of operation could not work because of the time delay between the
 remote control station and the robot.
 
-So the UI will proabably end up being some sort of web page with control
+So the UI will probably end up being some sort of web page with control
 buttons (need to learn more on this topic).
 
 *** Communication
 
-For maximum accessiblity, the best would probably to run a web server on
+For maximum accessibility, the best would probably to run a web server on
 the Android tablet (is this possible) with a port mapping on the home
 router. This means I will have to learn about web protocols...
 
 [[http://www.rosbridge.org/doku.php][rosbridge]] and websockets?
 
-rosjava development does not seems very active, and with the disapearance
+rosjava development does not seems very active, and with the disappearance
 of Willow Garage, I have some doubt about the future support for
 ROS. Since my project is moving extremely slowly, I need a stable long
 term solution;-)
 
-[[https://code.google.com/p/i-jetty/][i-jetty]] seems the simple solutiond to deploy a webserver on an Android
+[[https://code.google.com/p/i-jetty/][i-jetty]] seems the simple solution to deploy a web-server on an Android
 system.
 
 The web-based approach seems a little bit costly in time with my current
@@ -147,17 +157,35 @@ knowledge of the domain. I will look at a more bare-bone solution with [[http://
 for the transport layer and [[https://developers.google.com/protocol-buffers/][Protocol Buffers]] for the data description and
 serialization.
 
+*Update:*
+The first experiments using ZeromMQ native C libraries and the Java
+bindings worked correctly after quite a bit of tinkering. An advantage of
+my project going so slow is that in the mean time, [[https://github.com/zeromq/jeromq/wiki][JeroMQ]] matured, and I
+adaopted it. So currently GrannyRomba uses:
+  - JeroMQ for the communications layer
+  - Protocol Buffer for the message definition/encoding
+
 ** Notes / Links
 
 http://hackingroomba.com/projects/build-a-roomba-serial-tether/
 
 http://www.dprg.org/projects/2009-07a/
 
+Open Source alternative to Skype?
+[[https://jitsi.org/][jitsi]]
+
 * Updates
 
-- [2013-05-04 Sat] Peformed some initial testing with the IOIO OTG and the
+- [2013-08-31 Sat] Finally all the different components are working in
+  harmony: the first prototype of a iCreate Roomba with a Nexus-7 tablet
+  mounted on a tilt system can be driven by K. inside the house. It uses
+  JeroMQ for the communication, Google protocol-buffers to encode the
+  messages and slf4j for logging. The Android tablet talk with the Roomba
+  and the servo using the IOIO-OTG which is powered (using a regulator)
+  from the Roomba.
+- [2013-05-04 Sat] Performed some initial testing with the IOIO OTG and the
   Roomba Discovery: absolutely no success! The Roomba seems death to all
-  the attemps to communicate with it. Out of frustration, I purchased a
+  the attempts to communicate with it. Out of frustration, I purchased a
   Roomba Create, and the same IOIO rig seems to talk fine with it. So this
   is an extra expense, but I also get a much nicer platform that will easy
   the hardware integration. The Roomba Create also has a extended
@@ -165,7 +193,7 @@ http://www.dprg.org/projects/2009-07a/
   battery and charger from the old Roomba (~$100 saved).
 - [2013-04-20 Sat] Starting to work again on the project after 3 months
    lost due to a forced moving that had a double impact:
-  - The nice play-area with raised plateform does not exist at our new
+  - The nice play-area with raised platform does not exist at our new
     place, meaning that a 2 feet high GrannyRoomba will not
     have the ideal dimensions to play. It can still be used for ground
     level play, but not see something on a normal table.
