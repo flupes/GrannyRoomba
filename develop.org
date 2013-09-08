@@ -22,7 +22,11 @@ adb usb
 http://developer.android.com/tools/help/adb.html#forwardports
 *** Processes and threads
 http://developer.android.com/guide/components/processes-and-threads.html
-* GrannyRoomba Workspace creation
+* GrannyRoomba Workspace creation (new)
+** IOIO
+   git clone https://github.com/ytai/ioio.git
+
+* GrannyRoomba Workspace creation (old)
 ** Download the v3.3 (for OTG) of the  IOIO Software from:
    https://github.com/ytai/ioio/wiki/Downloads
    - Unpack under /Users/Shared/pkgs/App-IOIO330
@@ -39,8 +43,52 @@ http://developer.android.com/guide/components/processes-and-threads.html
    - From git: https://github.com/zeromq/jeromq.git
    - Import from Maven to Eclipse
 * IOIO
+** Using on PC and Android
+IOIO provides 2 projects libraries:
+  - IOIOLibPC, to build project targeted to PC (Mac)
+  - IOIOLibAndroid, to build projects targeted to Android
+Theses two projects share common code that is part of the IOIOLib
+directory. However the dependency is kind of reversed: for example the
+IOIOLib (supposedly generic code), relies on ioio.lib.spi.Log which is
+defined in the target projects!
+
+This is working fine for single projects built for a specific target (PC
+or Android). But it breaks down if you want to build a project (let say
+"common") that relies on the IOIO API, and that you want to use this
+project in other projects targeted to either PC or Android: it is not
+possible to have "common" just depend on the IOIO API wihtout pulling the
+target platform specific code!
+#+BEGIN_SRC ditaa
+Desired:
+--------
+         Prog_PC     App_Android              
+            |             |
+    +-------+---+     +---+------+
+    |       |   |     |   |      |
+IOIO_LibPC  |  CommonLib  |  IOIO_LibAndroid
+            |             |
+            +----+--------+
+                 |
+              IOIO_API
+
+Workaround:
+-----------
+     Prog_PC            App_Android              
+        |                    |
+        |                    |
+    CommonLib <- - - - - CommonLib_Android (separate project sharing
+        |       linked       |              the same source tree but
+        |      ressource     |              with different settings)
+    IOIO_LibPC           IOIO_LibAndroid
+#+END_SRC
 ** Running IOIO connected to an Android Virtual Device
-https://github.com/ytai/ioio/wiki/IOIO-Bridge
+   https://github.com/ytai/ioio/wiki/IOIO-Bridge
+** Setup to run on the AVD
+#+BEGIN_SRC bash
+adb forward tcp:6666 tcp:3333
+adb forward tcp:7777 tcp:4444
+/Users/Shared/pkgs/IOIOBridge/ioiobridge /dev/tty.usbmodem1411
+#+END_SRC
 * JeroMq for PC under Eclipse
   - Checkout the repo (command line) from:
   https://github.com/zeromq/jeromq.git
@@ -49,7 +97,7 @@ https://github.com/ytai/ioio/wiki/IOIO-Bridge
 * JeroMq for Android under Eclipse
 *Only if not using the pre-package project under thirdparty*
 ** Get the source code for PC
-   git clone https://github.com/zeromq/jeromq.git 
+   git clone https://github.com/zeromq/jeromq.git
    - File -> Import -> Maven -> Existing Maven projects
    - Rename the project as jeromqLibPC
 ** Create a new Android Library
@@ -75,7 +123,7 @@ adb forward tcp:6666 tcp:8888
 * Creating the Eclipse projects required for GR
 ** slf4j
 *** Clone the git repo
-    https://github.com/qos-ch/slf4j.git 
+    https://github.com/qos-ch/slf4j.git
 *** Import the Maven projects into Eclipe:
     - need a list of required projects here
 *** Modify the slf4j-api.pom.xml to remoe the error
@@ -88,7 +136,7 @@ index 63a489c..49250ef 100644
          <artifactId>maven-antrun-plugin</artifactId>
          <executions>
 +            <ignore />
-+            <!-- 
++            <!--
            <execution>
              <phase>process-classes</phase>
              <goals>
@@ -128,7 +176,7 @@ index 1729d45..d68ae95 100644
 *** Import "Projects from Git" into Eclipse
     - a list here is needed
 *** Resolve the libraries path for IOIOBridge
-* ZeroMQ for Android 
+* ZeroMQ for Android
 *deprecated now that we use JeroMQ*
 http://www.zeromq.org/build:android
 #+BEGIN_SRC bash
@@ -179,4 +227,3 @@ copyright-header -n --license GPL3 --copyright-holder "Lorenzo Flueckiger"
 --copyright-year=2013 --copyright-software="GrannyRoomba"
 --copyright-software-description "Telepresence robot based on a Roomba
 and Android tablet" --add-path org.flupes.ljf.grannyroomba/src
-
