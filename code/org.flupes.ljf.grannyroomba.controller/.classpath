@@ -8,5 +8,8 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba.hw"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba.net"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/IoioLibAndroid"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
