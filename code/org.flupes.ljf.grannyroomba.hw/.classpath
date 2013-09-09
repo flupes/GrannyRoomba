@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/IOIOLibAndroid"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba"/>
-	<classpathentry kind="lib" path="/Users/Shared/apps/eclipse-juno-SR2-macosx-cocoa-x86_64/eclipse/plugins/org.slf4j.api_1.6.4.v20120130-2120.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/IoioLibAndroid"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
