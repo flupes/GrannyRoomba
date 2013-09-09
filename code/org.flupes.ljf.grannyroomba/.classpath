@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.jlf.grannyroomba.messages"/>
-	<classpathentry kind="lib" path="/Users/Shared/pkgs/share/java/protobuf-java-2.5.0.jar"/>
-	<classpathentry kind="lib" path="/Users/Shared/apps/eclipse-juno-SR2-macosx-cocoa-x86_64/eclipse/plugins/org.slf4j.api_1.6.4.v20120130-2120.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/Shared/apps/eclipse-juno-SR2-macosx-cocoa-x86_64/eclipse/plugins/org.slf4j.api_1.6.4.v20120130-2120.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jeromqLibAndroid"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
