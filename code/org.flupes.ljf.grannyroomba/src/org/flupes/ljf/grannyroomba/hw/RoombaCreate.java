@@ -176,6 +176,16 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 	private class TelemetryListening implements Runnable {
 
+		protected Deque<Integer> m_message;
+		protected byte[] m_buffer;
+		protected ByteArrayInputStream m_input;
+		
+		protected TelemetryListening() {
+			m_message = new ArrayDeque<Integer>();
+			m_buffer = new byte[telemetryMessageLength()];
+			m_input = new ByteArrayInputStream(m_buffer, 0, telemetryMessageLength()-1);
+		}
+		
 		private boolean checksumOk(Deque<Integer> q) {
 			// Note: the documentation is wrong: the checksum also
 			// includes the message header (19)
@@ -188,28 +198,41 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 		protected int processMessage(byte buffer[]) {
 			int processed = 0;
-			ByteArrayInputStream input = new ByteArrayInputStream(buffer, 0, telemetryMessageLength()-1);
-			int numBytes = ByteUtils.readByte(input);
+//			ByteArrayInputStream input = new ByteArrayInputStream(buffer, 0, telemetryMessageLength()-1);
+			m_input.reset();
+			int numBytes = ByteUtils.readByte(m_input);
+			if ( numBytes == 0 ) {
+				s_logger.trace("received empty telemetry message!");
+				// Note: This looks like an error, but I think it is Roomba's fault
+				// not a bug in this code (how presumptuous;-)
+				// Indeed, to get here we had to 1) receive a telemetry header and 
+				// 2) receive a correct checksum... Just nothing was sent in
+				// between!
+				return processed;
+			}
 			if ( numBytes != (numberOfSensorPackets()+sizeOfSensorsData()) ) {
 				s_logger.error("telemetry message does not have the expected length "
 						+numBytes+" vs. "+numberOfSensorPackets()+sizeOfSensorsData());
 				return -1;
 			}
 			for ( SensorPackets p : SensorPackets.values() ) {
-				int id = ByteUtils.readByte(input);
+				int id = ByteUtils.readByte(m_input);
 				if ( id != p.id ) {
 					s_logger.error("sensor packet id does not match "
 							+id+" vs. "+p.id);
 					return -1;
 				}
 				if ( DataType.BYTE == p.type ) {
-					m_telemetry.put(p, ByteUtils.readByte(input));
+					m_telemetry.put(p, ByteUtils.readByte(m_input));
+					processed += 1;
 				}
 				else if ( DataType.SIGNED_WORD == p.type ) {
-					m_telemetry.put(p, ByteUtils.readSignedWord(input));
+					m_telemetry.put(p, ByteUtils.readSignedWord(m_input));
+					processed += 1;
 				}
 				else if ( DataType.UNSIGNED_WORD == p.type ) {
-					m_telemetry.put(p, ByteUtils.readUnsignedWord(input));
+					m_telemetry.put(p, ByteUtils.readUnsignedWord(m_input));
+					processed += 1;
 				}
 				else {
 					s_logger.error("data type mismatch!");
@@ -227,7 +250,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			// Buffer to store the message as byte (it is one element too long)
 			byte[] buffer = new byte[telemetryMessageLength()];
 
-			try {
+//			try {
 				int bufferedBytes = m_input.available();
 				for ( int i=bufferedBytes; i>0; i--) {
 					dataByte = m_input.read();
@@ -276,10 +299,10 @@ public class RoombaCreate extends SerialIoioRoomba {
 						}
 					}
 				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 
 		}
 
