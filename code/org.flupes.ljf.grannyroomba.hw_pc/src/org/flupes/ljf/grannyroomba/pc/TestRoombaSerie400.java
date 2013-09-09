@@ -1,4 +1,4 @@
-package org.flupes.ljf.grannyroomba.pctests;
+package org.flupes.ljf.grannyroomba.pc;
 
 import java.io.BufferedReader;
 import java.io.IOException;

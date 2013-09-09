@@ -1,4 +1,4 @@
-package org.flupes.ljf.grannyroomba.pctests;
+package org.flupes.ljf.grannyroomba.pc;
 
 import java.awt.Window;
 import java.io.IOException;
@@ -68,7 +68,8 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				m_lastTime = System.currentTimeMillis();
 
 				m_roomba = new RoombaCreate(ioio_);
-				m_roomba.connect();
+//				m_roomba.connect();
+				m_roomba.connect(2, 1);
 
 				m_roomba.safeControl();
 				

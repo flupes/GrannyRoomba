@@ -146,7 +146,7 @@ public class KeyboardController {
 				else {
 					radius = 0x0001; 
 				}
-				velocity = (int)(MAX_VELOCITY*Math.abs(spin));
+				velocity = (int)(MAX_VELOCITY*Math.abs(spin)/2.5);
 			}
 		}
 		else {
