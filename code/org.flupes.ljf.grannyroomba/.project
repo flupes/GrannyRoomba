@@ -5,13 +5,26 @@
 	<projects>
 	</projects>
 	<buildSpec>
-	  <buildCommand>
-	    <name>org.eclipse.jdt.core.javabuilder</name>
-	    <arguments>
-	    </arguments>
-	  </buildCommand>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
-	  <nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>ioio_api</name>
+			<type>2</type>
+			<locationURI>IOIO_ROOT/software/IOIOLib/src/ioio/lib/api</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>IOIO_ROOT</name>
+			<value>file:/Volumes/ljfdev/git/ioio</value>
+		</variable>
+	</variableList>
 </projectDescription>
