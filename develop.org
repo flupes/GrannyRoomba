@@ -43,7 +43,7 @@ http://developer.android.com/guide/components/processes-and-threads.html
    - From git: https://github.com/zeromq/jeromq.git
    - Import from Maven to Eclipse
 * IOIO
-** Using on PC and Android
+** Using target projects for both PC and Android
 IOIO provides 2 projects libraries:
   - IOIOLibPC, to build project targeted to PC (Mac)
   - IOIOLibAndroid, to build projects targeted to Android
@@ -56,7 +56,7 @@ This is working fine for single projects built for a specific target (PC
 or Android). But it breaks down if you want to build a project (let say
 "common") that relies on the IOIO API, and that you want to use this
 project in other projects targeted to either PC or Android: it is not
-possible to have "common" just depend on the IOIO API wihtout pulling the
+possible to have "common" just depend on the IOIO API without pulling the
 target platform specific code!
 #+BEGIN_SRC ditaa
 Desired:
@@ -69,7 +69,8 @@ IOIO_LibPC  |  CommonLib  |  IOIO_LibAndroid
             |             |
             +----+--------+
                  |
-              IOIO_API
+              IOIO_API <=== This is not feasible due to the current
+                            architecture of the IOIO projects
 
 Workaround:
 -----------
@@ -95,7 +96,7 @@ adb forward tcp:7777 tcp:4444
   - Import the projects from the repo with Eclipse
   - Convert to plugin (right click menu)
 * JeroMq for Android under Eclipse
-*Only if not using the pre-package project under thirdparty*
+*Only if not using the pre-packaged project under thirdparty*
 ** Get the source code for PC
    git clone https://github.com/zeromq/jeromq.git
    - File -> Import -> Maven -> Existing Maven projects
