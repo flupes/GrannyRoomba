@@ -34,7 +34,7 @@
 	<variableList>
 		<variable>
 			<name>IOIO_ROOT</name>
-			<value>file:/Volumes/ljfdev/git/ioio</value>
+			<value>$%7BGR_PKGS_ROOT%7D/ioio</value>
 		</variable>
 	</variableList>
 </projectDescription>

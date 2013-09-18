@@ -24,7 +24,7 @@
 	<variableList>
 		<variable>
 			<name>JEROMQ_ROOT</name>
-			<value>file:/Volumes/ljfdev/git/jeromq</value>
+			<value>$%7BGR_PKGS_ROOT%7D/jeromq</value>
 		</variable>
 	</variableList>
 </projectDescription>
