@@ -1,22 +1,22 @@
-package org.flupes.zplatformandroidtests;
+package org.flupe.zplatformandroidtests;
+
+import org.slf4j.LoggerFactory;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
-import org.slf4j.LoggerFactory;
-
 public class MainActivity extends Activity {
 
-    protected static org.slf4j.Logger s_logger = LoggerFactory.getLogger("grannyroomba");
+	protected static org.slf4j.Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        s_logger.trace("this is a trace message");
-        s_logger.debug("this is a debug message");
-        s_logger.info("this is an info message");
-        s_logger.error("this is an error message");
+	    s_logger.trace("this is a trace message");
+	    s_logger.debug("this is a debug message");
+	    s_logger.info("this is an info message");
+	    s_logger.error("this is an error message");
 		setContentView(R.layout.activity_main);
 	}
 
