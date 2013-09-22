@@ -1,30 +1,59 @@
-* Android Platform
-** ADT
-http://developer.android.com/sdk/installing/bundle.html
-** NDK
-http://developer.android.com/tools/sdk/ndk/index.html
-** APIs Levels
-http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
-** Direct Links
-*** API Guide
-http://developer.android.com/guide/components/index.html
-*** Virtual device port forwarding
-** Connect to Android Device over TCP
-http://stackoverflow.com/questions/2604727/how-can-i-connect-to-android-with-adb-over-tcp
-#+BEGIN_SRC
-# connect device with USB
-adb tcpip 5555
-# disconnect usb
-adb connect 172.16.0.39:5555
-# to go back to usb mode
-adb usb
+* Eclipse setup
+** Download and install Eclipse Standard (4.3)
+   http://www.eclipse.org/downloads/
+** Download and install the Android SDK
+   http://developer.android.com/sdk/installing/index.html
+** Install the Android Eclipse plugin
+   http://developer.android.com/sdk/installing/installing-adt.html
+** Install the Apache Logging plugin
+   - Add the Orbit Repository
+   http://download.eclipse.org/tools/orbit/downloads/
+   - Install "Apache Jakarta log4j Plug-in"
+#+BEGIN_COMMENT 
+*this method is not satisfactory and is now replaced by getting slf4j from git*
+Install logback and slf4j from from the qos.ch repository
+http://logback.qos.ch/p2/
+Note: I could not get the version of logback from Orbit to work, so the
+process below is replaced by the above qos...
+  Add the Orbit repository
+  http://download.eclipse.org/tools/orbit/downloads/
+  Install from Orbit:
+    - SLF4J API
+    - Logback Core
+    - Logback Classic
+#+END_COMMENT
+* Install GrannyRoomba dependencies
+#+BEGIN_SRC bash
+# IOIO
+cd /Users/Shared/git
+git clone https://github.com/ytai/ioio.git
+cd ioio
+git checkout tags/App-IOIO0330
+# JeroMq
+cd ..
+git clone https://github.com/zeromq/jeromq.git
+# SLF4j
+cd ..
+git clone http://github.com/twwwt/slf4j.git
+cd slf4j
+git checkout 77a28b4 -b v_1.7.5
+export JAVA_HOME=`/usr/libexec/java_home`
+cd slf4j-api
+mvn install
+cd ../slf4j-log4j12
+mvn install
+cd ../slf4j-android
+SDK=/Users/Shared/pkgs/android-sdk-macosx_r22.2
+export PATH=${SDK}/tools:${SDK}/platform-tools:${PATH}
+export ANDROID_HOME=${SDK}
 #+END_SRC
-http://developer.android.com/tools/help/adb.html#forwardports
-*** Processes and threads
-http://developer.android.com/guide/components/processes-and-threads.html
 * GrannyRoomba Workspace creation (new)
-** IOIO
-   git clone https://github.com/ytai/ioio.git
+** Define path to dependencies
+   Eclipse -> Preferences
+   General -> Workspace -> Linked Resources
+   New Path Variable
+   GR_PKGS_ROOT : /Users/Shared/git
+** Import the project dependencies
 
 * GrannyRoomba Workspace creation (old)
 ** Download the v3.3 (for OTG) of the  IOIO Software from:
@@ -42,6 +71,29 @@ http://developer.android.com/guide/components/processes-and-threads.html
 ** JeroMQ for PC
    - From git: https://github.com/zeromq/jeromq.git
    - Import from Maven to Eclipse
+* Android Platform
+** ADT
+http://developer.android.com/sdk/installing/bundle.html
+** NDK
+http://developer.android.com/tools/sdk/ndk/index.html
+** APIs Levels
+http://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+** Direct Links
+*** API Guide
+    http://developer.android.com/guide/components/index.html
+** Connect to Android Device over TCP
+http://stackoverflow.com/questions/2604727/how-can-i-connect-to-android-with-adb-over-tcp
+#+BEGIN_SRC
+# connect device with USB
+adb tcpip 5555
+# disconnect usb
+adb connect 172.16.0.39:5555
+# to go back to usb mode
+adb usb
+#+END_SRC
+http://developer.android.com/tools/help/adb.html#forwardports
+*** Processes and threads
+http://developer.android.com/guide/components/processes-and-threads.html
 * IOIO
 ** Using target projects for both PC and Android
 IOIO provides 2 projects libraries:
