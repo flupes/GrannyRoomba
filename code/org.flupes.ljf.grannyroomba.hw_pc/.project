@@ -20,5 +20,21 @@
 			<type>2</type>
 			<location>/Volumes/ljfdev/robotics/GrannyRoomba/code/org.flupes.ljf.grannyroomba.hw/src</location>
 		</link>
+		<link>
+			<name>libs/org.apache.log4j_1.2.15.v201012070815.jar</name>
+			<type>1</type>
+			<locationURI>ECLIPSE_HOME/plugins/org.apache.log4j_1.2.15.v201012070815.jar</locationURI>
+		</link>
+		<link>
+			<name>libs/slf4j-log4j12-1.7.5.jar</name>
+			<type>1</type>
+			<locationURI>SLF4J_ROOT/slf4j-log4j12/target/slf4j-log4j12-1.7.5.jar</locationURI>
+		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>SLF4J_ROOT</name>
+			<value>$%7BGR_PKGS_ROOT%7D/slf4j</value>
+		</variable>
+	</variableList>
 </projectDescription>

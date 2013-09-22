@@ -2,9 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src_hw"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="/Users/Shared/apps/eclipse-juno-SR2-macosx-cocoa-x86_64/eclipse/plugins/org.apache.log4j_1.2.15.v201012070815.jar"/>
+	<classpathentry kind="lib" path="libs/org.apache.log4j_1.2.15.v201012070815.jar"/>
+	<classpathentry kind="lib" path="libs/slf4j-log4j12-1.7.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/IoioLibPC"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba"/>
-	<classpathentry kind="lib" path="/Users/Shared/apps/eclipse-juno-SR2-macosx-cocoa-x86_64/eclipse/plugins/org.apache.log4j_1.2.15.v201012070815.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
