@@ -1,4 +1,4 @@
-package org.flupes.grannyroomba.test.zmqpc.helloclient;
+package org.flupes.grannyroomba.test.zmqpc;
 
 //  Directly copied from the zmq guide
 //

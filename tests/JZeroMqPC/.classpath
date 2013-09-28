@@ -2,10 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/Shared/pkgs/share/java/zmq.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/Shared/pkgs/lib"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/jeromq_notests"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba.net"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba"/>
+	<classpathentry kind="lib" path="libs/slf4j-simple-1.7.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
