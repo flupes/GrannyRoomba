@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class LocomotorClient extends Client implements ILocomotor {
+public class LocomotorClient extends ZmqClient implements ILocomotor {
 
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
 import org.flupes.ljf.grannyroomba.SimpleService;
 import org.zeromq.ZMQ;
 
-public abstract class Server extends SimpleService {
+public abstract class ZmqServer extends SimpleService {
 
 	protected int m_port;
 	protected String m_url;
@@ -34,12 +34,12 @@ public abstract class Server extends SimpleService {
 		}
 	}
 
-	public Server(int port) {
+	public ZmqServer(int port) {
 		super(10);		// wait 10ms between successive loop
 		init(port);
 	}
 
-	public Server(int port, int msdelay) {
+	public ZmqServer(int port, int msdelay) {
 		super(msdelay);
 		init(port);
 	}

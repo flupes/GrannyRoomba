@@ -12,7 +12,7 @@ import org.zeromq.ZMQException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class ServoServer extends Server {
+public class ServoServer extends ZmqServer {
 
 	protected IServo m_servo;
 

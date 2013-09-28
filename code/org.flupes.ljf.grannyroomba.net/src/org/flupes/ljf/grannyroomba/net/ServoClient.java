@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class ServoClient extends Client implements IServo {
+public class ServoClient extends ZmqClient implements IServo {
 
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 

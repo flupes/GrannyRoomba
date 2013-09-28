@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeromq.ZMQ;
 
-public class Client {
+public class ZmqClient {
 
 	protected String m_server;
 	protected int m_port;
@@ -15,7 +15,7 @@ public class Client {
 	
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 	
-	public Client(String server, int port) {
+	public ZmqClient(String server, int port) {
 		m_server = server;
 		m_port = port;
 		m_url = "tcp://"+m_server+":"+Integer.toString(m_port);

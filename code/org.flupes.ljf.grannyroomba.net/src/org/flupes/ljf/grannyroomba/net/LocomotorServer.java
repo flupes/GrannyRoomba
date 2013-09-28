@@ -14,7 +14,7 @@ import org.zeromq.ZMQException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class LocomotorServer extends Server {
+public class LocomotorServer extends ZmqServer {
 
 	protected final ILocomotor m_locomotor;
 
