@@ -52,7 +52,8 @@ public abstract class SimpleService implements Runnable {
 	/** Create a SimpleService with the default waiting period
 	 */
 	public SimpleService() {
-		launch(DEFAULT_PERIOD);
+		m_msDelay = DEFAULT_PERIOD;
+		launch();
 	}
 
 	/**
@@ -61,15 +62,15 @@ public abstract class SimpleService implements Runnable {
 	 * 					sleep between two successive loop call
 	 */
 	public SimpleService(int msdelay) {
-		launch(msdelay);
+		m_msDelay = msdelay;
+		launch();
 	}
 
-	private synchronized void launch(int msdelay) {
+	private synchronized void launch() {
 		if ( s_executor == null ) {
 			s_executor = Executors.newCachedThreadPool();
 		}
 		s_logger.debug("Starting SimpleService Thread");
-		m_msDelay = msdelay;
 		m_thread = s_executor.submit(this);
 		s_serviceThreads.add(m_thread);
 		m_state = State.RUNNING;
@@ -112,6 +113,9 @@ public abstract class SimpleService implements Runnable {
 	 * this call, but in a waiting state.
 	 */
 	public synchronized void start() {
+		if ( m_state == State.STOPPED ) {
+			launch();
+		}
 		// Simply call notify... However,
 		// because the start method is synchronized, 
 		// it grabs the object monitor first, which 
