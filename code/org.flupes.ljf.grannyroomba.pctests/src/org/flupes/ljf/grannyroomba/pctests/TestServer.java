@@ -5,14 +5,14 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.TTCCLayout;
-import org.flupes.ljf.grannyroomba.net.Server;
+import org.flupes.ljf.grannyroomba.net.ZmqServer;
 
 public class TestServer {
 
 	private static Logger s_logger = Logger.getLogger("grannyroomba");
-	private Server m_server;
+	private ZmqServer m_server;
 	
-	class SimpleServer extends Server {
+	class SimpleServer extends ZmqServer {
 
 		private int m_counter;
 		
@@ -34,9 +34,9 @@ public class TestServer {
 		m_server = new SimpleServer(8888);
 		s_logger.info("starting server");
 		m_server.start();
-		s_logger.info("sleeping for 6s");
+		s_logger.info("sleeping for 4s");
 		try {
-			Thread.sleep(6000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -51,6 +51,7 @@ public class TestServer {
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		logger.addAppender(appender);
 		new TestServer();
+		s_logger.info("done.");
 	}
 
 }

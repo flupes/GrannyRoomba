@@ -38,21 +38,34 @@ public class TestSimpleService {
 			return 0;
 		}
 
+		public void printStatus() {
+			System.out.println("HelloService ["+ m_name + "] is " 
+					+ (isThreadRunning()?"running":"termintated"));
+		}
 	}
 
 	TestSimpleService() {
-		SimpleService a = new HelloService("pomme", 1);
+		HelloService a = new HelloService("pomme", 1);
 		SimpleService b = new HelloService("poire", 2);
 		SimpleService c = new HelloService("prune", 1);
 		try {
 			a.start();
 			Thread.sleep(3000);
+			a.printStatus();
 			b.start();
 			c.start();
 			Thread.sleep(3000);
+			a.printStatus();
 			c.cancel();
-			Thread.sleep(6000);
-			SimpleService.terminateAll();
+			Thread.sleep(3000);
+			a.printStatus();
+			a.cancel();
+			b.cancel();
+			a.printStatus();
+			Thread.sleep(100);
+			c.start();
+			Thread.sleep(2000);
+			c.cancel();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}	
@@ -65,6 +78,10 @@ public class TestSimpleService {
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		logger.addAppender(appender);
 		new TestSimpleService();
+		// shutdown is not necessary because the SimpleService
+		// static executor will auto destroy when no more threads are 
+		// running
+		// SimpleService.shutdown();
 	}
 
 }
