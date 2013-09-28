@@ -26,8 +26,8 @@ public abstract class Server extends SimpleService {
 				s_logger.debug("terminating the context");
 				m_context.term();
 				// TODO how can we return the errno? (removed from the jeromq api)
-//				s_logger.debug("ServerStop now returns errno");
-//				return ZError.errno();
+				//				s_logger.debug("ServerStop now returns errno");
+				//				return ZError.errno();
 				return 0;
 			}
 			return null;
@@ -43,14 +43,14 @@ public abstract class Server extends SimpleService {
 		super(msdelay);
 		init(port);
 	}
-	
+
 	private void init(int port) {
 		m_port = port;
 		m_url = "tcp://*:"+Integer.toString(m_port);
 		m_active = false;
 		m_cmdid = port << 16;
 	}
-	
+
 	public boolean isActive() {
 		return m_active;
 	}
@@ -83,15 +83,13 @@ public abstract class Server extends SimpleService {
 		m_socket = null;
 		m_context = null;
 		m_active = false;
-		s_logger.debug("Server running on ["+m_url+"] termintated.");
+		s_logger.debug("Server running on ["+m_url+"] terminated.");
 		return 0;
 	}
 
 	@Override
 	public synchronized void cancel() {
 		s_logger.debug("Terminating service running on ["+m_url+"]");
-		m_state = State.STOPPED;
-
 		// To stop the server that may be in a blocking receive state,
 		// we need to send "term" to the context, which in turn
 		// interrupt the recv.
@@ -99,12 +97,15 @@ public abstract class Server extends SimpleService {
 		// on the main thread: we launch the stop in a separate thread!
 		Future<Integer> future = s_executor.submit(new ServerStop());
 		try {
-			int result = future.get(1, TimeUnit.SECONDS);
-			if ( result > 0 ) {
+			Integer result = future.get(400, TimeUnit.MILLISECONDS);
+			if ( result == null ) {
+				s_logger.debug("ServerStop found no context to terminate!");
+			}
+			else if ( result > 0 ) {
 				s_logger.debug("ServerStop failed and returned: " + result);
 			}
 			else {
-				s_logger.debug("ServerStop returned without error");
+				s_logger.debug("ServerStop returned without error.");
 			}
 		} catch (InterruptedException e) {
 			s_logger.debug("ServerStop was interrupted");
@@ -114,9 +115,9 @@ public abstract class Server extends SimpleService {
 			e.printStackTrace();
 		} catch (TimeoutException e) {
 			s_logger.debug("Context was not terminated in the allocated time");
-//			e.printStackTrace();
+			//			e.printStackTrace();
 		}
-
+		super.cancel();
 	}
 
 }
