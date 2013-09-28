@@ -40,7 +40,7 @@ public class Client {
 		m_socket.close();
 		m_context.term();
 		m_connected = false;
-		s_logger.info("Client of [" + m_url + "disconnected.");
+		s_logger.info("Client of [" + m_url + "] disconnected.");
 	}
 	
 }
