@@ -9,8 +9,6 @@ import java.util.concurrent.TimeoutException;
 import org.flupes.ljf.grannyroomba.SimpleService;
 import org.zeromq.ZMQ;
 
-import zmq.ZError;
-
 public abstract class Server extends SimpleService {
 
 	protected int m_port;
@@ -23,11 +21,14 @@ public abstract class Server extends SimpleService {
 	private class ServerStop implements Callable<Integer> {
 		@Override
 		public Integer call() throws Exception {
-			s_logger.info("ServerStop called");
+			s_logger.debug("ServerStop called");
 			if ( m_context != null ) {
+				s_logger.debug("terminating the context");
 				m_context.term();
-				s_logger.info("ServerStop now returns errno");
-				return ZError.errno();
+				// TODO how can we return the errno? (removed from the jeromq api)
+//				s_logger.debug("ServerStop now returns errno");
+//				return ZError.errno();
+				return 0;
 			}
 			return null;
 		}
@@ -35,12 +36,21 @@ public abstract class Server extends SimpleService {
 
 	public Server(int port) {
 		super(10);		// wait 10ms between successive loop
+		init(port);
+	}
+
+	public Server(int port, int msdelay) {
+		super(msdelay);
+		init(port);
+	}
+	
+	private void init(int port) {
 		m_port = port;
 		m_url = "tcp://*:"+Integer.toString(m_port);
 		m_active = false;
 		m_cmdid = port << 16;
 	}
-
+	
 	public boolean isActive() {
 		return m_active;
 	}
@@ -52,40 +62,36 @@ public abstract class Server extends SimpleService {
 	@Override
 	public int init() {
 		if ( ! m_active ) {
-			s_logger.info("Creating ZMQ context...");
+			s_logger.debug("Creating ZMQ context...");
 			m_context = ZMQ.context(1);
-			s_logger.info("Creating ZMQ socket...");
+			s_logger.debug("Creating ZMQ socket...");
 			m_socket = m_context.socket(ZMQ.REP);
-			s_logger.info("Binding socket to port...");
+			s_logger.debug("Binding socket to port...");
 			m_socket.bind (m_url);
-			s_logger.info("Started server on ["+m_url+"]");
+			s_logger.debug("Started server on ["+m_url+"]");
 		}
 		return 0;
 	}
 
 	@Override
 	public int fini() {
-		s_logger.info("entering Server.fini");
-//		m_socket.close();
-//		m_context.term();
+		s_logger.debug("entering Server.fini");
 		if ( m_socket != null ) {
+			s_logger.debug("closing the socket");
 			m_socket.close();
 		}
 		m_socket = null;
 		m_context = null;
 		m_active = false;
-		s_logger.info("Server running on ["+m_url+"] termintated.");
+		s_logger.debug("Server running on ["+m_url+"] termintated.");
 		return 0;
 	}
 
 	@Override
 	public synchronized void cancel() {
-		s_logger.info("Terminating service running on ["+m_url+"]");
+		s_logger.debug("Terminating service running on ["+m_url+"]");
 		m_state = State.STOPPED;
 
-//		interrupt();
-//		s_logger.info("interrupt returned.");
-		
 		// To stop the server that may be in a blocking receive state,
 		// we need to send "term" to the context, which in turn
 		// interrupt the recv.
@@ -95,19 +101,19 @@ public abstract class Server extends SimpleService {
 		try {
 			int result = future.get(1, TimeUnit.SECONDS);
 			if ( result > 0 ) {
-				s_logger.info("ServerStop failed and returned: " + result);
+				s_logger.debug("ServerStop failed and returned: " + result);
 			}
 			else {
-				s_logger.info("ServerStop returned without error");
+				s_logger.debug("ServerStop returned without error");
 			}
 		} catch (InterruptedException e) {
-			s_logger.info("ServerStop was interrupted");
+			s_logger.debug("ServerStop was interrupted");
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			s_logger.info("Something went wrong with ServerStop execution");
+			s_logger.debug("Something went wrong with ServerStop execution");
 			e.printStackTrace();
 		} catch (TimeoutException e) {
-			s_logger.info("Context was not terminated in the allocated time");
+			s_logger.debug("Context was not terminated in the allocated time");
 //			e.printStackTrace();
 		}
 
