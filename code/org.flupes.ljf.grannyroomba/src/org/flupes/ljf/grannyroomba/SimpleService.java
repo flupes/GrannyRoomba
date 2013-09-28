@@ -33,22 +33,58 @@ import org.slf4j.LoggerFactory;
  * It is also possible to stop all the SimpleService by calling
  * the static method terminateAll                          
  */
-public abstract class SimpleService implements Runnable {
-
-	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
+public abstract class SimpleService {
 
 	public enum State {
 		RUNNING, STARTED, STOPPED
 	}
-
-	protected volatile State m_state;
-	protected Future<?> m_thread;
-	protected int m_msDelay;
-
 	public static int DEFAULT_PERIOD = 10;
-	protected static ExecutorService s_executor;
-	private static List< Future<?> > s_serviceThreads = new ArrayList< Future<?> >();
 
+	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
+	protected static ExecutorService s_executor;
+
+	private volatile State m_state;
+	private int m_msDelay;
+	private Future<?> m_task;
+	private Runnable m_thread;
+	private static List< Future<?> > s_serviceThreads = new ArrayList< Future<?> >();
+	
+	private class ServiceThread implements Runnable {
+		ServiceThread() {
+			s_logger.debug("Creating ServiceThread");
+		}
+		
+		@Override
+		public void run() {
+			try {
+				// Wait for the client to call "start"
+				synchronized(this) {
+					s_logger.debug("SimpleService wating to be started");
+					if ( m_state != State.STARTED  ) {
+						wait();
+					}
+					// Perform initialization
+					s_logger.debug("SimpleService calling init code");
+					init();
+				}
+				
+				// Start looping
+				s_logger.debug("SimpleService starting looping");
+				while ( m_state != State.STOPPED ) {
+					TimeUnit.MILLISECONDS.sleep(m_msDelay);
+					if ( m_state == State.STARTED ) loop();
+				}
+
+			} catch (InterruptedException e1) {
+				s_logger.debug("SimpleService was interrupted");
+				// thread was interrupted...
+			}
+			// Cleanup
+			s_logger.debug("SimpleService calling fini code");
+			fini();
+		} 
+	}
+	
 	/** Create a SimpleService with the default waiting period
 	 */
 	public SimpleService() {
@@ -71,40 +107,12 @@ public abstract class SimpleService implements Runnable {
 			s_executor = Executors.newCachedThreadPool();
 		}
 		s_logger.debug("Starting SimpleService Thread");
-		m_thread = s_executor.submit(this);
-		s_serviceThreads.add(m_thread);
+		m_thread = new ServiceThread();
+		m_task = s_executor.submit(m_thread);
+		s_serviceThreads.add(m_task);
 		m_state = State.RUNNING;
 	}
 
-	@Override
-	public void run() {
-		try {
-			// Wait for the client to call "start"
-			synchronized(this) {
-				s_logger.debug("SimpleService wating to be started");
-				if ( m_state != State.STARTED  ) {
-					wait();
-				}
-				// Perform initialization
-				s_logger.debug("SimpleService calling init code");
-				init();
-			}
-			
-			// Start looping
-			s_logger.debug("SimpleService starting looping");
-			while ( m_state != State.STOPPED ) {
-				TimeUnit.MILLISECONDS.sleep(m_msDelay);
-				if ( m_state == State.STARTED ) loop();
-			}
-
-		} catch (InterruptedException e1) {
-			s_logger.debug("SimpleService was interrupted");
-			// thread was interrupted...
-		}
-		// Cleanup
-		s_logger.debug("SimpleService calling fini code");
-		fini();
-	} 
 
 	/**
 	 * Notify the thread that was initialized to start:
@@ -121,7 +129,9 @@ public abstract class SimpleService implements Runnable {
 		// it grabs the object monitor first, which 
 		// is required to notify a thread.
 		s_logger.debug("starting the service");
-		notify();
+		synchronized(m_thread) {
+			m_thread.notify();
+		}
 		m_state = State.STARTED;
 	}
 
@@ -133,10 +143,10 @@ public abstract class SimpleService implements Runnable {
 	public synchronized void cancel() {
 		s_logger.debug("terminating the service");
 		m_state = State.STOPPED;
-		m_thread.cancel(true);
-		if ( m_thread.isDone() ) {
+		m_task.cancel(true);
+		if ( m_task.isDone() ) {
 			s_logger.debug("service thread is terminated");
-			s_serviceThreads.remove(m_thread);
+			s_serviceThreads.remove(m_task);
 			if ( s_serviceThreads.isEmpty() ) {
 				s_logger.debug("no more services, killing the executor...");
 				s_executor.shutdown();
@@ -153,7 +163,7 @@ public abstract class SimpleService implements Runnable {
 	}
 	
 	public boolean isThreadRunning() {
-		return !m_thread.isDone();
+		return !m_task.isDone();
 	}
 
 	/**
