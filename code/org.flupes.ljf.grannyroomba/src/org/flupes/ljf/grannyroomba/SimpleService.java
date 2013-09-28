@@ -1,7 +1,11 @@
 package org.flupes.ljf.grannyroomba;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +33,8 @@ import org.slf4j.LoggerFactory;
  * It is also possible to stop all the SimpleService by calling
  * the static method terminateAll                          
  */
-public abstract class SimpleService extends Thread {
+public abstract class SimpleService implements Runnable {
 
-	private static int DEFAULT_PERIOD = 10;
-
-//	protected static ExecutorService s_executor = Executors.newCachedThreadPool();
-	protected static ExecutorService s_executor = Executors.newFixedThreadPool(7);
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
 	public enum State {
@@ -42,7 +42,12 @@ public abstract class SimpleService extends Thread {
 	}
 
 	protected volatile State m_state;
+	protected Future<?> m_thread;
 	protected int m_msDelay;
+
+	public static int DEFAULT_PERIOD = 10;
+	protected static ExecutorService s_executor;
+	private static List< Future<?> > s_serviceThreads = new ArrayList< Future<?> >();
 
 	/** Create a SimpleService with the default waiting period
 	 */
@@ -60,9 +65,13 @@ public abstract class SimpleService extends Thread {
 	}
 
 	private synchronized void launch(int msdelay) {
-		s_logger.info("Starting SimpleService Thread");
+		if ( s_executor == null ) {
+			s_executor = Executors.newCachedThreadPool();
+		}
+		s_logger.debug("Starting SimpleService Thread");
 		m_msDelay = msdelay;
-		s_executor.execute(this);
+		m_thread = s_executor.submit(this);
+		s_serviceThreads.add(m_thread);
 		m_state = State.RUNNING;
 	}
 
@@ -71,28 +80,28 @@ public abstract class SimpleService extends Thread {
 		try {
 			// Wait for the client to call "start"
 			synchronized(this) {
-				s_logger.info("SimpleService wating to be started");
+				s_logger.debug("SimpleService wating to be started");
 				if ( m_state != State.STARTED  ) {
 					wait();
 				}
 				// Perform initialization
-				s_logger.info("SimpleService calling init code");
+				s_logger.debug("SimpleService calling init code");
 				init();
 			}
 			
 			// Start looping
-			s_logger.info("SimpleService starting looping");
+			s_logger.debug("SimpleService starting looping");
 			while ( m_state != State.STOPPED ) {
-				sleep(m_msDelay);
-				loop();
+				TimeUnit.MILLISECONDS.sleep(m_msDelay);
+				if ( m_state == State.STARTED ) loop();
 			}
 
 		} catch (InterruptedException e1) {
-			s_logger.info("SimpleService was interrupted");
+			s_logger.debug("SimpleService was interrupted");
 			// thread was interrupted...
 		}
 		// Cleanup
-		s_logger.info("SimpleService calling fini code");
+		s_logger.debug("SimpleService calling fini code");
 		fini();
 	} 
 
@@ -107,7 +116,7 @@ public abstract class SimpleService extends Thread {
 		// because the start method is synchronized, 
 		// it grabs the object monitor first, which 
 		// is required to notify a thread.
-		s_logger.info("starting the service");
+		s_logger.debug("starting the service");
 		notify();
 		m_state = State.STARTED;
 	}
@@ -118,23 +127,52 @@ public abstract class SimpleService extends Thread {
 	 * will be called, then the thread will stop.
 	 */
 	public synchronized void cancel() {
-		s_logger.info("terminating the service");
+		s_logger.debug("terminating the service");
 		m_state = State.STOPPED;
-		interrupt();
+		m_thread.cancel(true);
+		if ( m_thread.isDone() ) {
+			s_logger.debug("service thread is terminated");
+			s_serviceThreads.remove(m_thread);
+			if ( s_serviceThreads.isEmpty() ) {
+				s_logger.debug("no more services, killing the executor...");
+				s_executor.shutdown();
+				if ( s_executor.isShutdown() ) {
+					s_executor = null;
+				}
+			}
+		}
+		s_logger.debug("interrupt has been called on the service thread");
 	}
 
 	public synchronized boolean isLooping() {
 		return m_state==State.STARTED;
 	}
 	
-	/**
-	 * Notify all SimpleServices to cancel their threads.
-	 * @throws InterruptedException
-	 */
-	public static void terminateAll() throws InterruptedException {
-		s_executor.shutdownNow();
+	public boolean isThreadRunning() {
+		return !m_thread.isDone();
 	}
 
+	/**
+	 * Notify all SimpleServices to cancel their threads,
+	 * and frees the executor.
+	 * @return true if everything went smoothly
+	 */
+	public static boolean shutdown() {
+		s_logger.debug("shuting down all remaining services...");
+		List<Runnable> still_active = s_executor.shutdownNow();
+		if ( still_active.size() > 0 ) {
+			s_logger.warn("Executor still have active tasks!");
+		}
+		try {
+			s_executor.awaitTermination(200, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			s_logger.warn("Some services did not termintate in time!");
+			return false;
+		}
+		s_logger.debug("clean shutdown of all service :-)");
+		return true;
+	}
+	
 	public abstract void loop() throws InterruptedException;
 
 	public abstract int init();
