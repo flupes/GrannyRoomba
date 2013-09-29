@@ -23,11 +23,12 @@ public abstract class ZmqServer extends SimpleService {
 		public Integer call() throws Exception {
 			s_logger.debug("ServerStop called");
 			if ( m_context != null ) {
-				s_logger.debug("terminating the context");
+				s_logger.debug("ServerStop try to terminate the context");
 				m_context.term();
 				// TODO how can we return the errno? (removed from the jeromq api)
 				//				s_logger.debug("ServerStop now returns errno");
 				//				return ZError.errno();
+				s_logger.debug("ServerStop done");
 				return 0;
 			}
 			return null;
@@ -89,7 +90,15 @@ public abstract class ZmqServer extends SimpleService {
 
 	@Override
 	public synchronized void cancel() {
+		if ( !isThreadRunning() ) {
+			s_logger.warn("cannot cancel a non-running ZmqServer");
+			return;
+		}
 		s_logger.debug("Terminating service running on ["+m_url+"]");
+
+		// Indicate that the service loop should stop
+		m_state = State.STOPPED;
+
 		// To stop the server that may be in a blocking receive state,
 		// we need to send "term" to the context, which in turn
 		// interrupt the recv.
@@ -115,9 +124,13 @@ public abstract class ZmqServer extends SimpleService {
 			e.printStackTrace();
 		} catch (TimeoutException e) {
 			s_logger.debug("Context was not terminated in the allocated time");
-			//			e.printStackTrace();
 		}
+
+		// Take care of the proper SimpleService termination
 		super.cancel();
+		
+		s_logger.debug("ZmqServer is down");
 	}
+
 
 }

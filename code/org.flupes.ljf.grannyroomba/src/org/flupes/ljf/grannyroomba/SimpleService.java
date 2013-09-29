@@ -42,13 +42,13 @@ public abstract class SimpleService {
 
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 	protected static ExecutorService s_executor;
+	protected volatile State m_state;
+	protected int m_msDelay;
 
-	private volatile State m_state;
-	private int m_msDelay;
-	private Future<?> m_task;
 	private Runnable m_thread;
+	private Future<?> m_task;
 	private static List< Future<?> > s_serviceThreads = new ArrayList< Future<?> >();
-	
+
 	private class ServiceThread implements Runnable {
 		ServiceThread() {
 			s_logger.debug("Creating ServiceThread");
@@ -141,6 +141,10 @@ public abstract class SimpleService {
 	 * will be called, then the thread will stop.
 	 */
 	public synchronized void cancel() {
+//		if ( m_task.isDone() ) {
+//			s_logger.warn("cannot cancel a non-running SimpleService");
+//			return;
+//		}
 		s_logger.debug("terminating the service");
 		m_state = State.STOPPED;
 		m_task.cancel(true);
@@ -155,7 +159,7 @@ public abstract class SimpleService {
 				}
 			}
 		}
-		s_logger.debug("interrupt has been called on the service thread");
+		s_logger.debug("SimpleService has been canceled");
 	}
 
 	public synchronized boolean isLooping() {
