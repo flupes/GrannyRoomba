@@ -58,6 +58,8 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 	}
 
+	private final boolean debug_serial = false;
+
 	/*
 	 * Data requested:
 	 * (full groups 2 + 3 + first of group 1 and 5)
@@ -83,7 +85,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	 * 
 	 */
 	static private final int MAX_MSG_SIZE = 92;
-	
+
 	static private final int CMD_DEMO = 136;
 	static private final int CMD_STREAM = 148;
 	static private final int CMD_TOGGLESTREAM = 150;
@@ -92,7 +94,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	static private final int TELEM_MSG_HEADER = 19;
 
 	private Map<SensorPackets, Integer> m_telemetry;
-
+	private final int m_msgSize;
 	private ExecutorService m_exec;
 
 	/**
@@ -127,6 +129,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	public RoombaCreate(IOIO ioio) {
 		super(ioio);
 		m_telemetry = new EnumMap<SensorPackets, Integer>(SensorPackets.class);
+		m_msgSize = telemetryMessageLength();
 
 		s_logger.info("Opening communication with a Roomba Create");
 		s_logger.debug("Telemetry:"
@@ -180,7 +183,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		protected Deque<Integer> m_message;
 		protected byte[] m_buffer;
 		protected ByteArrayInputStream m_input;
-		
+
 		protected TelemetryListening() {
 			// Queue to store a message in construction
 			m_message = new ArrayDeque<Integer>(MAX_MSG_SIZE);
@@ -189,7 +192,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			// Stream on the byte buffer
 			m_input = new ByteArrayInputStream(m_buffer, 0, telemetryMessageLength());
 		}
-		
+
 		private boolean checksumOk(Deque<Integer> q) {
 			// Note: the documentation is wrong: the checksum also
 			// includes the message header (19)
@@ -251,7 +254,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 				int bufferedBytes = m_serialReceive.available();
 				for ( int i=bufferedBytes; i>0; i--) {
 					dataByte = m_serialReceive.read();
-//					s_logger.trace("got: " + dataByte);
+					//					s_logger.trace("got: " + dataByte);
 					if ( dataByte == -1 ) break;
 					if ( m_message.size() > MAX_MSG_SIZE ) {
 						s_logger.error("Something went wrong (msg growing too much!");
@@ -262,29 +265,34 @@ public class RoombaCreate extends SerialIoioRoomba {
 					}
 					else {
 						m_message.add(dataByte);
-						if ( m_message.size() == telemetryMessageLength()-1) {
-							if ( s_logger.isTraceEnabled() ) {
-								String str = new String("MSG: ");
-								for ( Iterator<Integer> it = m_message.iterator(); 
-										it.hasNext(); ) {
-									str += it.next() + ", ";
-								}
-								s_logger.trace(str);
-							}
+						if ( m_message.size() == m_msgSize-1) {
+//							if ( debug_serial ) {
+//								if ( s_logger.isTraceEnabled() ) {
+//									String str = new String("MSG: ");
+//									for ( Iterator<Integer> it = m_message.iterator(); 
+//											it.hasNext(); ) {
+//										str += it.next() + ", ";
+//									}
+//									s_logger.trace(str);
+//								}
+//							}
 							// we did not insert the header, hence the -1
 							if ( checksumOk(m_message) ) {
-								s_logger.trace("We have a new valid message!");
+								if ( debug_serial )
+									s_logger.trace("We have a new valid message!");
 								// Copy to a byte buffer
+								/*
 								int b=0;
 								for ( Iterator<Integer> it = m_message.iterator(); 
 										it.hasNext(); b++) {
 									m_buffer[b] = it.next().byteValue();
 								}
 								processMessage();
+								 */
 								msgComplete=true;
 							}
 							else {
-								s_logger.trace("Not the right message header...");
+								//								s_logger.trace("Not the right message header...");
 								// this was not a real header, drop
 								// the bytes until the next potential start
 								Integer b;
@@ -318,7 +326,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 				else {
 					readSerial();
 					// Sleep a little bit (less than 15ms ?)
-					delay(5);
+					delay(1);
 				}
 			}
 			s_logger.info("Exiting Telemetry Thread.");

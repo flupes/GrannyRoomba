@@ -77,6 +77,7 @@ public class GrannyRoombaService extends IOIOService {
 		if (intent != null && intent.getAction() != null && intent.getAction().equals("stop")) {
 			// User clicked the notification. Need to stop the service.
 			nm.cancel(0);
+//			stopForeground(false);
 			stopSelf();
 		}
 		else {
@@ -94,6 +95,8 @@ public class GrannyRoombaService extends IOIOService {
 			.build();
 
 			nm.notify(0, notification);
+			// remove nm stuff to enable this
+//			startForeground(3141, notification);
 		}
 	}
 
