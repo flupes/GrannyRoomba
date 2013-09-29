@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>SLF4J_ROOT</name>
+			<value>$%7BGR_PKGS_ROOT%7D/slf4j</value>
+		</variable>
+	</variableList>
 </projectDescription>

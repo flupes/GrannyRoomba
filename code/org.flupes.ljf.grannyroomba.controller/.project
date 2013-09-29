@@ -32,9 +32,19 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>libs/protobuf-java-2.5.0.jar</name>
+			<type>1</type>
+			<location>/Users/Shared/pkgs/share/java/protobuf-java-2.5.0.jar</location>
+		</link>
+		<link>
 			<name>libs/slf4j-android-1.7.2.jar</name>
 			<type>1</type>
 			<locationURI>SLF4J_ROOT/slf4j-android/target/slf4j-android-1.7.2.jar</locationURI>
+		</link>
+		<link>
+			<name>libs/slf4j-api-1.7.5.jar</name>
+			<type>1</type>
+			<locationURI>SLF4J_ROOT/slf4j-api/target/slf4j-api-1.7.5.jar</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
