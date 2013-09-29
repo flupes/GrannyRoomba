@@ -34,12 +34,13 @@
    application. Some critical features also need to be implemented to
    avoid breaking the Roomba: bump detection (and position drive to backup)
 ** Work items
+*** TODO Implement position drive
 *** TODO Implement safe guarded locomotion (using bumpers)
 *** TODO Refine the start/stop of the system and lifecyle of the GrannyRoomba servive
-*** TODO Implement position drive
 * Iteration 3: clean up the system and document
 * Iteration 4: add some features
 ** Goal
 ** Work items
 *** TODO Implement a joystick controller
 *** TODO Create a broker service to allow bi-directional communication between to hosts, each between firewalls
+    
