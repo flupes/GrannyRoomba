@@ -46,6 +46,7 @@ cd ../slf4j-android
 SDK=/Users/Shared/pkgs/android-sdk-macosx_r22.2
 export PATH=${SDK}/tools:${SDK}/platform-tools:${PATH}
 export ANDROID_HOME=${SDK}
+mvn install
 #+END_SRC
 * GrannyRoomba Workspace creation (new)
 ** Define path to dependencies
@@ -94,6 +95,11 @@ adb usb
 http://developer.android.com/tools/help/adb.html#forwardports
 *** Processes and threads
 http://developer.android.com/guide/components/processes-and-threads.html
+** When things do not work!
+*** Some classes are not resolved
+    - Make sure that all the code is compiled with Java 1.6 (some DeX
+      errors shoud show up in the console if not)
+    - Make sure that all the dependent projects are also exported
 * IOIO
 ** Using target projects for both PC and Android
 IOIO provides 2 projects libraries:
