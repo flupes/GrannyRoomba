@@ -71,8 +71,13 @@ public abstract class SimpleService {
 				// Start looping
 				s_logger.debug("SimpleService starting looping");
 				while ( m_state != State.STOPPED ) {
+					s_logger.warn("loop sleep");
 					TimeUnit.MILLISECONDS.sleep(m_msDelay);
-					if ( m_state == State.STARTED ) loop();
+					if ( m_state == State.STARTED ) {
+						s_logger.warn("call loop");
+						loop();
+					}
+					s_logger.warn("next loop. state = " + m_state);
 				}
 
 			} catch (InterruptedException e1) {
@@ -141,10 +146,6 @@ public abstract class SimpleService {
 	 * will be called, then the thread will stop.
 	 */
 	public synchronized void cancel() {
-//		if ( m_task.isDone() ) {
-//			s_logger.warn("cannot cancel a non-running SimpleService");
-//			return;
-//		}
 		s_logger.debug("terminating the service");
 		m_state = State.STOPPED;
 		m_task.cancel(true);
@@ -162,7 +163,7 @@ public abstract class SimpleService {
 		s_logger.debug("SimpleService has been canceled");
 	}
 
-	public synchronized boolean isLooping() {
+	public boolean isLooping() {
 		return m_state==State.STARTED;
 	}
 	
