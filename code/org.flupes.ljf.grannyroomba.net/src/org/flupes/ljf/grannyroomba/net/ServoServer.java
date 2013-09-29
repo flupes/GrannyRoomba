@@ -76,7 +76,7 @@ public class ServoServer extends ZmqServer {
 			//				s_logger.info("loop received an exception different from EAGAIN -> stop now!");
 			//			}
 			if ( zmq.ZError.ETERM == e.getErrorCode() ) {
-				s_logger.info("Received ETERM exception while waiting for command");
+				s_logger.info("ServoServer received ETERM exception while waiting for command");
 				// Mark the service has stopped in case of the ETERM was not issued
 				// internally by cancel, but by another process
 				//				m_state = State.STOPPED;
@@ -90,11 +90,8 @@ public class ServoServer extends ZmqServer {
 			s_logger.warn("Could not decode SingleAxisCmd message properly!");
 			s_logger.warn("  -> ignore silently for now!");
 		}
-		if ( cmd != null ) {
-			// is_Alive may have changed while in the blocking recv
-		}
-		else {
-			s_logger.info("server was not looping anymore -> this should be correct!");
+		if ( cmd == null ) {
+			s_logger.debug("servo server was interrupted before receiving a command");
 		}
 	}
 

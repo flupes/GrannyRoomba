@@ -5,10 +5,6 @@ import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status;
 import org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg;
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd;
-import org.flupes.ljf.grannyroomba.messages.MotorConfigProto.MotorConfig;
-import org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg;
-import org.flupes.ljf.grannyroomba.messages.MotorStateProto.MotorState;
-import org.flupes.ljf.grannyroomba.messages.SingleAxisProto.SingleAxisCmd;
 
 import org.zeromq.ZMQException;
 
@@ -55,7 +51,7 @@ public class LocomotorServer extends ZmqServer {
 			//				s_logger.info("loop received an exception different from EAGAIN -> stop now!");
 			//			}
 			if ( zmq.ZError.ETERM == e.getErrorCode() ) {
-				s_logger.info("Received ETERM exception while waiting for command");
+				s_logger.info("LocomotorServer received ETERM exception while waiting for command");
 				// Mark the service has stopped in case of the ETERM was not issued
 				// internally by cancel, but by another process
 				//				m_state = State.STOPPED;
@@ -69,11 +65,8 @@ public class LocomotorServer extends ZmqServer {
 			s_logger.warn("Could not decode LocomotionCmd message properly!");
 			s_logger.warn("  -> ignore silently for now!");
 		}
-		if ( cmd != null ) {
-			// is_Alive may have changed while in the blocking recv
-		}
-		else {
-			s_logger.info("server was not looping anymore -> this should be correct!");
+		if ( cmd == null ) {
+			s_logger.debug("locomotor server was interrupted before receiving a command");
 		}
 	}
 
