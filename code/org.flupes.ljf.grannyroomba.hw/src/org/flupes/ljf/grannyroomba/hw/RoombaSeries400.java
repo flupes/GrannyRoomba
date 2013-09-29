@@ -47,8 +47,8 @@ public class RoombaSeries400 extends SerialIoioRoomba {
 					+ "\n    TX pin = " + txspec.pin + " (" + txspec.mode +")");
 			m_uart = m_ioio.openUart(rxspec, txspec,
 					BAUD_RATE, Uart.Parity.NONE, Uart.StopBits.ONE);
-			m_input = m_uart.getInputStream();
-			m_output = m_uart.getOutputStream();
+			m_serialReceive = m_uart.getInputStream();
+			m_serialTransmit = m_uart.getOutputStream();
 
 			s_logger.info("Send START to Roomba");
 			writeByte( CMD_START );

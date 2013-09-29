@@ -48,8 +48,8 @@ public abstract class SerialIoioRoomba {
 	protected byte[] m_buffer = new byte[128];
 
 	protected DigitalOutput m_deviceDetect; 
-	protected InputStream m_input;
-	protected OutputStream m_output;
+	protected InputStream m_serialReceive;
+	protected OutputStream m_serialTransmit;
 
 	public enum CtrlModes { DISCONNECTED, PASSIVE, CONTROL, FULL };
 	protected CtrlModes m_mode;
@@ -75,8 +75,8 @@ public abstract class SerialIoioRoomba {
 					+ "\n    TX pin = " + txspec.pin + " (" + txspec.mode +")");
 			m_uart = m_ioio.openUart(rxspec, txspec,
 					BAUD_RATE, Uart.Parity.NONE, Uart.StopBits.ONE);
-			m_input = m_uart.getInputStream();
-			m_output = m_uart.getOutputStream();
+			m_serialReceive = m_uart.getInputStream();
+			m_serialTransmit = m_uart.getOutputStream();
 
 			s_logger.info("Send START to Roomba");
 			writeByte( CMD_START );
@@ -132,7 +132,7 @@ public abstract class SerialIoioRoomba {
 	protected void writeByte(int b) 
 			throws ConnectionLostException {
 		try {
-			m_output.write( b );
+			m_serialTransmit.write( b );
 		} catch (IOException e) {
 			throw new ConnectionLostException(e);
 		}
@@ -146,7 +146,7 @@ public abstract class SerialIoioRoomba {
 			// is equivalent
 			m_buffer[0] = (byte) (s >> 8);
 			m_buffer[1] = (byte) (s & 0xFF);
-			m_output.write(m_buffer, 0, 2);
+			m_serialTransmit.write(m_buffer, 0, 2);
 		} catch (IOException e) {
 			throw new ConnectionLostException(e);
 		}
@@ -155,7 +155,7 @@ public abstract class SerialIoioRoomba {
 	protected int readByte() throws ConnectionLostException {
 		int b = 0;
 		try {
-			b = m_input.read();
+			b = m_serialReceive.read();
 		} catch (IOException e) {
 			throw new ConnectionLostException(e);
 		}
@@ -165,8 +165,8 @@ public abstract class SerialIoioRoomba {
 	protected int readUnsignedWord() throws ConnectionLostException {
 		int u = 0;
 		try {
-			int high = m_input.read(); 
-			int low = m_input.read(); 
+			int high = m_serialReceive.read(); 
+			int low = m_serialReceive.read(); 
 			u = (high << 8) | low;
 		} catch (IOException e) {
 			throw new ConnectionLostException(e);
@@ -177,8 +177,8 @@ public abstract class SerialIoioRoomba {
 	protected int readSignedWord() throws ConnectionLostException {
 		int s = 0;
 		try {
-			int high = m_input.read(); 
-			int low = m_input.read(); 
+			int high = m_serialReceive.read(); 
+			int low = m_serialReceive.read(); 
 			s = (high << 8) | low;
 			if ( s > 0x7FFF) {
 				s -= 0x10000;

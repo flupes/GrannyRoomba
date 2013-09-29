@@ -82,7 +82,8 @@ public class RoombaCreate extends SerialIoioRoomba {
 	 * Sensors Values: 5 + 10 -> total=48
 	 * 
 	 */
-
+	static private final int MAX_MSG_SIZE = 92;
+	
 	static private final int CMD_DEMO = 136;
 	static private final int CMD_STREAM = 148;
 	static private final int CMD_TOGGLESTREAM = 150;
@@ -181,9 +182,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 		protected ByteArrayInputStream m_input;
 		
 		protected TelemetryListening() {
-			m_message = new ArrayDeque<Integer>();
+			// Queue to store a message in construction
+			m_message = new ArrayDeque<Integer>(MAX_MSG_SIZE);
+			// Byte buffer equivalent of the message
 			m_buffer = new byte[telemetryMessageLength()];
-			m_input = new ByteArrayInputStream(m_buffer, 0, telemetryMessageLength()-1);
+			// Stream on the byte buffer
+			m_input = new ByteArrayInputStream(m_buffer, 0, telemetryMessageLength());
 		}
 		
 		private boolean checksumOk(Deque<Integer> q) {
@@ -196,9 +200,8 @@ public class RoombaCreate extends SerialIoioRoomba {
 			return ( (checksum & 0xFF) == 0); 
 		}
 
-		protected int processMessage(byte buffer[]) {
+		protected int processMessage() {
 			int processed = 0;
-//			ByteArrayInputStream input = new ByteArrayInputStream(buffer, 0, telemetryMessageLength()-1);
 			m_input.reset();
 			int numBytes = ByteUtils.readByte(m_input);
 			if ( numBytes == 0 ) {
@@ -241,49 +244,43 @@ public class RoombaCreate extends SerialIoioRoomba {
 			return processed;
 		}
 
-		protected void readBuffer() {
-
+		protected void readSerial() {
 			int dataByte;
 			boolean msgComplete = true;
-			// Queue to store a message in construction
-			Deque<Integer> message = new ArrayDeque<Integer>();
-			// Buffer to store the message as byte (it is one element too long)
-			byte[] buffer = new byte[telemetryMessageLength()];
-
-//			try {
-				int bufferedBytes = m_input.available();
+			try {
+				int bufferedBytes = m_serialReceive.available();
 				for ( int i=bufferedBytes; i>0; i--) {
-					dataByte = m_input.read();
-					s_logger.trace("got: " + dataByte);
+					dataByte = m_serialReceive.read();
+//					s_logger.trace("got: " + dataByte);
 					if ( dataByte == -1 ) break;
-					if ( message.size() > 128 ) {
+					if ( m_message.size() > MAX_MSG_SIZE ) {
 						s_logger.error("Something went wrong (msg growing too much!");
 					}
 					if ( (dataByte == TELEM_MSG_HEADER) && msgComplete ) {
-						message.clear();
+						m_message.clear();
 						msgComplete = false;
 					}
 					else {
-						message.add(dataByte);
-						if ( message.size() == telemetryMessageLength()-1) {
+						m_message.add(dataByte);
+						if ( m_message.size() == telemetryMessageLength()-1) {
 							if ( s_logger.isTraceEnabled() ) {
 								String str = new String("MSG: ");
-								for ( Iterator<Integer> it = message.iterator(); 
+								for ( Iterator<Integer> it = m_message.iterator(); 
 										it.hasNext(); ) {
 									str += it.next() + ", ";
 								}
 								s_logger.trace(str);
 							}
 							// we did not insert the header, hence the -1
-							if ( checksumOk(message) ) {
+							if ( checksumOk(m_message) ) {
 								s_logger.trace("We have a new valid message!");
 								// Copy to a byte buffer
 								int b=0;
-								for ( Iterator<Integer> it = message.iterator(); 
+								for ( Iterator<Integer> it = m_message.iterator(); 
 										it.hasNext(); b++) {
-									buffer[b] = it.next().byteValue();
+									m_buffer[b] = it.next().byteValue();
 								}
-								processMessage(buffer);
+								processMessage();
 								msgComplete=true;
 							}
 							else {
@@ -292,17 +289,17 @@ public class RoombaCreate extends SerialIoioRoomba {
 								// the bytes until the next potential start
 								Integer b;
 								do {
-									b = message.pollFirst();
+									b = m_message.pollFirst();
 									if ( b == null ) break;
 								} while ( (b != TELEM_MSG_HEADER) ); 
 							}
 						}
 					}
 				}
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 		}
 
@@ -311,7 +308,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			s_logger.info("Telemetry Thread Started");
 
 			while ( !m_exec.isShutdown() ) {
-				if ( m_input == null ) {
+				if ( m_serialReceive == null ) {
 					// Telemetry thread is started at construction,
 					// however serial connection is not available
 					// until "connect" is called... In this case,
@@ -319,7 +316,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 					delay(10);
 				}
 				else {
-					readBuffer();
+					readSerial();
 					// Sleep a little bit (less than 15ms ?)
 					delay(5);
 				}
