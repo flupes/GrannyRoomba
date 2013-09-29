@@ -62,10 +62,10 @@ public class GrannyRoombaService extends IOIOService {
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();	// IOIO things
 		s_logger.info("GrannyRoombaService.onDestroy");
 		m_servoService.cancel();
 		m_locoService.cancel();
+		super.onDestroy();	// IOIO things
 	}
 
 	@Override
@@ -117,17 +117,17 @@ public class GrannyRoombaService extends IOIOService {
 					m_servoImpl = new IoioServo(10, ioio_, 1500, 2000, -180, 180);
 					m_servoService = new ServoServer(3333, m_servoImpl);
 					m_servoService.start();
-					s_logger.warn("IOIO looper started the ServoService");
+					s_logger.info("IOIO looper started the ServoService");
 					
 					RoombaCreate roomba = new RoombaCreate(ioio_);
 					roomba.connect(2, 1);
 					roomba.safeControl();
-					roomba.startTelemetry();
+//					roomba.startTelemetry();
 
 					m_locoImpl = new IoioRoombaLocomotor(roomba);
 					m_locoService = new LocomotorServer(4444, m_locoImpl);
 					m_locoService.start();
-					s_logger.warn("IOIO looper starte the LocomotorService");
+					s_logger.info("IOIO looper starte the LocomotorService");
 				}
 			}
 
