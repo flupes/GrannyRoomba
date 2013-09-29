@@ -14,7 +14,7 @@ import android.os.IBinder;
 public class HelloSimpleService extends Service {
 
 	private ZmqServer m_server;
-	
+
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba.test");
 
 	class SimpleServer extends ZmqServer {
@@ -26,8 +26,9 @@ public class HelloSimpleService extends Service {
 
 		@Override
 		public void loop() throws InterruptedException {
+			byte[] reply = null;
 			try {
-				byte[] reply = m_socket.recv(0);
+				reply = m_socket.recv(0);
 			}
 			catch (ZMQException e) {
 				if ( ZError.ETERM == e.getErrorCode() ) {
@@ -37,17 +38,17 @@ public class HelloSimpleService extends Service {
 					s_logger.info("recv exection unexpected: " + e.getErrorCode());
 				}
 			}
-            if ( isLooping() ) { // is_Alive may have changed while in the blocking recv
-            	s_logger.info("Received Hello");
-            	String request = "World" ;
-            	m_socket.send(request.getBytes (), 0);
-            }
-            s_logger.warn("out of loop now!");
+			if ( reply != null ) {
+				if ( isLooping() ) {
+					s_logger.info("Received Hello");
+					String request = "World" ;
+					m_socket.send(request.getBytes (), 0);
+				}
+			}
 		}
-
 	}
 
-	
+
 	@Override
 	public void onCreate() {
 		s_logger.info("entering HelloSimpleService.onCreate");
