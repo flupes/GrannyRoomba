@@ -17,7 +17,7 @@ import org.flupes.ljf.grannyroomba.hw.IoioRoombaLocomotor;
 import org.flupes.ljf.grannyroomba.hw.IoioServo;
 import org.flupes.ljf.grannyroomba.hw.RoombaCreate;
 import org.flupes.ljf.grannyroomba.net.LocomotorServer;
-import org.flupes.ljf.grannyroomba.net.Server;
+import org.flupes.ljf.grannyroomba.net.ZmqServer;
 import org.flupes.ljf.grannyroomba.net.ServoServer;
 
 import ioio.lib.api.DigitalOutput;
@@ -31,10 +31,10 @@ public class GrannyRoombaService extends IOIOService {
 
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
-	protected Server m_servoService;
+	protected ZmqServer m_servoService;
 	protected IServo m_servoImpl;
 	
-	protected Server m_locoService;
+	protected ZmqServer m_locoService;
 	protected ILocomotor m_locoImpl;
 
 	protected static final boolean m_debug = false;
@@ -65,6 +65,7 @@ public class GrannyRoombaService extends IOIOService {
 		super.onDestroy();	// IOIO things
 		s_logger.info("GrannyRoombaService.onDestroy");
 		m_servoService.cancel();
+		m_locoService.cancel();
 	}
 
 	@Override
