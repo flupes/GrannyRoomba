@@ -7,7 +7,6 @@ import org.flupes.ljf.grannyroomba.messages.MotorConfigProto.MotorConfig;
 import org.flupes.ljf.grannyroomba.messages.MotorProto.MotorMsg;
 import org.flupes.ljf.grannyroomba.messages.MotorStateProto.MotorState;
 import org.flupes.ljf.grannyroomba.messages.SingleAxisProto.SingleAxisCmd;
-
 import org.zeromq.ZMQException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -76,7 +75,7 @@ public class ServoServer extends ZmqServer {
 			//				s_logger.info("loop received an exception different from EAGAIN -> stop now!");
 			//			}
 			if ( zmq.ZError.ETERM == e.getErrorCode() ) {
-				s_logger.info("ServoServer received ETERM exception while waiting for command");
+				s_logger.debug("ServoServer received ETERM exception while waiting for command");
 				// Mark the service has stopped in case of the ETERM was not issued
 				// internally by cancel, but by another process
 				//				m_state = State.STOPPED;
@@ -93,6 +92,13 @@ public class ServoServer extends ZmqServer {
 		if ( cmd == null ) {
 			s_logger.debug("servo server was interrupted before receiving a command");
 		}
+	}
+
+	@Override
+	public int fini() {
+		int ret = super.fini();
+		s_logger.info("ServoServer canceled");
+		return ret;
 	}
 
 }

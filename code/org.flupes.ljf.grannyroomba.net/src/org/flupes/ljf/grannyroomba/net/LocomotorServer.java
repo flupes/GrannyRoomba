@@ -51,7 +51,7 @@ public class LocomotorServer extends ZmqServer {
 			//				s_logger.info("loop received an exception different from EAGAIN -> stop now!");
 			//			}
 			if ( zmq.ZError.ETERM == e.getErrorCode() ) {
-				s_logger.info("LocomotorServer received ETERM exception while waiting for command");
+				s_logger.debug("LocomotorServer received ETERM exception while waiting for command");
 				// Mark the service has stopped in case of the ETERM was not issued
 				// internally by cancel, but by another process
 				//				m_state = State.STOPPED;
@@ -70,4 +70,10 @@ public class LocomotorServer extends ZmqServer {
 		}
 	}
 
+	@Override
+	public int fini() {
+		int ret = super.fini();
+		s_logger.info("LocomotorServer canceled");
+		return ret;
+	}
 }

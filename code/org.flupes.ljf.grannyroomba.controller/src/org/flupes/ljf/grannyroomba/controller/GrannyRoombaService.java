@@ -127,7 +127,7 @@ public class GrannyRoombaService extends IOIOService {
 					m_locoImpl = new IoioRoombaLocomotor(roomba);
 					m_locoService = new LocomotorServer(4444, m_locoImpl);
 					m_locoService.start();
-					s_logger.info("IOIO looper starte the LocomotorService");
+					s_logger.info("IOIO looper started the LocomotorService");
 				}
 			}
 

@@ -69,7 +69,7 @@ public abstract class SimpleService {
 				}
 				
 				// Start looping
-				s_logger.info("SimpleService starting looping");
+				s_logger.debug("SimpleService starting looping");
 				while ( m_state != State.STOPPED ) {
 					TimeUnit.MILLISECONDS.sleep(m_msDelay);
 					if ( m_state == State.STARTED ) {
@@ -157,7 +157,7 @@ public abstract class SimpleService {
 				}
 			}
 		}
-		s_logger.info("SimpleService has been canceled");
+		s_logger.debug("SimpleService has been canceled");
 	}
 
 	public boolean isLooping() {
