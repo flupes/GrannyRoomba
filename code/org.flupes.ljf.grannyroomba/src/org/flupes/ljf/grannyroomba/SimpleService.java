@@ -71,13 +71,10 @@ public abstract class SimpleService {
 				// Start looping
 				s_logger.debug("SimpleService starting looping");
 				while ( m_state != State.STOPPED ) {
-					s_logger.warn("loop sleep");
 					TimeUnit.MILLISECONDS.sleep(m_msDelay);
 					if ( m_state == State.STARTED ) {
-						s_logger.warn("call loop");
 						loop();
 					}
-					s_logger.warn("next loop. state = " + m_state);
 				}
 
 			} catch (InterruptedException e1) {
