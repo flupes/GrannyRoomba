@@ -2,10 +2,7 @@ package org.flupes.ljf.grannyroomba.hw;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
@@ -58,7 +55,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 	}
 
-	private final boolean debug_serial = false;
+	private final boolean debug_serial = true;
 
 	/*
 	 * Data requested:
@@ -138,7 +135,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 				+ "\n    total message length = " + telemetryMessageLength());
 
 		// Start a separate thread for telemetry listening
-		s_logger.info("Launching Telemetry Thread");
+		s_logger.trace("Launching Telemetry Thread");
 		m_exec = Executors.newSingleThreadExecutor();
 		TelemetryListening telem = new TelemetryListening();
 		m_exec.execute(telem);
@@ -180,29 +177,28 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 	private class TelemetryListening implements Runnable {
 
-		protected Deque<Integer> m_message;
 		protected byte[] m_buffer;
 		protected ByteArrayInputStream m_input;
+		protected int m_offset = 0;
+		protected boolean m_newMsg = false;
 
 		protected TelemetryListening() {
 			// Queue to store a message in construction
-			m_message = new ArrayDeque<Integer>(MAX_MSG_SIZE);
+			//			m_message = new ArrayDeque<Integer>(MAX_MSG_SIZE);
 			// Byte buffer equivalent of the message
-			m_buffer = new byte[telemetryMessageLength()];
+			m_buffer = new byte[m_msgSize];
 			// Stream on the byte buffer
-			m_input = new ByteArrayInputStream(m_buffer, 0, telemetryMessageLength());
+			m_input = new ByteArrayInputStream(m_buffer, 0, m_msgSize);
 		}
 
-		private boolean checksumOk(Deque<Integer> q) {
-			// Note: the documentation is wrong: the checksum also
-			// includes the message header (19)
+		private boolean validChecksum() {
 			byte checksum = TELEM_MSG_HEADER;
-			for ( Iterator<Integer> it = q.iterator(); it.hasNext(); ) {
-				checksum += it.next().byteValue();
+			for ( int i=0; i<m_msgSize; i++ ) {
+				checksum += m_buffer[i];
 			}
 			return ( (checksum & 0xFF) == 0); 
 		}
-
+		
 		protected int processMessage() {
 			int processed = 0;
 			m_input.reset();
@@ -248,62 +244,35 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 
 		protected void readSerial() {
-			int dataByte;
-			boolean msgComplete = true;
+			Integer dataByte;
 			try {
 				int bufferedBytes = m_serialReceive.available();
 				for ( int i=bufferedBytes; i>0; i--) {
 					dataByte = m_serialReceive.read();
-					//					s_logger.trace("got: " + dataByte);
-					if ( dataByte == -1 ) break;
-					if ( m_message.size() > MAX_MSG_SIZE ) {
-						s_logger.error("Something went wrong (msg growing too much!");
-					}
-					if ( (dataByte == TELEM_MSG_HEADER) && msgComplete ) {
-						m_message.clear();
-						msgComplete = false;
+					if ( dataByte == -1 ) break; // WTF ?
+					if ( m_newMsg ) {
+						m_buffer[m_offset] = dataByte.byteValue();
+						m_offset++;
 					}
 					else {
-						m_message.add(dataByte);
-						if ( m_message.size() == m_msgSize-1) {
-//							if ( debug_serial ) {
-//								if ( s_logger.isTraceEnabled() ) {
-//									String str = new String("MSG: ");
-//									for ( Iterator<Integer> it = m_message.iterator(); 
-//											it.hasNext(); ) {
-//										str += it.next() + ", ";
-//									}
-//									s_logger.trace(str);
-//								}
-//							}
-							// we did not insert the header, hence the -1
-							if ( checksumOk(m_message) ) {
-								if ( debug_serial )
-									s_logger.trace("We have a new valid message!");
-								// Copy to a byte buffer
-								/*
-								int b=0;
-								for ( Iterator<Integer> it = m_message.iterator(); 
-										it.hasNext(); b++) {
-									m_buffer[b] = it.next().byteValue();
-								}
-								processMessage();
-								 */
-								msgComplete=true;
-							}
-							else {
-								//								s_logger.trace("Not the right message header...");
-								// this was not a real header, drop
-								// the bytes until the next potential start
-								Integer b;
-								do {
-									b = m_message.pollFirst();
-									if ( b == null ) break;
-								} while ( (b != TELEM_MSG_HEADER) ); 
-							}
+						if ( dataByte == TELEM_MSG_HEADER ) {
+							m_newMsg = true;
+							m_offset = 0;
 						}
 					}
-				}
+					if ( m_offset == m_msgSize-1 ) {
+						boolean valid = validChecksum();
+						if ( valid ) {
+							// if ( debug_serial ) s_logger.trace("Valid message received.");
+							processMessage();
+						}
+						else {
+							if ( debug_serial ) s_logger.trace("Checksum error!");
+						}
+						m_offset = 0;
+						m_newMsg = false;
+					}
+				} // for all buffered bytes
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -321,12 +290,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 					// however serial connection is not available
 					// until "connect" is called... In this case,
 					// just wait and do not process anything!
-					delay(10);
+					delay(50);
 				}
 				else {
 					readSerial();
 					// Sleep a little bit (less than 15ms ?)
-					delay(1);
+					delay(5);
 				}
 			}
 			s_logger.info("Exiting Telemetry Thread.");
