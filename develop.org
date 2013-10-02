@@ -101,6 +101,7 @@ http://developer.android.com/guide/components/processes-and-threads.html
       errors shoud show up in the console if not)
     - Make sure that all the dependent projects are also exported
 * IOIO
+** [[https://github.com/ytai/ioio/wiki][IOIO Wiki]]
 ** Using target projects for both PC and Android
 IOIO provides 2 projects libraries:
   - IOIOLibPC, to build project targeted to PC (Mac)
