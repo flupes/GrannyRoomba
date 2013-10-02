@@ -48,7 +48,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 	private static boolean s_listen = false;
 
 	public static void main(String[] args) throws Exception {
-		s_logger.setLevel(Level.DEBUG);
+		s_logger.setLevel(Level.TRACE);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		s_logger.addAppender(appender);
 
@@ -79,6 +79,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 					m_input = m_uart.getInputStream();
 				}
 
+				
 				m_roomba.startTelemetry();
 				//				m_roomba.demo(4);
 

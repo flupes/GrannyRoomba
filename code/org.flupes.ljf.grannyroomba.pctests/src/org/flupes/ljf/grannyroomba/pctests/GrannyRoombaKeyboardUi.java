@@ -20,7 +20,7 @@ public class GrannyRoombaKeyboardUi {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
 
-	protected static final boolean m_debug = true;
+	protected static final boolean m_debug = false;
 	
 	public static void main(String[] args) {
 		Display display = new Display( );
