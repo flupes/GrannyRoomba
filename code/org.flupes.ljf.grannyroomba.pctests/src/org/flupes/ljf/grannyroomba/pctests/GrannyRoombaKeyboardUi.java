@@ -19,10 +19,44 @@ import org.flupes.ljf.grannyroomba.pctests.KeyboardController;
 public class GrannyRoombaKeyboardUi {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
+	
+	protected static final boolean m_debug = true;
 
-	protected static final boolean m_debug = false;
+	enum Mode {
+		LOCAL("local", "localhost", 6666, 7777),
+		PRIVATE("private", "172.16.0.39", 3333, 4444),
+		PUBLIC("public", "67.188.2.6", 3140, 3141);
+		
+		final String mode;
+		final String host;
+		final Integer servoPort;
+		final Integer locoPort;
+
+		Mode(String mode, String host, Integer servoPort, Integer locoPort) {
+			this.mode = mode;
+			this.host = host;
+			this.servoPort = servoPort;
+			this.locoPort = locoPort;
+		}
+		
+	};
 	
 	public static void main(String[] args) {
+
+		Mode connectMode = Mode.PRIVATE; 
+		String modeStr = System.getProperties().getProperty("connection");
+		if ( modeStr != null ) { // override default connection mode
+			if ( 0 == modeStr.compareToIgnoreCase(Mode.LOCAL.mode) ) {
+				connectMode = Mode.LOCAL;
+			}
+			else if ( 0 == modeStr.compareToIgnoreCase(Mode.PRIVATE.mode) ) {
+				connectMode = Mode.PRIVATE;
+			}
+			else if ( 0 == modeStr.compareToIgnoreCase(Mode.PUBLIC.mode) ) {
+				connectMode = Mode.PUBLIC;
+			}
+		}
+		
 		Display display = new Display( );
 
 		Shell shell = new Shell (display);
@@ -55,19 +89,10 @@ public class GrannyRoombaKeyboardUi {
 		s_logger.addAppender(appender);
 
 		// Create client and keyboard dispatcher
-		String host;
-		int servoPort;
-		int locoPort;
-		if ( m_debug ) {
-			host = "localhost";
-			servoPort = 6666;
-			locoPort = 7777;
-		}
-		else {
-			host = "172.16.0.39";
-			servoPort = 3333;
-			locoPort = 4444;
-		}
+		String host = connectMode.host;
+		int servoPort = connectMode.servoPort;
+		int locoPort = connectMode.locoPort;
+
 		ServoClient servoClient = new ServoClient(host, servoPort);
 		LocomotorClient locoClient = new LocomotorClient(host, locoPort);
 		
@@ -77,13 +102,15 @@ public class GrannyRoombaKeyboardUi {
 		locoClient.connect();
 
 		shell.pack ();
-		//	shell.setSize(300, 400);
 		shell.open ();
 
 		while (!shell.isDisposed ()) {
 			if (!display.readAndDispatch ()) display.sleep ();
 		}
 
+		locoClient.disconnect();
+		servoClient.disconnect();
+		
 		image.dispose ();
 		display.dispose ();
 	}
