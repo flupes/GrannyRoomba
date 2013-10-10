@@ -5,30 +5,54 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
+import org.flupes.ljf.grannyroomba.LocomotorStub;
 import org.flupes.ljf.grannyroomba.ServoStub;
+import org.flupes.ljf.grannyroomba.net.LocomotorServer;
 import org.flupes.ljf.grannyroomba.net.ServoServer;
 
 public class RobotStubServer {
 
-	public static void main(String[] args) {
+	private volatile boolean interrupted = false;
+	
+	public RobotStubServer() {
 		
 		Logger logger = Logger.getLogger("grannyroomba");
 		logger.setLevel(Level.TRACE);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		logger.addAppender(appender);
 
-		ServoStub servo = new ServoStub();
-		ServoServer service = new ServoServer(3333, servo);
-		service.start();
+		ServoStub servoStub = new ServoStub();
+		ServoServer servoService = new ServoServer(6666, servoStub);
+		servoService.start();
 		
-		while ( service.isActive() ) {
+		LocomotorStub locoStub = new LocomotorStub();
+		LocomotorServer locoService = new LocomotorServer(7777, locoStub);
+		locoService.start();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				System.out.println("process interrupted!");
+				interrupted = true;
+			}
+		});
+
+		
+		while ( ! interrupted ) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("interrupted while sleeping");
 			}
 		}
+		
+		locoService.cancel();
+		servoService.cancel();
+		
+	}
+	
+	public static void main(String[] args) {
+		new RobotStubServer();
 	}
 
 }
