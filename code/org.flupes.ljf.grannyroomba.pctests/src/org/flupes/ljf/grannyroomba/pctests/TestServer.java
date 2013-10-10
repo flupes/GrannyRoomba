@@ -7,6 +7,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.TTCCLayout;
 import org.flupes.ljf.grannyroomba.net.ZmqServer;
 
+// Run from shell (after exporting as runnable jar):
+// java -classpath test_zmq_server.jar -Dport="8888" -Ddelay="0" org/flupes/ljf/grannyroomba/pctests/TestServer
+
 public class TestServer {
 
 	private static Logger s_logger = Logger.getLogger("grannyroomba");
@@ -70,6 +73,7 @@ public class TestServer {
 				}
 				if ( 30 == loop ) {
 					System.out.println();
+					loop = 0;
 				}
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {

@@ -8,6 +8,8 @@ import org.apache.log4j.TTCCLayout;
 import org.flupes.ljf.grannyroomba.net.ZmqClient;
 import org.zeromq.ZMQException;
 
+// Run from shell (after exporting as runnable jar):
+// java -classpath test_zmq_client.jar -Drequests="100" -Dhost="172.16.0.23" -Dport="8888" org/flupes/ljf/grannyroomba/pctests/TestClient
 
 public class TestClient {
 
