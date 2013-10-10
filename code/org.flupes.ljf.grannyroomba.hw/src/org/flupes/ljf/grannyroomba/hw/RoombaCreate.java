@@ -2,6 +2,7 @@ package org.flupes.ljf.grannyroomba.hw;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,6 +56,11 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 	}
 
+	protected static final int CMD_SCRIPT = 152;
+	protected static final int CMD_PLAY_SCRIPT = 153;
+	protected static final int CMD_WAIT_DISTANCE = 156;
+	protected static final int CMD_WAIT_ANGLE = 157;
+
 	private final boolean debug_serial = true;
 
 	/*
@@ -93,6 +99,9 @@ public class RoombaCreate extends SerialIoioRoomba {
 	private Map<SensorPackets, Integer> m_telemetry;
 	private final int m_msgSize;
 	private ExecutorService m_exec;
+	private Runnable m_monitor;
+
+	private volatile boolean m_bumperPushed;
 
 	/**
 	 * Returns the number of different sensor packets requested
@@ -125,7 +134,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 	public RoombaCreate(IOIO ioio) {
 		super(ioio);
-		m_telemetry = new EnumMap<SensorPackets, Integer>(SensorPackets.class);
+
+		storeBackupScript();
+
+		EnumMap<SensorPackets, Integer> telemetry_store = new EnumMap<SensorPackets, Integer>(SensorPackets.class);
+		m_telemetry = Collections.synchronizedMap(telemetry_store);
+
 		m_msgSize = telemetryMessageLength();
 
 		s_logger.info("Opening communication with a Roomba Create");
@@ -136,9 +150,29 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 		// Start a separate thread for telemetry listening
 		s_logger.trace("Launching Telemetry Thread");
-		m_exec = Executors.newSingleThreadExecutor();
+		m_exec = Executors.newFixedThreadPool(2);
+		m_monitor = new MonitorSafety();
+		m_exec.execute(m_monitor);
 		TelemetryListening telem = new TelemetryListening();
 		m_exec.execute(telem);
+	}
+
+	protected void storeBackupScript() {
+		try {
+			writeByte( CMD_SCRIPT );
+			writeByte( 13 );
+			writeByte( CMD_DRIVE );
+			writeWord( -240 );
+			writeWord( 0x8000  );
+			writeByte( CMD_WAIT_DISTANCE );
+			writeWord( -12 );
+			writeByte( CMD_DRIVE );
+			writeWord( 0 );
+			writeWord( 0x8000  );
+			delay(CMD_WAIT_MS);
+		} catch (ConnectionLostException e) {
+			s_logger.warn("Could not write the backup script!");;
+		}
 	}
 
 	public void startTelemetry() throws ConnectionLostException {
@@ -164,14 +198,73 @@ public class RoombaCreate extends SerialIoioRoomba {
 		writeByte( d );
 	}
 
+	public void backup() throws ConnectionLostException {
+		// Script should already have been stored...
+		writeByte( CMD_PLAY_SCRIPT );
+		delay(CMD_WAIT_MS);
+	}
+
 	public void printRawTelemetry() {
-		if ( m_telemetry.size() > 0 ) {
-			for ( Entry<SensorPackets, Integer> e : m_telemetry.entrySet() ) {
-				System.out.println(e.getKey().name+" = "+e.getValue());
+		synchronized(m_telemetry) {
+			if ( m_telemetry.size() > 0 ) {
+				for ( Entry<SensorPackets, Integer> e : m_telemetry.entrySet() ) {
+					System.out.println(e.getKey().name+" = "+e.getValue());
+				}
+			}
+			else {
+				System.out.println("No telemetry has been received!");
 			}
 		}
-		else {
-			System.out.println("No telemetry has been received!");
+	}
+
+//	@Override
+//	public void drive(int velocity, int radius) throws ConnectionLostException {
+//		if ( m_bumperPushed ) {
+//			if ( velocity<0 && Math.abs(radius) > 0.1 ) {
+//				super.drive(velocity, radius);
+//			}
+//		}
+//		else {
+//			super.drive(velocity, radius);
+//		}
+//	}
+
+	private class MonitorSafety implements Runnable {
+
+		MonitorSafety() {
+			s_logger.info("MonitoSafety thread created");
+		}
+
+		@Override
+		public void run() {
+			try {
+				while ( !m_exec.isShutdown() ) {
+					// Block until triggered by the telemetry thread
+					synchronized(this) {
+						wait();
+					}
+					int bumps;
+					synchronized(m_telemetry) {
+						bumps = m_telemetry.get(SensorPackets.BUMPS);
+					}
+					if ( 0 != (bumps&(2+1)) ) {
+						try {
+							if ( !m_bumperPushed ) {
+								stop();
+								backup();
+								m_bumperPushed = true;
+							}
+						} catch (ConnectionLostException e) {
+							s_logger.warn("MonitorSafety failed to stop Roomba because the serial connection was lost");
+						}
+					}
+					else {
+						m_bumperPushed = false;
+					}
+				} // while executor is up
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -198,7 +291,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			}
 			return ( (checksum & 0xFF) == 0); 
 		}
-		
+
 		protected int processMessage() {
 			int processed = 0;
 			m_input.reset();
@@ -217,28 +310,34 @@ public class RoombaCreate extends SerialIoioRoomba {
 						+numBytes+" vs. "+numberOfSensorPackets()+sizeOfSensorsData());
 				return -1;
 			}
-			for ( SensorPackets p : SensorPackets.values() ) {
-				int id = ByteUtils.readByte(m_input);
-				if ( id != p.id ) {
-					s_logger.error("sensor packet id does not match "
-							+id+" vs. "+p.id);
-					return -1;
+
+			synchronized(m_telemetry) {
+				for ( SensorPackets p : SensorPackets.values() ) {
+					int id = ByteUtils.readByte(m_input);
+					if ( id != p.id ) {
+						s_logger.error("sensor packet id does not match "
+								+id+" vs. "+p.id);
+						return -1;
+					}
+					if ( DataType.BYTE == p.type ) {
+						m_telemetry.put(p, ByteUtils.readByte(m_input));
+						processed += 1;
+					}
+					else if ( DataType.SIGNED_WORD == p.type ) {
+						m_telemetry.put(p, ByteUtils.readSignedWord(m_input));
+						processed += 1;
+					}
+					else if ( DataType.UNSIGNED_WORD == p.type ) {
+						m_telemetry.put(p, ByteUtils.readUnsignedWord(m_input));
+						processed += 1;
+					}
+					else {
+						s_logger.error("data type mismatch!");
+					}
 				}
-				if ( DataType.BYTE == p.type ) {
-					m_telemetry.put(p, ByteUtils.readByte(m_input));
-					processed += 1;
-				}
-				else if ( DataType.SIGNED_WORD == p.type ) {
-					m_telemetry.put(p, ByteUtils.readSignedWord(m_input));
-					processed += 1;
-				}
-				else if ( DataType.UNSIGNED_WORD == p.type ) {
-					m_telemetry.put(p, ByteUtils.readUnsignedWord(m_input));
-					processed += 1;
-				}
-				else {
-					s_logger.error("data type mismatch!");
-				}
+			}
+			synchronized(m_monitor) {
+				m_monitor.notify();
 			}
 			return processed;
 		}
