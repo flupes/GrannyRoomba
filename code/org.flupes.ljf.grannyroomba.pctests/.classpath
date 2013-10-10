@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.flupes.ljf.grannyroomba.net"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.5.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jeromq_notests"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
