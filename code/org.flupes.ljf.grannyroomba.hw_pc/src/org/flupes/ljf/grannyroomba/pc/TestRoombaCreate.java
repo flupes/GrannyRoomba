@@ -181,7 +181,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 							else if ( spin < -SPIN_INCR/2 ) {
 								spin = -absSpin;
 							}
-							s_logger.trace("reset spin to :" + spin);
+							s_logger.trace("reset spin to: " + spin);
 						}
 						if ( newDrive ) {
 							changeDrive(speed, spin);
