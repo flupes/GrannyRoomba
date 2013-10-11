@@ -14,6 +14,8 @@ option java_outer_classname = "DriveVelocityProto";
  *   - straight line (curvature = 0)
  *   - arc circle
  *   - spin in place (curvature = 1000)
+ * Radius has been added for convenience. However the client and server
+ * need to chose which one they will rely on.
  */
 message DriveVelocityMsg {
 
@@ -29,7 +31,7 @@ message DriveVelocityMsg {
 
 	// Curvature of the drive (the curvature is defined as 1/radius)
 	//   - a curvature of 0 correspond to a straight line drive
-	//   - by convention, a curvature > 1000 (=1mm radius) will
+	//   - by convention, if |curvature| > 1000 (=1mm radius) will
 	//     generate a point turn
 	//   - a positive curvature correspond to a turn to the left
 	//   - a negative curvature correspond to a turn to the right
@@ -37,11 +39,24 @@ message DriveVelocityMsg {
 	//     to a straight drive (curvature=0 by default).
 	optional float curvature = 2 [ default = 0 ];
 
+	// Radius of the drive (only curvature OR radius should be specified)
+	//   - radius is a convenience argument that can replace the curvature
+	//     if it is preferred to have an singularity for straight lines
+	//	   (curvature shows a singularity for point turns).
+	//   - a positive radius correspond to a turn to the left
+	//   - a negative radius correspond to a turn to the right
+	//   - by convention, if |radius| > 1000, the drive will be considered
+	//     a straight drive (however this can be defined differently
+	//     if the client and server agree on a different convention)
+	//   - if the radius argument is omitted, the command is equivalent to a
+	//     straight drive (radius = 1000 by default).
+	optional float radius = 3 [ default = 1000 ];
+
 	// Optional time out in seconds.
 	// The command will expire after the given time and then the mobile
 	// base should normally stop (by convention).
 	// A time out of zero indicate that the command should never expire,
 	// it is the default behavior is the argument is omitted.
-	optional float timeout = 3 [ default = 0 ];
+	optional float timeout = 4 [ default = 0 ];
 
 }
