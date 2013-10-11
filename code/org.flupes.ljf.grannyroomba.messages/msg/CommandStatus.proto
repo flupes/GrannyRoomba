@@ -1,0 +1,31 @@
+syntax = "proto2";
+
+package grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "CommandStatusProto";
+
+message CommandStatus {
+
+	enum Status {
+		IDLE = 1;
+		BUSY = 2;
+		FAILED = 3;
+		COMPLETED = 5;
+		INTERRUPTED = 4;
+	}
+
+	required sfixed32 id = 1;
+
+	required Status status = 2;
+
+}
+
+message RequestStatus {
+	optional int32 component = 1;
+}
+
+message SystemState {
+	optional int32 state = 1;
+	repeated float values = 2;
+}
