@@ -2,9 +2,9 @@ package org.flupes.ljf.grannyroomba.hw;
 
 import ioio.lib.api.exception.ConnectionLostException;
 
-import org.flupes.ljf.grannyroomba.ILocomotor;
+import org.flupes.ljf.grannyroomba.IRoombaLocomotor;
 
-public class IoioRoombaLocomotor implements ILocomotor {
+public class IoioRoombaLocomotor implements IRoombaLocomotor {
 
 	RoombaCreate m_roomba;
 	
@@ -32,6 +32,26 @@ public class IoioRoombaLocomotor implements ILocomotor {
 			return -1;
 		}
 		return 0;
+	}
+
+	@Override
+	public int getOiMode() {
+		return m_roomba.getOiMode();
+	}
+
+	@Override
+	public int getBumps() {
+		return m_roomba.getBumps();
+	}
+
+	@Override
+	public int getVelocity() {
+		return m_roomba.getVelocity();
+	}
+
+	@Override
+	public int getRadius() {
+		return m_roomba.getRadius();
 	}
 
 }

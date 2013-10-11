@@ -1,22 +1,22 @@
 package org.flupes.ljf.grannyroomba.net;
 
-import org.flupes.ljf.grannyroomba.ILocomotor;
+import org.flupes.ljf.grannyroomba.IRoombaLocomotor;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status;
 import org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg;
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd;
-
+import org.flupes.ljf.grannyroomba.messages.RoombaStatusProto.RoombaStatus;
 import org.zeromq.ZMQException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
 public class LocomotorServer extends ZmqServer {
 
-	protected final ILocomotor m_locomotor;
+	protected final IRoombaLocomotor m_locomotor;
 
-	public LocomotorServer(int port, ILocomotor servo) {
+	public LocomotorServer(int port, IRoombaLocomotor loco) {
 		super(port);
-		m_locomotor = servo;
+		m_locomotor = loco;
 	}
 
 	@Override
@@ -24,24 +24,33 @@ public class LocomotorServer extends ZmqServer {
 		LocomotionCmd cmd = null;
 		try {
 			byte[] data = m_socket.recv();
-			CommandStatus.Builder builder = CommandStatus.newBuilder();
 			cmd = LocomotionCmd.parseFrom(data); 
 			m_cmdid += 1;
 			switch ( cmd.getCmd() ) {
 
 			case STOP:
 				m_locomotor.stop(cmd.getStop().getMode().getNumber());
-				builder.setId(m_cmdid).setStatus(Status.BUSY);
-				m_socket.send(builder.build().toByteArray());
+				CommandStatus.Builder builder1 = CommandStatus.newBuilder();
+				builder1.setId(m_cmdid).setStatus(Status.BUSY);
+				m_socket.send(builder1.build().toByteArray());
 				break;
 
 			case DRIVE_VELOCITY:
 				DriveVelocityMsg msg = cmd.getDriveVelocity();
 				m_locomotor.driveVelocity(msg.getSpeed(), msg.getCurvature(), msg.getTimeout());
-				builder.setId(m_cmdid).setStatus(Status.BUSY);
-				m_socket.send(builder.build().toByteArray());
+				CommandStatus.Builder builder2 = CommandStatus.newBuilder();
+				builder2.setId(m_cmdid).setStatus(Status.BUSY);
+				m_socket.send(builder2.build().toByteArray());
 				break;
 
+			case STATUS_REQUEST:
+				RoombaStatus.Builder builder3 = RoombaStatus.newBuilder();
+				builder3.setOimode(m_locomotor.getOiMode());
+				builder3.setBumps(m_locomotor.getBumps());
+				builder3.setVelocity(m_locomotor.getVelocity());
+				builder3.setRadius(m_locomotor.getRadius());
+				m_socket.send(builder3.build().toByteArray());
+				
 			default:
 				s_logger.warn("LocomotionCmd " + cmd.getCmd() + " not supported!");
 			} // switch cmd.getCmd

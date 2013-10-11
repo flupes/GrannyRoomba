@@ -9,9 +9,9 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
 
-import org.flupes.ljf.grannyroomba.ILocomotor;
+import org.flupes.ljf.grannyroomba.IRoombaLocomotor;
 import org.flupes.ljf.grannyroomba.IServo;
-import org.flupes.ljf.grannyroomba.LocomotorStub;
+import org.flupes.ljf.grannyroomba.RoombaLocomotorStub;
 import org.flupes.ljf.grannyroomba.ServoStub;
 import org.flupes.ljf.grannyroomba.hw.IoioRoombaLocomotor;
 import org.flupes.ljf.grannyroomba.hw.IoioServo;
@@ -35,7 +35,7 @@ public class GrannyRoombaService extends IOIOService {
 	protected IServo m_servoImpl;
 	
 	protected ZmqServer m_locoService;
-	protected ILocomotor m_locoImpl;
+	protected IRoombaLocomotor m_locoImpl;
 
 	protected static final boolean m_debug = false;
 
@@ -54,7 +54,7 @@ public class GrannyRoombaService extends IOIOService {
 			m_servoService = new ServoServer(3333, m_servoImpl);
 			m_servoService.start();
 			
-			m_locoImpl = new LocomotorStub();
+			m_locoImpl = new RoombaLocomotorStub();
 			m_locoService = new LocomotorServer(4444, m_locoImpl);
 			m_locoService.start();
 		}
@@ -125,7 +125,7 @@ public class GrannyRoombaService extends IOIOService {
 					RoombaCreate roomba = new RoombaCreate(ioio_);
 					roomba.connect(2, 1);
 					roomba.safeControl();
-//					roomba.startTelemetry();
+					roomba.startTelemetry();
 
 					m_locoImpl = new IoioRoombaLocomotor(roomba);
 					m_locoService = new LocomotorServer(4444, m_locoImpl);

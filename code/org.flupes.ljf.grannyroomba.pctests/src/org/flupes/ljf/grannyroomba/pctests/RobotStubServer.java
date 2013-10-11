@@ -5,7 +5,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
-import org.flupes.ljf.grannyroomba.LocomotorStub;
+import org.flupes.ljf.grannyroomba.RoombaLocomotorStub;
 import org.flupes.ljf.grannyroomba.ServoStub;
 import org.flupes.ljf.grannyroomba.net.LocomotorServer;
 import org.flupes.ljf.grannyroomba.net.ServoServer;
@@ -25,7 +25,7 @@ public class RobotStubServer {
 		ServoServer servoService = new ServoServer(6666, servoStub);
 		servoService.start();
 		
-		LocomotorStub locoStub = new LocomotorStub();
+		RoombaLocomotorStub locoStub = new RoombaLocomotorStub();
 		LocomotorServer locoService = new LocomotorServer(7777, locoStub);
 		locoService.start();
 		
