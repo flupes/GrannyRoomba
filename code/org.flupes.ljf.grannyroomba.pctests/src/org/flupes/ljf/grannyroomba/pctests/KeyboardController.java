@@ -1,10 +1,13 @@
 package org.flupes.ljf.grannyroomba.pctests;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyAdapter;
-import org.flupes.ljf.grannyroomba.net.LocomotorClient;
+import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
 
 public class KeyboardController {
@@ -18,16 +21,42 @@ public class KeyboardController {
 	private static final float TITL_INCR = 5.0f;
 
 	private ServoClient m_servoClient;
-	private LocomotorClient m_locoClient;
+	private RoombaLocomotorClient m_locoClient;
 
 	private Float m_tilt = null;
-	private float speed = 0;
-	private float prevSpeed = 0;
-	private float spin = 0;
+	private volatile float speed = 0;
+	private volatile float prevSpeed = 0;
+	private volatile float spin = 0;
 
-	public KeyboardController(ServoClient sclient, LocomotorClient lclient) {
+	private Timer m_timer;
+	
+	public KeyboardController(ServoClient sclient, RoombaLocomotorClient lclient) {
 		m_servoClient = sclient;
 		m_locoClient = lclient;
+		m_timer = new Timer();
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				synchronized(m_timer) {
+					m_locoClient.getStatus();
+				}
+				// Reset the speed and spin if the robot was stopped.
+				// otherwise just ignore the current velocity
+				// and radius, assuming that the robot would have
+				// always done what ask!
+//				s_logger.debug("Velocity="+m_locoClient.getVelocity()
+//						+" / Radius="+m_locoClient.getRadius());
+				if ( m_locoClient.getVelocity() == 0 ) {
+					speed = 0;
+					prevSpeed = 0;
+				}
+				if ( m_locoClient.getRadius() == 0x8000 ||
+						m_locoClient.getBumps() == 0x7FFF ) {
+					spin = 0;
+				}
+			}
+		};
+		m_timer.schedule(task, 20, 200);
 	}
 	
 	public KeyAdapter controller() {
@@ -169,13 +198,9 @@ public class KeyboardController {
 				}
 			}
 		}
-		m_locoClient.driveVelocity(velocity, radius, 1.0f);
-//		try {
-//			m_roomba.drive(velocity, radius);
-//		} catch (ConnectionLostException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		synchronized(m_timer) {
+			m_locoClient.driveVelocity(velocity, radius, 1.0f);
+		}
 	}
 
 }

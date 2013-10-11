@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.flupes.ljf.grannyroomba.net.LocomotorClient;
+import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
 import org.flupes.ljf.grannyroomba.pctests.KeyboardController;
 
@@ -94,7 +94,7 @@ public class GrannyRoombaKeyboardUi {
 		int locoPort = connectMode.locoPort;
 
 		ServoClient servoClient = new ServoClient(host, servoPort);
-		LocomotorClient locoClient = new LocomotorClient(host, locoPort);
+		RoombaLocomotorClient locoClient = new RoombaLocomotorClient(host, locoPort);
 		
 		KeyboardController kc = new KeyboardController(servoClient, locoClient);
 		shell.addKeyListener(kc.controller());
