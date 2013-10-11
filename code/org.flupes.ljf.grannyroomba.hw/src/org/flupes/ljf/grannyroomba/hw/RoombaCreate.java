@@ -31,12 +31,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 	/** Description of the telemetry to be requested */
 	enum SensorPackets {
 		BUMPS(7, DataType.BYTE, "Bumps and Wheel Drops"),
-		IR(17, DataType.BYTE, "IR Byte"),
-		BUTTONS(18, DataType.BYTE, "Buttons"),
-		CHARGING(21, DataType.BYTE, "Charging State"),
-		VOLTAGE(22, DataType.UNSIGNED_WORD, "Voltage"),
-		CURRENT(23, DataType.SIGNED_WORD, "Current"),
-		TEMPERATURE(24, DataType.BYTE, "Battery Temperature"),
+//		IR(17, DataType.BYTE, "IR Byte"),
+//		BUTTONS(18, DataType.BYTE, "Buttons"),
+//		CHARGING(21, DataType.BYTE, "Charging State"),
+//		VOLTAGE(22, DataType.UNSIGNED_WORD, "Voltage"),
+//		CURRENT(23, DataType.SIGNED_WORD, "Current"),
+//		TEMPERATURE(24, DataType.BYTE, "Battery Temperature"),
 		CHARGE(25, DataType.UNSIGNED_WORD, "Battery Charge"),
 		CAPACITY(26, DataType.UNSIGNED_WORD, "Battery Capcity"),
 		OIMODE(35, DataType.BYTE, "OI Mode"),
@@ -121,8 +121,6 @@ public class RoombaCreate extends SerialIoioRoomba {
 	protected Script m_backupScript;
 	protected Script m_waitSafeScript;
 	
-	private volatile boolean m_bumperPushed;
-
 	/**
 	 * Returns the number of different sensor packets requested
 	 */
@@ -182,7 +180,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		m_backupScript.addByte(CMD_FULL);
 		m_backupScript.addByte(CMD_DRIVE).addWord(-100).addWord(0x8000);
 		m_backupScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_BUMPER);
-		m_backupScript.addByte(CMD_WAIT_DISTANCE).addWord(-8);
+//		m_backupScript.addByte(CMD_WAIT_DISTANCE).addWord(-8);
 		m_backupScript.addByte(CMD_DRIVE).addWord(0).addWord(0x8000);
 		m_backupScript.addByte(CMD_SAFE);
 		m_backupScript.close();

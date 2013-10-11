@@ -48,6 +48,17 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 		return waitForReply();
 	}
 	
+	@Override
+	public int getStatus() {
+		if ( ! isConnected() ) {
+			s_logger.warn("LocomotorClient is not connected!");
+		}
+		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
+		builder.setCmd(Command.STATUS_REQUEST);
+		m_socket.send(builder.build().toByteArray());
+		return waitForReply();
+	}
+
 	protected int waitForReply() {
 		byte[] reply = m_socket.recv(0);
 		try {
@@ -59,4 +70,5 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 		}
 		return -1;
 	}
+
 }

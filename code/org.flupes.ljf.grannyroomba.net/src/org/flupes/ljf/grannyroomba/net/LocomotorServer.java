@@ -45,6 +45,7 @@ public class LocomotorServer extends ZmqServer {
 
 			case STATUS_REQUEST:
 				RoombaStatus.Builder builder3 = RoombaStatus.newBuilder();
+				m_locomotor.getStatus();
 				builder3.setOimode(m_locomotor.getOiMode());
 				builder3.setBumps(m_locomotor.getBumps());
 				builder3.setVelocity(m_locomotor.getVelocity());

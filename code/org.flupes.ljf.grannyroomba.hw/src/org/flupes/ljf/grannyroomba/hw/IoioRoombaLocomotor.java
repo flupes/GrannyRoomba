@@ -8,6 +8,11 @@ public class IoioRoombaLocomotor implements IRoombaLocomotor {
 
 	RoombaCreate m_roomba;
 	
+	int m_oiMode;
+	int m_bumps;
+	int m_velocity;
+	int m_radius;
+	
 	public IoioRoombaLocomotor(RoombaCreate roomba) {
 		m_roomba = roomba;
 	}
@@ -35,23 +40,32 @@ public class IoioRoombaLocomotor implements IRoombaLocomotor {
 	}
 
 	@Override
+	public int getStatus() {
+		m_oiMode = m_roomba.getOiMode();
+		m_bumps =  m_roomba.getBumps();
+		m_velocity = m_roomba.getVelocity();
+		m_radius = m_roomba.getRadius();
+		return 0;
+	}
+
+	@Override
 	public int getOiMode() {
-		return m_roomba.getOiMode();
+		return  m_oiMode;
 	}
 
 	@Override
 	public int getBumps() {
-		return m_roomba.getBumps();
+		return m_bumps;
 	}
 
 	@Override
 	public int getVelocity() {
-		return m_roomba.getVelocity();
+		return m_velocity;
 	}
 
 	@Override
 	public int getRadius() {
-		return m_roomba.getRadius();
+		return m_radius;
 	}
 
 }

@@ -6,4 +6,6 @@ public interface ILocomotor {
 
 		int driveVelocity(float speed, float curvature, float timeout);
 		
+		int getStatus();
+		
 }

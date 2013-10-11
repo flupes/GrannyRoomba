@@ -25,4 +25,9 @@ public class LocomotorStub implements ILocomotor {
 		return 0;
 	}
 
+	@Override
+	public int getStatus() {
+		return 0;
+	}
+
 }
