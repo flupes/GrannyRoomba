@@ -119,7 +119,7 @@ public abstract class SerialIoioRoomba {
 		s_logger.debug("Stop Drive");
 		drive(0, 0x8000);
 	}
-	
+
 	public void drive(int velocity, int radius)
 			throws ConnectionLostException {
 		s_logger.debug("drive("+velocity+", "+radius+")");
@@ -128,7 +128,7 @@ public abstract class SerialIoioRoomba {
 		writeWord( radius );
 		delay(CMD_WAIT_MS);
 	}
-	
+
 	protected void writeByte(int b) 
 			throws ConnectionLostException {
 		try {
@@ -150,6 +150,15 @@ public abstract class SerialIoioRoomba {
 		} catch (IOException e) {
 			throw new ConnectionLostException(e);
 		}
+	}
+
+	protected void writeBytes(byte[] buffer, int size) throws ConnectionLostException {
+		try {
+			m_serialTransmit.write(buffer, 0, size);
+		} catch (IOException e) {
+			throw new ConnectionLostException(e);
+		}
+
 	}
 
 	protected int readByte() throws ConnectionLostException {

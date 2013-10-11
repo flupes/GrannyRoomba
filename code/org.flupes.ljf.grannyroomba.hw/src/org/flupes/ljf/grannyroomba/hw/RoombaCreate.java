@@ -33,16 +33,28 @@ public class RoombaCreate extends SerialIoioRoomba {
 		BUMPS(7, DataType.BYTE, "Bumps and Wheel Drops"),
 		IR(17, DataType.BYTE, "IR Byte"),
 		BUTTONS(18, DataType.BYTE, "Buttons"),
-		DISTANCE(19, DataType.SIGNED_WORD, "Distance"),
-		ANGLE(20, DataType.SIGNED_WORD, "Angle"),
 		CHARGING(21, DataType.BYTE, "Charging State"),
 		VOLTAGE(22, DataType.UNSIGNED_WORD, "Voltage"),
 		CURRENT(23, DataType.SIGNED_WORD, "Current"),
 		TEMPERATURE(24, DataType.BYTE, "Battery Temperature"),
 		CHARGE(25, DataType.UNSIGNED_WORD, "Battery Charge"),
 		CAPACITY(26, DataType.UNSIGNED_WORD, "Battery Capcity"),
-		OIMODE(35, DataType.BYTE, "OI Mode");
-
+		OIMODE(35, DataType.BYTE, "OI Mode"),
+		VELOCITY(39, DataType.SIGNED_WORD, "Velocity"),
+		RADIUS(40, DataType.SIGNED_WORD, "Radius");
+/*
+ * Distance and angle were removed from the telemetry stream.
+ * Every time these values are requested, they are reset to 0  (even
+ * if part stream):
+ * - since telemetry is pushed every 15ms, the value are very small and
+ * accumulation would be really inncacurate
+ * - since telemetry continues while the script are playing, the WAIT_DISTANCE
+ * and WAIT_ANGLE methods do not work anymore: the counter never reach the 
+ * since they are reset every 15ms
+ * 
+		DISTANCE(19, DataType.SIGNED_WORD, "Distance"),
+		ANGLE(20, DataType.SIGNED_WORD, "Angle"),
+*/
 		final int id;
 		final int size;
 		final DataType type;
@@ -56,10 +68,19 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 	}
 
+	protected static final int CMD_DEMO = 136;
+	protected static final int CMD_STREAM = 148;
+	protected static final int CMD_TOGGLESTREAM = 150;
 	protected static final int CMD_SCRIPT = 152;
 	protected static final int CMD_PLAY_SCRIPT = 153;
+	protected static final int CMD_WAIT_TIME = 155;
 	protected static final int CMD_WAIT_DISTANCE = 156;
 	protected static final int CMD_WAIT_ANGLE = 157;
+	protected static final int CMD_WAIT_EVENT = 158;
+	
+	protected static final int EVENT_NO_CLIFF = 246;
+	protected static final int EVENT_NO_BUMPER = 251;
+	protected static final int EVENT_NO_WHEELDROP = 255;
 
 	private final boolean debug_serial = true;
 
@@ -89,10 +110,6 @@ public class RoombaCreate extends SerialIoioRoomba {
 	 */
 	static private final int MAX_MSG_SIZE = 92;
 
-	static private final int CMD_DEMO = 136;
-	static private final int CMD_STREAM = 148;
-	static private final int CMD_TOGGLESTREAM = 150;
-
 	/** Header maker starting a Roomba Create telemetry message */
 	static private final int TELEM_MSG_HEADER = 19;
 
@@ -101,6 +118,9 @@ public class RoombaCreate extends SerialIoioRoomba {
 	private ExecutorService m_exec;
 	private Runnable m_monitor;
 
+	protected Script m_backupScript;
+	protected Script m_waitSafeScript;
+	
 	private volatile boolean m_bumperPushed;
 
 	/**
@@ -135,8 +155,6 @@ public class RoombaCreate extends SerialIoioRoomba {
 	public RoombaCreate(IOIO ioio) {
 		super(ioio);
 
-		storeBackupScript();
-
 		EnumMap<SensorPackets, Integer> telemetry_store = new EnumMap<SensorPackets, Integer>(SensorPackets.class);
 		m_telemetry = Collections.synchronizedMap(telemetry_store);
 
@@ -148,6 +166,8 @@ public class RoombaCreate extends SerialIoioRoomba {
 				+ "\n    sensor data size = " + sizeOfSensorsData()
 				+ "\n    total message length = " + telemetryMessageLength());
 
+		createScripts();
+		
 		// Start a separate thread for telemetry listening
 		s_logger.trace("Launching Telemetry Thread");
 		m_exec = Executors.newFixedThreadPool(2);
@@ -157,24 +177,39 @@ public class RoombaCreate extends SerialIoioRoomba {
 		m_exec.execute(telem);
 	}
 
-	protected void storeBackupScript() {
-		try {
-			writeByte( CMD_SCRIPT );
-			writeByte( 13 );
-			writeByte( CMD_DRIVE );
-			writeWord( -240 );
-			writeWord( 0x8000  );
-			writeByte( CMD_WAIT_DISTANCE );
-			writeWord( -12 );
-			writeByte( CMD_DRIVE );
-			writeWord( 0 );
-			writeWord( 0x8000  );
-			delay(CMD_WAIT_MS);
-		} catch (ConnectionLostException e) {
-			s_logger.warn("Could not write the backup script!");;
-		}
+	private void createScripts() {
+		m_backupScript = new Script();
+		m_backupScript.addByte(CMD_FULL);
+		m_backupScript.addByte(CMD_DRIVE).addWord(-100).addWord(0x8000);
+		m_backupScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_BUMPER);
+		m_backupScript.addByte(CMD_WAIT_DISTANCE).addWord(-8);
+		m_backupScript.addByte(CMD_DRIVE).addWord(0).addWord(0x8000);
+		m_backupScript.addByte(CMD_SAFE);
+		m_backupScript.close();
+		
+		m_waitSafeScript = new Script();
+		m_waitSafeScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_CLIFF);
+		m_waitSafeScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_WHEELDROP);
+		m_waitSafeScript.addByte(CMD_SAFE);
+		m_waitSafeScript.close();
+	}
+	
+	public int getOiMode() {
+		return m_telemetry.get(SensorPackets.OIMODE);
 	}
 
+	public int getBumps() {
+		return m_telemetry.get(SensorPackets.BUMPS);
+	}
+	
+	public int getVelocity() {
+		return m_telemetry.get(SensorPackets.VELOCITY);
+	}
+	
+	public int getRadius() {
+		return m_telemetry.get(SensorPackets.RADIUS);
+	}
+	
 	public void startTelemetry() throws ConnectionLostException {
 		writeByte( CMD_STREAM );
 		writeByte( numberOfSensorPackets() );
@@ -183,7 +218,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 	}
 
-	public void toogleTelemetry(boolean state) throws ConnectionLostException {
+	public void toggleTelemetry(boolean state) throws ConnectionLostException {
 		writeByte( CMD_TOGGLESTREAM );
 		if ( state ) {
 			writeByte( 1 );
@@ -198,12 +233,45 @@ public class RoombaCreate extends SerialIoioRoomba {
 		writeByte( d );
 	}
 
-	public void backup() throws ConnectionLostException {
-		// Script should already have been stored...
-		writeByte( CMD_PLAY_SCRIPT );
+	protected void storeBackupScript() throws ConnectionLostException {
+		writeByte( CMD_SCRIPT );
+		writeByte( 15 );
+		writeByte ( CMD_FULL );
+		writeByte( CMD_DRIVE );
+		writeWord( 100 );
+		writeWord( 0x8000  );
+		//		writeByte( CMD_WAIT_EVENT );
+		//		writeByte( 251 );
+		writeByte( CMD_WAIT_DISTANCE );
+		writeWord( 100 );
+		//		writeByte( CMD_WAIT_TIME );
+		//		writeByte( 150 );
+		writeByte( CMD_DRIVE );
+		writeWord( 0 );
+		writeWord( 0x8000  );
+		writeByte( CMD_SAFE );
 		delay(CMD_WAIT_MS);
 	}
 
+	public void backup() {
+			try {
+				stop();
+				runScript(m_backupScript);
+			} catch (ConnectionLostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+
+	public void waitForSafety() {
+		try {
+			runScript(m_waitSafeScript);
+		} catch (ConnectionLostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void printRawTelemetry() {
 		synchronized(m_telemetry) {
 			if ( m_telemetry.size() > 0 ) {
@@ -217,18 +285,78 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 	}
 
-//	@Override
-//	public void drive(int velocity, int radius) throws ConnectionLostException {
-//		if ( m_bumperPushed ) {
-//			if ( velocity<0 && Math.abs(radius) > 0.1 ) {
-//				super.drive(velocity, radius);
-//			}
-//		}
-//		else {
-//			super.drive(velocity, radius);
-//		}
-//	}
+	//	@Override
+	//	public void drive(int velocity, int radius) throws ConnectionLostException {
+	//		if ( m_bumperPushed ) {
+	//			if ( velocity<0 && Math.abs(radius) > 0.1 ) {
+	//				super.drive(velocity, radius);
+	//			}
+	//		}
+	//		else {
+	//			super.drive(velocity, radius);
+	//		}
+	//	}
 
+	private class Script {
+
+		private final int CAPACITY = 100;
+		protected byte[] m_script;
+		protected int m_pos;
+		protected boolean m_closed;
+
+		Script() {
+			m_script = new byte[CAPACITY];
+			m_script[0] = 0;
+			m_pos = 1;
+			m_closed = false;
+		}
+
+		public Script addByte(int b) {
+			if ( m_closed ) throw new IllegalStateException("script was already closed");
+			if ( m_pos < CAPACITY-1 ) {
+				m_script[m_pos++] = (byte)b;
+			}
+			else {
+				throw new IndexOutOfBoundsException("script is limited to "+CAPACITY+" bytes");
+			}
+			return this;
+		}
+
+		public Script addWord(int w) {
+			if ( m_closed ) throw new IllegalStateException("script was already closed");
+			if ( m_pos < CAPACITY-2 ) {
+				m_script[m_pos++] = (byte)(w >> 8);
+				m_script[m_pos++] = (byte)(w & 0xFF);
+			}
+			else {
+				throw new IndexOutOfBoundsException("script is limited to "+CAPACITY+" bytes");
+			}
+			return this;
+		}
+
+		public int close() {
+			m_script[0] = (byte)(m_pos-1);
+			m_closed = true;
+			return m_pos;
+		}
+		
+		public int length() {
+			System.err.println("script length = " + m_pos);
+			return m_pos;
+		}
+
+		public byte[] buffer() {
+			return m_script;
+		}
+	}
+
+	protected void runScript(Script script) throws ConnectionLostException {
+		writeByte(CMD_SCRIPT);
+		writeBytes(script.buffer(), script.length());
+		delay(CMD_WAIT_MS);
+		writeByte(CMD_PLAY_SCRIPT);
+	}
+	
 	private class MonitorSafety implements Runnable {
 
 		MonitorSafety() {
@@ -244,22 +372,30 @@ public class RoombaCreate extends SerialIoioRoomba {
 						wait();
 					}
 					int bumps;
+					int mode;
 					synchronized(m_telemetry) {
 						bumps = m_telemetry.get(SensorPackets.BUMPS);
+						mode = m_telemetry.get(SensorPackets.OIMODE);
 					}
 					if ( 0 != (bumps&(2+1)) ) {
-						try {
-							if ( !m_bumperPushed ) {
-								stop();
-								backup();
-								m_bumperPushed = true;
-							}
-						} catch (ConnectionLostException e) {
-							s_logger.warn("MonitorSafety failed to stop Roomba because the serial connection was lost");
+						if ( mode == 2 ) {
+							// run the script if not already running!
+							s_logger.warn("bump -> backup");
+							backup();
 						}
 					}
-					else {
-						m_bumperPushed = false;
+					if ( mode == 1 && m_mode != CtrlModes.PASSIVE ) {
+						// Roomba reverted to passive because safe condition
+						// was triggered
+						m_mode = CtrlModes.PASSIVE;
+						s_logger.warn("passive -> wait for safety");;
+						waitForSafety();
+					}
+					if ( mode == 2 && m_mode != CtrlModes.CONTROL) {
+						m_mode = CtrlModes.CONTROL;
+					}
+					if ( mode == 3 && m_mode != CtrlModes.FULL) {
+						m_mode = CtrlModes.FULL;
 					}
 				} // while executor is up
 			} catch (InterruptedException e) {
@@ -399,6 +535,6 @@ public class RoombaCreate extends SerialIoioRoomba {
 			}
 			s_logger.info("Exiting Telemetry Thread.");
 		}
-
 	}
+		
 }
