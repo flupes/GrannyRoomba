@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+package grannyroomba.messages;
+
+option java_package = "org.flupes.ljf.grannyroomba.messages";
+option java_outer_classname = "RoombaStatusProto";
+
+message RoombaStatus {
+
+	required int32 oimode = 1;
+	required int32 bumps = 2;
+	required sint32 velocity = 3;
+	required sint32 radius = 4;
+	optional int32 charge = 5;
+	optional int32 capacity = 6;
+	optional int32 voltage = 7;
+	optional int32 current = 8;
+	optional int32 temperature = 9;
+	optional bool charging = 10;
+
+}
