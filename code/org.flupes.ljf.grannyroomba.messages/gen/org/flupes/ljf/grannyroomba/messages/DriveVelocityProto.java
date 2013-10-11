@@ -50,7 +50,7 @@ public final class DriveVelocityProto {
      * <pre>
      * Curvature of the drive (the curvature is defined as 1/radius)
      *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
      *     generate a point turn
      *   - a positive curvature correspond to a turn to the left
      *   - a negative curvature correspond to a turn to the right
@@ -65,7 +65,7 @@ public final class DriveVelocityProto {
      * <pre>
      * Curvature of the drive (the curvature is defined as 1/radius)
      *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
      *     generate a point turn
      *   - a positive curvature correspond to a turn to the left
      *   - a negative curvature correspond to a turn to the right
@@ -75,9 +75,47 @@ public final class DriveVelocityProto {
      */
     float getCurvature();
 
-    // optional float timeout = 3 [default = 0];
+    // optional float radius = 3 [default = 1000];
     /**
-     * <code>optional float timeout = 3 [default = 0];</code>
+     * <code>optional float radius = 3 [default = 1000];</code>
+     *
+     * <pre>
+     * Radius of the drive (only curvature OR radius should be specified)
+     *   - radius is a convenience argument that can replace the curvature
+     *     if it is preferred to have an singularity for straight lines
+     *	   (curvature shows a singularity for point turns).
+     *   - a positive radius correspond to a turn to the left
+     *   - a negative radius correspond to a turn to the right
+     *   - by convention, if |radius| &gt; 1000, the drive will be considered
+     *     a straight drive (however this can be defined differently
+     *     if the client and server agree on a different convention)
+     *   - if the radius argument is omitted, the command is equivalent to a
+     *     straight drive (radius = 1000 by default).
+     * </pre>
+     */
+    boolean hasRadius();
+    /**
+     * <code>optional float radius = 3 [default = 1000];</code>
+     *
+     * <pre>
+     * Radius of the drive (only curvature OR radius should be specified)
+     *   - radius is a convenience argument that can replace the curvature
+     *     if it is preferred to have an singularity for straight lines
+     *	   (curvature shows a singularity for point turns).
+     *   - a positive radius correspond to a turn to the left
+     *   - a negative radius correspond to a turn to the right
+     *   - by convention, if |radius| &gt; 1000, the drive will be considered
+     *     a straight drive (however this can be defined differently
+     *     if the client and server agree on a different convention)
+     *   - if the radius argument is omitted, the command is equivalent to a
+     *     straight drive (radius = 1000 by default).
+     * </pre>
+     */
+    float getRadius();
+
+    // optional float timeout = 4 [default = 0];
+    /**
+     * <code>optional float timeout = 4 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -89,7 +127,7 @@ public final class DriveVelocityProto {
      */
     boolean hasTimeout();
     /**
-     * <code>optional float timeout = 3 [default = 0];</code>
+     * <code>optional float timeout = 4 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -114,6 +152,8 @@ public final class DriveVelocityProto {
    *   - straight line (curvature = 0)
    *   - arc circle
    *   - spin in place (curvature = 1000)
+   * Radius has been added for convenience. However the client and server
+   * need to chose which one they will rely on.
    * </pre>
    */
   public static final class DriveVelocityMsg extends
@@ -176,6 +216,11 @@ public final class DriveVelocityProto {
             }
             case 29: {
               bitField0_ |= 0x00000004;
+              radius_ = input.readFloat();
+              break;
+            }
+            case 37: {
+              bitField0_ |= 0x00000008;
               timeout_ = input.readFloat();
               break;
             }
@@ -266,7 +311,7 @@ public final class DriveVelocityProto {
      * <pre>
      * Curvature of the drive (the curvature is defined as 1/radius)
      *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
      *     generate a point turn
      *   - a positive curvature correspond to a turn to the left
      *   - a negative curvature correspond to a turn to the right
@@ -283,7 +328,7 @@ public final class DriveVelocityProto {
      * <pre>
      * Curvature of the drive (the curvature is defined as 1/radius)
      *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
      *     generate a point turn
      *   - a positive curvature correspond to a turn to the left
      *   - a negative curvature correspond to a turn to the right
@@ -295,11 +340,55 @@ public final class DriveVelocityProto {
       return curvature_;
     }
 
-    // optional float timeout = 3 [default = 0];
-    public static final int TIMEOUT_FIELD_NUMBER = 3;
+    // optional float radius = 3 [default = 1000];
+    public static final int RADIUS_FIELD_NUMBER = 3;
+    private float radius_;
+    /**
+     * <code>optional float radius = 3 [default = 1000];</code>
+     *
+     * <pre>
+     * Radius of the drive (only curvature OR radius should be specified)
+     *   - radius is a convenience argument that can replace the curvature
+     *     if it is preferred to have an singularity for straight lines
+     *	   (curvature shows a singularity for point turns).
+     *   - a positive radius correspond to a turn to the left
+     *   - a negative radius correspond to a turn to the right
+     *   - by convention, if |radius| &gt; 1000, the drive will be considered
+     *     a straight drive (however this can be defined differently
+     *     if the client and server agree on a different convention)
+     *   - if the radius argument is omitted, the command is equivalent to a
+     *     straight drive (radius = 1000 by default).
+     * </pre>
+     */
+    public boolean hasRadius() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional float radius = 3 [default = 1000];</code>
+     *
+     * <pre>
+     * Radius of the drive (only curvature OR radius should be specified)
+     *   - radius is a convenience argument that can replace the curvature
+     *     if it is preferred to have an singularity for straight lines
+     *	   (curvature shows a singularity for point turns).
+     *   - a positive radius correspond to a turn to the left
+     *   - a negative radius correspond to a turn to the right
+     *   - by convention, if |radius| &gt; 1000, the drive will be considered
+     *     a straight drive (however this can be defined differently
+     *     if the client and server agree on a different convention)
+     *   - if the radius argument is omitted, the command is equivalent to a
+     *     straight drive (radius = 1000 by default).
+     * </pre>
+     */
+    public float getRadius() {
+      return radius_;
+    }
+
+    // optional float timeout = 4 [default = 0];
+    public static final int TIMEOUT_FIELD_NUMBER = 4;
     private float timeout_;
     /**
-     * <code>optional float timeout = 3 [default = 0];</code>
+     * <code>optional float timeout = 4 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -310,10 +399,10 @@ public final class DriveVelocityProto {
      * </pre>
      */
     public boolean hasTimeout() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional float timeout = 3 [default = 0];</code>
+     * <code>optional float timeout = 4 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -330,6 +419,7 @@ public final class DriveVelocityProto {
     private void initFields() {
       speed_ = 0F;
       curvature_ = 0F;
+      radius_ = 1000F;
       timeout_ = 0F;
     }
     private byte memoizedIsInitialized = -1;
@@ -351,7 +441,10 @@ public final class DriveVelocityProto {
         output.writeFloat(2, curvature_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeFloat(3, timeout_);
+        output.writeFloat(3, radius_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeFloat(4, timeout_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -372,7 +465,11 @@ public final class DriveVelocityProto {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, timeout_);
+          .computeFloatSize(3, radius_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(4, timeout_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -465,6 +562,8 @@ public final class DriveVelocityProto {
      *   - straight line (curvature = 0)
      *   - arc circle
      *   - spin in place (curvature = 1000)
+     * Radius has been added for convenience. However the client and server
+     * need to chose which one they will rely on.
      * </pre>
      */
     public static final class Builder extends
@@ -506,8 +605,10 @@ public final class DriveVelocityProto {
         bitField0_ = (bitField0_ & ~0x00000001);
         curvature_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000002);
-        timeout_ = 0F;
+        radius_ = 1000F;
         bitField0_ = (bitField0_ & ~0x00000004);
+        timeout_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -547,6 +648,10 @@ public final class DriveVelocityProto {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
+        result.radius_ = radius_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
         result.timeout_ = timeout_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -569,6 +674,9 @@ public final class DriveVelocityProto {
         }
         if (other.hasCurvature()) {
           setCurvature(other.getCurvature());
+        }
+        if (other.hasRadius()) {
+          setRadius(other.getRadius());
         }
         if (other.hasTimeout()) {
           setTimeout(other.getTimeout());
@@ -685,7 +793,7 @@ public final class DriveVelocityProto {
        * <pre>
        * Curvature of the drive (the curvature is defined as 1/radius)
        *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
        *     generate a point turn
        *   - a positive curvature correspond to a turn to the left
        *   - a negative curvature correspond to a turn to the right
@@ -702,7 +810,7 @@ public final class DriveVelocityProto {
        * <pre>
        * Curvature of the drive (the curvature is defined as 1/radius)
        *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
        *     generate a point turn
        *   - a positive curvature correspond to a turn to the left
        *   - a negative curvature correspond to a turn to the right
@@ -719,7 +827,7 @@ public final class DriveVelocityProto {
        * <pre>
        * Curvature of the drive (the curvature is defined as 1/radius)
        *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
        *     generate a point turn
        *   - a positive curvature correspond to a turn to the left
        *   - a negative curvature correspond to a turn to the right
@@ -739,7 +847,7 @@ public final class DriveVelocityProto {
        * <pre>
        * Curvature of the drive (the curvature is defined as 1/radius)
        *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, a curvature &gt; 1000 (=1mm radius) will
+       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
        *     generate a point turn
        *   - a positive curvature correspond to a turn to the left
        *   - a negative curvature correspond to a turn to the right
@@ -754,10 +862,99 @@ public final class DriveVelocityProto {
         return this;
       }
 
-      // optional float timeout = 3 [default = 0];
+      // optional float radius = 3 [default = 1000];
+      private float radius_ = 1000F;
+      /**
+       * <code>optional float radius = 3 [default = 1000];</code>
+       *
+       * <pre>
+       * Radius of the drive (only curvature OR radius should be specified)
+       *   - radius is a convenience argument that can replace the curvature
+       *     if it is preferred to have an singularity for straight lines
+       *	   (curvature shows a singularity for point turns).
+       *   - a positive radius correspond to a turn to the left
+       *   - a negative radius correspond to a turn to the right
+       *   - by convention, if |radius| &gt; 1000, the drive will be considered
+       *     a straight drive (however this can be defined differently
+       *     if the client and server agree on a different convention)
+       *   - if the radius argument is omitted, the command is equivalent to a
+       *     straight drive (radius = 1000 by default).
+       * </pre>
+       */
+      public boolean hasRadius() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional float radius = 3 [default = 1000];</code>
+       *
+       * <pre>
+       * Radius of the drive (only curvature OR radius should be specified)
+       *   - radius is a convenience argument that can replace the curvature
+       *     if it is preferred to have an singularity for straight lines
+       *	   (curvature shows a singularity for point turns).
+       *   - a positive radius correspond to a turn to the left
+       *   - a negative radius correspond to a turn to the right
+       *   - by convention, if |radius| &gt; 1000, the drive will be considered
+       *     a straight drive (however this can be defined differently
+       *     if the client and server agree on a different convention)
+       *   - if the radius argument is omitted, the command is equivalent to a
+       *     straight drive (radius = 1000 by default).
+       * </pre>
+       */
+      public float getRadius() {
+        return radius_;
+      }
+      /**
+       * <code>optional float radius = 3 [default = 1000];</code>
+       *
+       * <pre>
+       * Radius of the drive (only curvature OR radius should be specified)
+       *   - radius is a convenience argument that can replace the curvature
+       *     if it is preferred to have an singularity for straight lines
+       *	   (curvature shows a singularity for point turns).
+       *   - a positive radius correspond to a turn to the left
+       *   - a negative radius correspond to a turn to the right
+       *   - by convention, if |radius| &gt; 1000, the drive will be considered
+       *     a straight drive (however this can be defined differently
+       *     if the client and server agree on a different convention)
+       *   - if the radius argument is omitted, the command is equivalent to a
+       *     straight drive (radius = 1000 by default).
+       * </pre>
+       */
+      public Builder setRadius(float value) {
+        bitField0_ |= 0x00000004;
+        radius_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float radius = 3 [default = 1000];</code>
+       *
+       * <pre>
+       * Radius of the drive (only curvature OR radius should be specified)
+       *   - radius is a convenience argument that can replace the curvature
+       *     if it is preferred to have an singularity for straight lines
+       *	   (curvature shows a singularity for point turns).
+       *   - a positive radius correspond to a turn to the left
+       *   - a negative radius correspond to a turn to the right
+       *   - by convention, if |radius| &gt; 1000, the drive will be considered
+       *     a straight drive (however this can be defined differently
+       *     if the client and server agree on a different convention)
+       *   - if the radius argument is omitted, the command is equivalent to a
+       *     straight drive (radius = 1000 by default).
+       * </pre>
+       */
+      public Builder clearRadius() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        radius_ = 1000F;
+        onChanged();
+        return this;
+      }
+
+      // optional float timeout = 4 [default = 0];
       private float timeout_ ;
       /**
-       * <code>optional float timeout = 3 [default = 0];</code>
+       * <code>optional float timeout = 4 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -768,10 +965,10 @@ public final class DriveVelocityProto {
        * </pre>
        */
       public boolean hasTimeout() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional float timeout = 3 [default = 0];</code>
+       * <code>optional float timeout = 4 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -785,7 +982,7 @@ public final class DriveVelocityProto {
         return timeout_;
       }
       /**
-       * <code>optional float timeout = 3 [default = 0];</code>
+       * <code>optional float timeout = 4 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -796,13 +993,13 @@ public final class DriveVelocityProto {
        * </pre>
        */
       public Builder setTimeout(float value) {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         timeout_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float timeout = 3 [default = 0];</code>
+       * <code>optional float timeout = 4 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -813,7 +1010,7 @@ public final class DriveVelocityProto {
        * </pre>
        */
       public Builder clearTimeout() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         timeout_ = 0F;
         onChanged();
         return this;
@@ -845,10 +1042,11 @@ public final class DriveVelocityProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\023DriveVelocity.proto\022\025grannyroomba.mess" +
-      "ages\"N\n\020DriveVelocityMsg\022\020\n\005speed\030\001 \001(\002:" +
-      "\0010\022\024\n\tcurvature\030\002 \001(\002:\0010\022\022\n\007timeout\030\003 \001(" +
-      "\002:\0010B:\n$org.flupes.ljf.grannyroomba.mess" +
-      "agesB\022DriveVelocityProto"
+      "ages\"d\n\020DriveVelocityMsg\022\020\n\005speed\030\001 \001(\002:" +
+      "\0010\022\024\n\tcurvature\030\002 \001(\002:\0010\022\024\n\006radius\030\003 \001(\002" +
+      ":\0041000\022\022\n\007timeout\030\004 \001(\002:\0010B:\n$org.flupes" +
+      ".ljf.grannyroomba.messagesB\022DriveVelocit" +
+      "yProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -860,7 +1058,7 @@ public final class DriveVelocityProto {
           internal_static_grannyroomba_messages_DriveVelocityMsg_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_grannyroomba_messages_DriveVelocityMsg_descriptor,
-              new java.lang.String[] { "Speed", "Curvature", "Timeout", });
+              new java.lang.String[] { "Speed", "Curvature", "Radius", "Timeout", });
           return null;
         }
       };

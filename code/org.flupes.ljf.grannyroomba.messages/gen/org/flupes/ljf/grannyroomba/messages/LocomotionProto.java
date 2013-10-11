@@ -62,6 +62,20 @@ public final class LocomotionProto {
      * <code>optional .grannyroomba.messages.DriveVelocityMsg driveVelocity = 4;</code>
      */
     org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsgOrBuilder getDriveVelocityOrBuilder();
+
+    // optional .grannyroomba.messages.RequestStatus statusRequest = 5;
+    /**
+     * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+     */
+    boolean hasStatusRequest();
+    /**
+     * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+     */
+    org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus getStatusRequest();
+    /**
+     * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+     */
+    org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatusOrBuilder getStatusRequestOrBuilder();
   }
   /**
    * Protobuf type {@code grannyroomba.messages.LocomotionCmd}
@@ -164,6 +178,19 @@ public final class LocomotionProto {
               bitField0_ |= 0x00000008;
               break;
             }
+            case 42: {
+              org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = statusRequest_.toBuilder();
+              }
+              statusRequest_ = input.readMessage(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(statusRequest_);
+                statusRequest_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -220,6 +247,10 @@ public final class LocomotionProto {
        * <code>DRIVE_VELOCITY = 3;</code>
        */
       DRIVE_VELOCITY(2, 3),
+      /**
+       * <code>STATUS_REQUEST = 4;</code>
+       */
+      STATUS_REQUEST(3, 4),
       ;
 
       /**
@@ -234,6 +265,10 @@ public final class LocomotionProto {
        * <code>DRIVE_VELOCITY = 3;</code>
        */
       public static final int DRIVE_VELOCITY_VALUE = 3;
+      /**
+       * <code>STATUS_REQUEST = 4;</code>
+       */
+      public static final int STATUS_REQUEST_VALUE = 4;
 
 
       public final int getNumber() { return value; }
@@ -243,6 +278,7 @@ public final class LocomotionProto {
           case 1: return STOP;
           case 2: return DRIVE_POSITION;
           case 3: return DRIVE_VELOCITY;
+          case 4: return STATUS_REQUEST;
           default: return null;
         }
       }
@@ -377,11 +413,34 @@ public final class LocomotionProto {
       return driveVelocity_;
     }
 
+    // optional .grannyroomba.messages.RequestStatus statusRequest = 5;
+    public static final int STATUSREQUEST_FIELD_NUMBER = 5;
+    private org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus statusRequest_;
+    /**
+     * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+     */
+    public boolean hasStatusRequest() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+     */
+    public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus getStatusRequest() {
+      return statusRequest_;
+    }
+    /**
+     * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+     */
+    public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatusOrBuilder getStatusRequestOrBuilder() {
+      return statusRequest_;
+    }
+
     private void initFields() {
       cmd_ = org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command.STOP;
       stop_ = org.flupes.ljf.grannyroomba.messages.StopProto.StopMsg.getDefaultInstance();
       drivePosition_ = org.flupes.ljf.grannyroomba.messages.DrivePositionProto.DrivePositionMsg.getDefaultInstance();
       driveVelocity_ = org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg.getDefaultInstance();
+      statusRequest_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -411,6 +470,9 @@ public final class LocomotionProto {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(4, driveVelocity_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, statusRequest_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -435,6 +497,10 @@ public final class LocomotionProto {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, driveVelocity_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, statusRequest_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -547,6 +613,7 @@ public final class LocomotionProto {
           getStopFieldBuilder();
           getDrivePositionFieldBuilder();
           getDriveVelocityFieldBuilder();
+          getStatusRequestFieldBuilder();
         }
       }
       private static Builder create() {
@@ -575,6 +642,12 @@ public final class LocomotionProto {
           driveVelocityBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
+        if (statusRequestBuilder_ == null) {
+          statusRequest_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.getDefaultInstance();
+        } else {
+          statusRequestBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -631,6 +704,14 @@ public final class LocomotionProto {
         } else {
           result.driveVelocity_ = driveVelocityBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (statusRequestBuilder_ == null) {
+          result.statusRequest_ = statusRequest_;
+        } else {
+          result.statusRequest_ = statusRequestBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -658,6 +739,9 @@ public final class LocomotionProto {
         }
         if (other.hasDriveVelocity()) {
           mergeDriveVelocity(other.getDriveVelocity());
+        }
+        if (other.hasStatusRequest()) {
+          mergeStatusRequest(other.getStatusRequest());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1077,6 +1161,123 @@ public final class LocomotionProto {
         return driveVelocityBuilder_;
       }
 
+      // optional .grannyroomba.messages.RequestStatus statusRequest = 5;
+      private org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus statusRequest_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.Builder, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatusOrBuilder> statusRequestBuilder_;
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public boolean hasStatusRequest() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus getStatusRequest() {
+        if (statusRequestBuilder_ == null) {
+          return statusRequest_;
+        } else {
+          return statusRequestBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public Builder setStatusRequest(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus value) {
+        if (statusRequestBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          statusRequest_ = value;
+          onChanged();
+        } else {
+          statusRequestBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public Builder setStatusRequest(
+          org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.Builder builderForValue) {
+        if (statusRequestBuilder_ == null) {
+          statusRequest_ = builderForValue.build();
+          onChanged();
+        } else {
+          statusRequestBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public Builder mergeStatusRequest(org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus value) {
+        if (statusRequestBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              statusRequest_ != org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.getDefaultInstance()) {
+            statusRequest_ =
+              org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.newBuilder(statusRequest_).mergeFrom(value).buildPartial();
+          } else {
+            statusRequest_ = value;
+          }
+          onChanged();
+        } else {
+          statusRequestBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public Builder clearStatusRequest() {
+        if (statusRequestBuilder_ == null) {
+          statusRequest_ = org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.getDefaultInstance();
+          onChanged();
+        } else {
+          statusRequestBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.Builder getStatusRequestBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getStatusRequestFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      public org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatusOrBuilder getStatusRequestOrBuilder() {
+        if (statusRequestBuilder_ != null) {
+          return statusRequestBuilder_.getMessageOrBuilder();
+        } else {
+          return statusRequest_;
+        }
+      }
+      /**
+       * <code>optional .grannyroomba.messages.RequestStatus statusRequest = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.Builder, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatusOrBuilder> 
+          getStatusRequestFieldBuilder() {
+        if (statusRequestBuilder_ == null) {
+          statusRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatus.Builder, org.flupes.ljf.grannyroomba.messages.CommandStatusProto.RequestStatusOrBuilder>(
+                  statusRequest_,
+                  getParentForChildren(),
+                  isClean());
+          statusRequest_ = null;
+        }
+        return statusRequestBuilder_;
+      }
+
       // @@protoc_insertion_point(builder_scope:grannyroomba.messages.LocomotionCmd)
     }
 
@@ -1104,16 +1305,19 @@ public final class LocomotionProto {
     java.lang.String[] descriptorData = {
       "\n\020Locomotion.proto\022\025grannyroomba.message" +
       "s\032\nStop.proto\032\023DrivePosition.proto\032\023Driv" +
-      "eVelocity.proto\"\265\002\n\rLocomotionCmd\0229\n\003cmd" +
-      "\030\001 \002(\0162,.grannyroomba.messages.Locomotio" +
-      "nCmd.Command\022,\n\004stop\030\002 \001(\0132\036.grannyroomb" +
-      "a.messages.StopMsg\022>\n\rdrivePosition\030\003 \001(" +
-      "\0132\'.grannyroomba.messages.DrivePositionM" +
-      "sg\022>\n\rdriveVelocity\030\004 \001(\0132\'.grannyroomba" +
-      ".messages.DriveVelocityMsg\";\n\007Command\022\010\n" +
-      "\004STOP\020\001\022\022\n\016DRIVE_POSITION\020\002\022\022\n\016DRIVE_VEL",
-      "OCITY\020\003B7\n$org.flupes.ljf.grannyroomba.m" +
-      "essagesB\017LocomotionProto"
+      "eVelocity.proto\032\023CommandStatus.proto\"\206\003\n" +
+      "\rLocomotionCmd\0229\n\003cmd\030\001 \002(\0162,.grannyroom" +
+      "ba.messages.LocomotionCmd.Command\022,\n\004sto" +
+      "p\030\002 \001(\0132\036.grannyroomba.messages.StopMsg\022" +
+      ">\n\rdrivePosition\030\003 \001(\0132\'.grannyroomba.me" +
+      "ssages.DrivePositionMsg\022>\n\rdriveVelocity" +
+      "\030\004 \001(\0132\'.grannyroomba.messages.DriveVelo" +
+      "cityMsg\022;\n\rstatusRequest\030\005 \001(\0132$.grannyr",
+      "oomba.messages.RequestStatus\"O\n\007Command\022" +
+      "\010\n\004STOP\020\001\022\022\n\016DRIVE_POSITION\020\002\022\022\n\016DRIVE_V" +
+      "ELOCITY\020\003\022\022\n\016STATUS_REQUEST\020\004B7\n$org.flu" +
+      "pes.ljf.grannyroomba.messagesB\017Locomotio" +
+      "nProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1125,7 +1329,7 @@ public final class LocomotionProto {
           internal_static_grannyroomba_messages_LocomotionCmd_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_grannyroomba_messages_LocomotionCmd_descriptor,
-              new java.lang.String[] { "Cmd", "Stop", "DrivePosition", "DriveVelocity", });
+              new java.lang.String[] { "Cmd", "Stop", "DrivePosition", "DriveVelocity", "StatusRequest", });
           return null;
         }
       };
@@ -1135,6 +1339,7 @@ public final class LocomotionProto {
           org.flupes.ljf.grannyroomba.messages.StopProto.getDescriptor(),
           org.flupes.ljf.grannyroomba.messages.DrivePositionProto.getDescriptor(),
           org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.getDescriptor(),
+          org.flupes.ljf.grannyroomba.messages.CommandStatusProto.getDescriptor(),
         }, assigner);
   }
 
