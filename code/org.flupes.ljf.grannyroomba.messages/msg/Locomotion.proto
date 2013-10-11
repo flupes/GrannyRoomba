@@ -5,6 +5,7 @@ package grannyroomba.messages;
 import "Stop.proto";
 import "DrivePosition.proto";
 import "DriveVelocity.proto";
+import "CommandStatus.proto";
 
 option java_package = "org.flupes.ljf.grannyroomba.messages";
 option java_outer_classname = "LocomotionProto";
@@ -15,6 +16,7 @@ message LocomotionCmd {
 		STOP = 1;
 		DRIVE_POSITION = 2;
 		DRIVE_VELOCITY = 3;
+		STATUS_REQUEST = 4;
 	}
 
 	required Command cmd = 1;
@@ -22,5 +24,6 @@ message LocomotionCmd {
 	optional StopMsg stop = 2;
 	optional DrivePositionMsg drivePosition = 3;
 	optional DriveVelocityMsg driveVelocity = 4;
+	optional RequestStatus statusRequest = 5;
 
 }
