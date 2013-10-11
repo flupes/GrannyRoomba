@@ -22,6 +22,21 @@ process below is replaced by the above qos...
     - Logback Core
     - Logback Classic
 #+END_COMMENT
+** Install the Protobuf-DT plugin
+   - Instructions at:
+     https://code.google.com/p/protobuf-dt/
+   - Install Xtext from (version 2.4.2 seems to please Eclipse and protobuf!)
+     http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/
+   - Install protobuf-dt from:
+     http://protobuf-dt.googlecode.com/git/update-site
+   - In Preferences -> Protocol Buffer -> Compiler:
+     - Main tab
+       - set the path for "use protoc in path"
+       - select compile .proto files on save
+     - Option tab
+       - select generate Java
+       - Java Output Directory : gen
+   - Add an association between the *.proto files and the protobuf editor
 * Install GrannyRoomba dependencies
 #+BEGIN_SRC bash
 # IOIO
@@ -149,6 +164,9 @@ adb forward tcp:6666 tcp:3333
 adb forward tcp:7777 tcp:4444
 /Users/Shared/pkgs/IOIOBridge/ioiobridge /dev/tty.usbmodem1411
 #+END_SRC
+* Protobuf
+https://developers.google.com/protocol-buffers/
+
 * JeroMq for PC under Eclipse
   - Checkout the repo (command line) from:
   https://github.com/zeromq/jeromq.git
