@@ -5,6 +5,8 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.widgets.Display;
@@ -77,6 +79,10 @@ public class KeyboardController {
 		return new ControlListener();
 	}
 
+	public FocusAdapter stopper() {
+		return new FocusLost();
+	}
+	
 	public void cancel() {
 		m_timer.cancel();
 	}
@@ -103,8 +109,16 @@ public class KeyboardController {
 		});
 	}
 
-	// Static inner class because we do not create an instance of the
-	// outer class since it is a main entry point
+	class FocusLost extends FocusAdapter {
+		@Override
+		public void focusLost(FocusEvent e) {
+			s_logger.info("Lost focus -> stop the robot!");
+			speed = 0;
+			spin = 0;
+			changeDrive(speed, spin);
+		}
+	}
+	
 	class ControlListener extends KeyAdapter {
 
 		@Override

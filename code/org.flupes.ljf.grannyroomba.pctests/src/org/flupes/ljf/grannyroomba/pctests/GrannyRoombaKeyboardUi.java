@@ -121,6 +121,7 @@ public class GrannyRoombaKeyboardUi {
 
 			KeyboardController kc = new KeyboardController(servoClient, locoClient);
 			shell.addKeyListener(kc.controller());
+			shell.addFocusListener(kc.stopper());
 
 			shell.pack ();
 			shell.open ();
