@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
@@ -19,14 +20,14 @@ import org.flupes.ljf.grannyroomba.pctests.KeyboardController;
 public class GrannyRoombaKeyboardUi {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
-	
+
 	protected static final boolean m_debug = true;
 
 	enum Mode {
 		LOCAL("local", "localhost", 6666, 7777),
 		PRIVATE("private", "172.16.0.39", 3333, 4444),
 		PUBLIC("public", "67.188.2.6", 3140, 3141);
-		
+
 		final String mode;
 		final String host;
 		final Integer servoPort;
@@ -38,9 +39,9 @@ public class GrannyRoombaKeyboardUi {
 			this.servoPort = servoPort;
 			this.locoPort = locoPort;
 		}
-		
+
 	};
-	
+
 	public static void main(String[] args) {
 
 		Mode connectMode = Mode.PRIVATE; 
@@ -56,7 +57,7 @@ public class GrannyRoombaKeyboardUi {
 				connectMode = Mode.PUBLIC;
 			}
 		}
-		
+
 		Display display = new Display( );
 
 		Shell shell = new Shell (display);
@@ -95,22 +96,37 @@ public class GrannyRoombaKeyboardUi {
 
 		ServoClient servoClient = new ServoClient(host, servoPort);
 		RoombaLocomotorClient locoClient = new RoombaLocomotorClient(host, locoPort);
-		
-		KeyboardController kc = new KeyboardController(servoClient, locoClient);
-		shell.addKeyListener(kc.controller());
+
 		servoClient.connect();
 		locoClient.connect();
 
-		shell.pack ();
-		shell.open ();
+		boolean connected = true;
+		// check if connection is up
+		try {
+			locoClient.getStatus();
+		} catch (Exception e) {
+			MessageBox msg = new MessageBox(shell, SWT.OK);
+			msg.setMessage("Connection to GrannyRoomba failed!\nTry again later");
+			msg.open();	
+			connected = false;
+		}
 
-		while (!shell.isDisposed ()) {
-			if (!display.readAndDispatch ()) display.sleep ();
+		if ( connected ) {
+
+			KeyboardController kc = new KeyboardController(servoClient, locoClient);
+			shell.addKeyListener(kc.controller());
+
+			shell.pack ();
+			shell.open ();
+
+			while ( !shell.isDisposed() && kc.connected() ) {
+				if (!display.readAndDispatch ()) display.sleep ();
+			}
 		}
 
 		locoClient.disconnect();
 		servoClient.disconnect();
-		
+
 		image.dispose ();
 		display.dispose ();
 	}
