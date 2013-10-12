@@ -7,6 +7,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
 
@@ -28,24 +31,31 @@ public class KeyboardController {
 	private volatile float prevSpeed = 0;
 	private volatile float spin = 0;
 
+	private boolean m_connected;
 	private Timer m_timer;
-	
+
 	public KeyboardController(ServoClient sclient, RoombaLocomotorClient lclient) {
 		m_servoClient = sclient;
 		m_locoClient = lclient;
+		m_connected = true;
 		m_timer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
-				synchronized(m_timer) {
-					m_locoClient.getStatus();
+				try {
+					synchronized(m_timer) {
+						m_locoClient.getStatus();
+					}
+				} catch (Exception e) {
+					stop();
 				}
+
 				// Reset the speed and spin if the robot was stopped.
 				// otherwise just ignore the current velocity
 				// and radius, assuming that the robot would have
 				// always done what ask!
-//				s_logger.debug("Velocity="+m_locoClient.getVelocity()
-//						+" / Radius="+m_locoClient.getRadius());
+				//				s_logger.debug("Velocity="+m_locoClient.getVelocity()
+				//						+" / Radius="+m_locoClient.getRadius());
 				if ( m_locoClient.getVelocity() == 0 ) {
 					speed = 0;
 					prevSpeed = 0;
@@ -58,9 +68,35 @@ public class KeyboardController {
 		};
 		m_timer.schedule(task, 20, 200);
 	}
-	
+
+	public boolean connected() {
+		return m_connected;
+	}
+
 	public KeyAdapter controller() {
 		return new ControlListener();
+	}
+
+	protected void stop() {
+		m_timer.cancel();
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				Shell[] shells = Display.getDefault().getShells();
+				if ( shells.length < 1 ) {
+					s_logger.error("Could not find a parent shell!");
+				}
+				else {
+					if ( shells.length > 1 ) {
+						s_logger.warn("More than one shell for this simple UI?");
+					}
+					MessageBox msg = new MessageBox(shells[0], SWT.OK);
+					msg.setMessage("Connection to GrannyRoomba interrupted!\nThe application will terminated now.\nYou can try to restart it when the robot is up again.");
+					msg.open();
+					s_logger.warn("a message should have poped!");
+				}
+				m_connected = false;
+			}
+		});
 	}
 
 	// Static inner class because we do not create an instance of the
@@ -69,6 +105,7 @@ public class KeyboardController {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
+			if (!m_connected) return;
 			if ( m_tilt == null ) {
 				m_tilt = m_servoClient.getPosition();
 			}
@@ -198,8 +235,12 @@ public class KeyboardController {
 				}
 			}
 		}
-		synchronized(m_timer) {
-			m_locoClient.driveVelocity(velocity, radius, 1.0f);
+		try {
+			synchronized(m_timer) {
+				m_locoClient.driveVelocity(velocity, radius, 1.0f);
+			}
+		} catch (Exception e) {
+			stop();
 		}
 	}
 
