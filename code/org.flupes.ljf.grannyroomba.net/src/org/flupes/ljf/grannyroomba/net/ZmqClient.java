@@ -31,7 +31,7 @@ public class ZmqClient {
 		if ( ! m_connected ) {
 			m_context = ZMQ.context(1);
 			m_socket = m_context.socket(ZMQ.REQ);
-			m_socket.connect (m_url);
+			m_socket.connect(m_url);
 			m_socket.setSendTimeOut(500);
 			m_socket.setReceiveTimeOut(1500);
 			m_connected = true;
