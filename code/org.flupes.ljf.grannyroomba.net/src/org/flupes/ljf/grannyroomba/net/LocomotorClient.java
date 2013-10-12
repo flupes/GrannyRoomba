@@ -29,8 +29,8 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 		builder.setCmd(Command.STOP).setStop(
 				StopMsg.newBuilder().setMode( StopMsg.Mode.valueOf(mode) ) 
 				);
-		m_socket.send(builder.build().toByteArray());
-		return waitForReply();
+		byte[] reply = reqrep(builder.build().toByteArray());
+		return parseReply(reply);
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 				.setCurvature(curvature)
 				.setTimeout(timeout)
 				);
-		m_socket.send(builder.build().toByteArray());
-		return waitForReply();
+		byte[] reply = reqrep(builder.build().toByteArray());
+		return parseReply(reply);
 	}
 	
 	@Override
@@ -55,12 +55,11 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.STATUS_REQUEST);
-		m_socket.send(builder.build().toByteArray());
-		return waitForReply();
+		byte[] reply = reqrep(builder.build().toByteArray());
+		return parseReply(reply);
 	}
 
-	protected int waitForReply() {
-		byte[] reply = m_socket.recv(0);
+	protected int parseReply(byte[] reply) {
 		try {
 			CommandStatus status = CommandStatus.parseFrom(reply);
 			return status.getStatus().getNumber();
