@@ -77,8 +77,12 @@ public class KeyboardController {
 		return new ControlListener();
 	}
 
-	protected void stop() {
+	public void cancel() {
 		m_timer.cancel();
+	}
+
+	protected void stop() {
+		cancel();
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell[] shells = Display.getDefault().getShells();

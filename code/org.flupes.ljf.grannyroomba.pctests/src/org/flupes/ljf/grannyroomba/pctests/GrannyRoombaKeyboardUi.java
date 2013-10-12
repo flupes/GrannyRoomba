@@ -21,6 +21,8 @@ public class GrannyRoombaKeyboardUi {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
 
+	static final String IMAGE_FILE = "KeyboardController.png";
+	
 	protected static final boolean m_debug = true;
 
 	enum Mode {
@@ -69,7 +71,7 @@ public class GrannyRoombaKeyboardUi {
 		gl.marginLeft = 4;
 		gl.marginRight = 4;
 		shell.setLayout (gl);
-		Image image = new Image (display, KeyboardController.class.getResourceAsStream ("grannyempty.jpg"));
+		Image image = new Image (display, KeyboardController.class.getResourceAsStream (IMAGE_FILE));
 
 		Group group = new Group(shell, SWT.NONE);
 		GridData gd = new GridData();
@@ -78,8 +80,12 @@ public class GrannyRoombaKeyboardUi {
 		//	gd.grabExcessHorizontalSpace = true;
 		//	gd.grabExcessVerticalSpace = true;
 		//	gd.horizontalAlignment = GridData.CENTER;
-		gd.heightHint = 320;
-		gd.widthHint = 240;
+		
+		// WTF: why these dimension have to be smaller
+		// than the real image!!!
+		gd.heightHint = 294;
+		gd.widthHint = 464;
+
 		group.setLayoutData(gd);
 		//	group.setSize(240, 320);
 		group.setBackgroundImage(image);
@@ -121,6 +127,9 @@ public class GrannyRoombaKeyboardUi {
 
 			while ( !shell.isDisposed() && kc.connected() ) {
 				if (!display.readAndDispatch ()) display.sleep ();
+			}
+			if ( kc.connected() ) {
+				kc.cancel();
 			}
 		}
 
