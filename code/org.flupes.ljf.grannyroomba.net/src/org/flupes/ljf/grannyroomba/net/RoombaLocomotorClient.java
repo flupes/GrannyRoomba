@@ -29,6 +29,7 @@ public class RoombaLocomotorClient extends LocomotorClient implements
 		builder.setCmd(Command.STATUS_REQUEST);
 		m_socket.send(builder.build().toByteArray());
 		byte[] reply = m_socket.recv(0);
+		if ( reply == null ) throw new IllegalStateException("Did not get a reply for getStatus");
 		try {
 			RoombaStatus status = RoombaStatus.parseFrom(reply);
 			m_oiMode = status.getOimode();
@@ -39,8 +40,8 @@ public class RoombaLocomotorClient extends LocomotorClient implements
 		} catch (InvalidProtocolBufferException e) {
 			s_logger.error("got invalid response from server!");
 			s_logger.error("Exception: "+e);
+			throw new IllegalStateException("Could not parse the reply from getStatus");
 		}
-		return -1;
 	}
 
 	@Override
