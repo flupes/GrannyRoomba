@@ -51,7 +51,8 @@ public class LocomotorServer extends ZmqServer {
 				builder3.setVelocity(m_locomotor.getVelocity());
 				builder3.setRadius(m_locomotor.getRadius());
 				m_socket.send(builder3.build().toByteArray());
-				
+				break;
+
 			default:
 				s_logger.warn("LocomotionCmd " + cmd.getCmd() + " not supported!");
 			} // switch cmd.getCmd
