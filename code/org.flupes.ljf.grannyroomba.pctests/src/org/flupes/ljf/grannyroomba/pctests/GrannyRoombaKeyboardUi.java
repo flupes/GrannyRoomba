@@ -1,7 +1,12 @@
 package org.flupes.ljf.grannyroomba.pctests;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
@@ -46,7 +51,7 @@ public class GrannyRoombaKeyboardUi {
 
 	public static void main(String[] args) {
 
-		Mode connectMode = Mode.PRIVATE; 
+		Mode connectMode = Mode.PUBLIC; 
 		String modeStr = System.getProperties().getProperty("connection");
 		if ( modeStr != null ) { // override default connection mode
 			if ( 0 == modeStr.compareToIgnoreCase(Mode.LOCAL.mode) ) {
@@ -59,6 +64,27 @@ public class GrannyRoombaKeyboardUi {
 				connectMode = Mode.PUBLIC;
 			}
 		}
+
+		// initialize logger
+		s_logger.setLevel(Level.TRACE);
+		System.out.println("Connect Mode = " + connectMode);
+		Appender appender;
+		if ( connectMode == Mode.PUBLIC) {
+			String homeDir = System.getProperty("user.home");
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			String logFile = homeDir+"/granny_roomba_"+timeStamp+".txt";
+			try {
+				appender = new FileAppender(new TTCCLayout(), logFile);
+			} catch (IOException e) {
+				System.err.println("Could not create log file: "+logFile);
+				e.printStackTrace();
+				return;
+			}
+		}
+		else {
+			appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
+		}
+		s_logger.addAppender(appender);
 
 		Display display = new Display( );
 
@@ -90,11 +116,6 @@ public class GrannyRoombaKeyboardUi {
 		//	group.setSize(240, 320);
 		group.setBackgroundImage(image);
 
-		// initialize logger
-		s_logger.setLevel(Level.TRACE);
-		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
-		s_logger.addAppender(appender);
-
 		// Create client and keyboard dispatcher
 		String host = connectMode.host;
 		int servoPort = connectMode.servoPort;
@@ -111,6 +132,7 @@ public class GrannyRoombaKeyboardUi {
 		try {
 			locoClient.getStatus();
 		} catch (Exception e) {
+			s_logger.error("locoClient.getStatus() failed -> exit");
 			MessageBox msg = new MessageBox(shell, SWT.OK);
 			msg.setMessage("Connection to GrannyRoomba failed!\nTry again later");
 			msg.open();	
