@@ -50,10 +50,12 @@ public class ZmqClient {
 	protected byte[] reqrep(byte[] buffer) throws ZMQException {
 		boolean req = m_socket.send(buffer);
 		if ( ! req ) {
+			s_logger.error("could not send request!");
 			throw new ZMQException(m_socket.base().errno());
 		}
 		byte[] rep = m_socket.recv(0);
 		if ( null == rep ) {
+			s_logger.error("did not receive response!");
 			throw new ZMQException(m_socket.base().errno());
 		}
 		return rep;
