@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
 
-public class KeyboardController {
+public class SwtKeyboardController {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
 
@@ -36,7 +36,7 @@ public class KeyboardController {
 	private boolean m_connected;
 	private Timer m_timer;
 
-	public KeyboardController(ServoClient sclient, RoombaLocomotorClient lclient) {
+	public SwtKeyboardController(ServoClient sclient, RoombaLocomotorClient lclient) {
 		m_servoClient = sclient;
 		m_locoClient = lclient;
 		m_connected = true;

@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
-import org.flupes.ljf.grannyroomba.pctests.KeyboardController;
+import org.flupes.ljf.grannyroomba.pctests.SwtKeyboardController;
 
 public class GrannyRoombaKeyboardUi {
 
@@ -97,7 +97,7 @@ public class GrannyRoombaKeyboardUi {
 		gl.marginLeft = 4;
 		gl.marginRight = 4;
 		shell.setLayout (gl);
-		Image image = new Image (display, KeyboardController.class.getResourceAsStream (IMAGE_FILE));
+		Image image = new Image (display, SwtKeyboardController.class.getResourceAsStream (IMAGE_FILE));
 
 		Group group = new Group(shell, SWT.NONE);
 		GridData gd = new GridData();
@@ -141,7 +141,7 @@ public class GrannyRoombaKeyboardUi {
 
 		if ( connected ) {
 
-			KeyboardController kc = new KeyboardController(servoClient, locoClient);
+			SwtKeyboardController kc = new SwtKeyboardController(servoClient, locoClient);
 			shell.addKeyListener(kc.controller());
 			shell.addFocusListener(kc.stopper());
 
