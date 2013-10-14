@@ -51,7 +51,7 @@ public class GrannyRoombaKeyboardUi {
 
 	public static void main(String[] args) {
 
-		Mode connectMode = Mode.PUBLIC; 
+		Mode connectMode = Mode.PRIVATE; 
 		String modeStr = System.getProperties().getProperty("connection");
 		if ( modeStr != null ) { // override default connection mode
 			if ( 0 == modeStr.compareToIgnoreCase(Mode.LOCAL.mode) ) {
@@ -134,7 +134,13 @@ public class GrannyRoombaKeyboardUi {
 		} catch (Exception e) {
 			s_logger.error("locoClient.getStatus() failed -> exit");
 			MessageBox msg = new MessageBox(shell, SWT.OK);
-			msg.setMessage("Connection to GrannyRoomba failed!\nTry again later");
+			String text = "Connection to GrannyRoomba failed!\nTry again later.\n";
+			text += "connection="+modeStr+" host="+host+"\n";
+			text +=	"servoPort="+servoPort+" locoPort="+locoPort+"\n";
+			int sendTimeoutMs = Integer.getInteger("send_timeout", 1000);
+			int recvTimeoutMs = Integer.getInteger("recv_timeout", 2000);
+			text += "sendTimeoutMs="+sendTimeoutMs+" recvTimeoutMs="+recvTimeoutMs;
+			msg.setMessage(text);
 			msg.open();	
 			connected = false;
 		}

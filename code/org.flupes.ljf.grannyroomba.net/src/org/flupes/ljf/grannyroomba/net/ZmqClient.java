@@ -13,6 +13,8 @@ public class ZmqClient {
 	protected ZMQ.Context m_context;
 	protected ZMQ.Socket m_socket;
 	protected boolean m_connected;
+	protected int m_sendTimeoutMs;
+	protected int m_recvTimeoutMs;
 	
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 	
@@ -21,6 +23,8 @@ public class ZmqClient {
 		m_port = port;
 		m_url = "tcp://"+m_server+":"+Integer.toString(m_port);
 		m_connected = false;
+		m_sendTimeoutMs = Integer.getInteger("send_timeout", 1000);
+		m_recvTimeoutMs = Integer.getInteger("recv_timeout", 2000);
 	}
 	
 	public boolean isConnected() {
@@ -32,8 +36,8 @@ public class ZmqClient {
 			m_context = ZMQ.context(1);
 			m_socket = m_context.socket(ZMQ.REQ);
 			m_socket.connect(m_url);
-			m_socket.setSendTimeOut(500);
-			m_socket.setReceiveTimeOut(1500);
+			m_socket.setSendTimeOut(m_sendTimeoutMs);
+			m_socket.setReceiveTimeOut(m_recvTimeoutMs);
 			m_connected = true;
 			s_logger.info("Client connected to ["+m_url+"]");
 		}

@@ -49,6 +49,7 @@ public class SwtKeyboardController {
 						m_locoClient.getStatus();
 					}
 				} catch (Exception e) {
+					s_logger.error("REQ/REP failed for getStatus in Timer thread");
 					stop();
 				}
 
@@ -82,31 +83,38 @@ public class SwtKeyboardController {
 	public FocusAdapter stopper() {
 		return new FocusLost();
 	}
-	
+
 	public void cancel() {
+		s_logger.info("keyboard controller was canceled -> stop robot");
+		m_connected = false;
 		m_timer.cancel();
+		synchronized( m_timer ) {
+			m_locoClient.driveVelocity(0, 0x8000, 1.0f);
+		}
 	}
 
 	protected void stop() {
-		cancel();
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				Shell[] shells = Display.getDefault().getShells();
-				if ( shells.length < 1 ) {
-					s_logger.error("Could not find a parent shell!");
-				}
-				else {
-					if ( shells.length > 1 ) {
-						s_logger.warn("More than one shell for this simple UI?");
+		s_logger.warn("stoping the keyboard controller and send a popup notification");
+		m_timer.cancel();
+		if ( m_connected == true ) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					Shell[] shells = Display.getDefault().getShells();
+					if ( shells.length < 1 ) {
+						s_logger.error("Could not find a parent shell!");
 					}
-					MessageBox msg = new MessageBox(shells[0], SWT.OK);
-					msg.setMessage("Connection to GrannyRoomba interrupted!\nThe application will terminated now.\nYou can try to restart it when the robot is up again.");
-					msg.open();
-					s_logger.warn("a message should have poped!");
+					else {
+						if ( shells.length > 1 ) {
+							s_logger.warn("More than one shell for this simple UI?");
+						}
+						MessageBox msg = new MessageBox(shells[0], SWT.OK);
+						msg.setMessage("Connection to GrannyRoomba interrupted!\nThe application will terminated now.\nYou can try to restart it when the robot is up again.");
+						msg.open();
+					}
+					m_connected = false;
 				}
-				m_connected = false;
-			}
-		});
+			});
+		}
 	}
 
 	class FocusLost extends FocusAdapter {
@@ -118,7 +126,7 @@ public class SwtKeyboardController {
 			changeDrive(speed, spin);
 		}
 	}
-	
+
 	class ControlListener extends KeyAdapter {
 
 		@Override
@@ -258,6 +266,7 @@ public class SwtKeyboardController {
 				m_locoClient.driveVelocity(velocity, radius, 1.0f);
 			}
 		} catch (Exception e) {
+			s_logger.error("REP/REQ failed for driveVelocity");
 			stop();
 		}
 	}
