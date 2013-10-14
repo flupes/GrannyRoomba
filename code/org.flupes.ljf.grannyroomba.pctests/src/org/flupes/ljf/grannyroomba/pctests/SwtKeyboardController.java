@@ -49,6 +49,7 @@ public class SwtKeyboardController {
 						m_locoClient.getStatus();
 					}
 				} catch (Exception e) {
+					s_logger.error("REQ/REP failed for getStatus in Timer thread");
 					stop();
 				}
 
@@ -89,6 +90,7 @@ public class SwtKeyboardController {
 
 	protected void stop() {
 		cancel();
+		s_logger.warn("stoping the keyboard controller and send a popup notification");
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell[] shells = Display.getDefault().getShells();
@@ -102,7 +104,6 @@ public class SwtKeyboardController {
 					MessageBox msg = new MessageBox(shells[0], SWT.OK);
 					msg.setMessage("Connection to GrannyRoomba interrupted!\nThe application will terminated now.\nYou can try to restart it when the robot is up again.");
 					msg.open();
-					s_logger.warn("a message should have poped!");
 				}
 				m_connected = false;
 			}
@@ -258,6 +259,7 @@ public class SwtKeyboardController {
 				m_locoClient.driveVelocity(velocity, radius, 1.0f);
 			}
 		} catch (Exception e) {
+			s_logger.error("REP/REQ failed for driveVelocity");
 			stop();
 		}
 	}
