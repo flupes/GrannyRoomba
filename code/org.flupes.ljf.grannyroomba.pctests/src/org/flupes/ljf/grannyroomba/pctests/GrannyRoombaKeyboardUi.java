@@ -51,7 +51,7 @@ public class GrannyRoombaKeyboardUi {
 
 	public static void main(String[] args) {
 
-		Mode connectMode = Mode.PUBLIC; 
+		Mode connectMode = Mode.PRIVATE; 
 		String modeStr = System.getProperties().getProperty("connection");
 		if ( modeStr != null ) { // override default connection mode
 			if ( 0 == modeStr.compareToIgnoreCase(Mode.LOCAL.mode) ) {
