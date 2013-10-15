@@ -20,8 +20,8 @@ public class LocomotorStub implements ILocomotor {
 	}
 
 	@Override
-	public int driveVelocity(float speed, float curvature, float timeout) {
-		s_logger.info("DRIVE_VELOCITY(speed="+speed+", curvature="+curvature+", timeout="+timeout+")");
+	public int driveVelocity(float speed, float spin, float timeout) {
+		s_logger.info("DRIVE_VELOCITY(speed="+speed+", spin="+spin+", timeout="+timeout+")");
 		return 0;
 	}
 

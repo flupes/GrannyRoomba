@@ -89,7 +89,7 @@ public class SwtKeyboardController {
 		m_connected = false;
 		m_timer.cancel();
 		synchronized( m_timer ) {
-			m_locoClient.driveVelocity(0, 0x8000, 1.0f);
+			m_locoClient.driveVelocityCurvature(0, 0x8000, 1.0f);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class SwtKeyboardController {
 		}
 		try {
 			synchronized(m_timer) {
-				m_locoClient.driveVelocity(velocity, radius, 1.0f);
+				m_locoClient.driveVelocityCurvature(velocity, radius, 1.0f);
 			}
 		} catch (Exception e) {
 			s_logger.error("REP/REQ failed for driveVelocity");

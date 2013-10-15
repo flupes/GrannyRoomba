@@ -8,55 +8,54 @@ option java_outer_classname = "DriveVelocityProto";
 /*
  * Message to specify a velocity drive command.
  *
- * The unified velocity drive message allow to command
- * the mobile base at the given velocity for the following
- * 3 types of move:
- *   - straight line (curvature = 0)
- *   - arc circle
- *   - spin in place (curvature = 1000)
- * Radius has been added for convenience. However the client and server
- * need to chose which one they will rely on.
+ * The unified velocity drive message allows to command
+ * the mobile base in velocity mode for the following
+ * 3 types of moves:
+ *    - straight line (speed!=0 && spin==0)
+ *    - turn in place (speed==0 && spin!=0)
+ *    - arc circle (speed!=0 && spin!=0)
+ *
+ * The advantage of using the speed (linear velocity) and
+ * spin (angular velocity) as parameter is double:
+ *    - There is no singularities in the commands compared to
+ *  	other set of parameters:
+ * 			(speed, curvature) for point turn -> curvature = infinity
+ * 			(speed, radius) for straight line -> radius = infinity
+ * 	  - There is continuity when changing from an arc turn to a
+ * 		point turn (given that the speed is within bounds).
+ *
+ * If radius/curvature are required, then can be extracted from
+ * the (speed/spin) set as follow:
+ *    - speed==0 and spin==0 -> stop (radius does not matter)
+ *    - speed!=0 and spin==0 -> straight (curvature zero or radius infinite)
+ *    - speed==0 and spin!=0 -> point turn (radius zero or curvature infinite)
+ *    - speed!=0 and spin!=0 -> regular arc circle:
+ * 		- velocity = speed
+ * 		- radius = velocity/spin (or curvature = spin/velocity)
  */
 message DriveVelocityMsg {
 
-	// Speed of the drive
-	// By convention, the speed is defined as a ratio of the vehicle
-	// maximum speed. So the speed range is normally comprised in [-1; 1].
+	// Linear velocity (speed) of the robot.
+	// By convention:
+	//   - the speed is expressed in m/s
 	//   - a positive speed will make the mobile base move forward
 	//   - a negative speed will make the mobile base move backward
-	//   - a zero speed correspond to a stop (and ignores the curvature)
-	//   - if the speed argument is omitted, the command is equivalent
-	//     to a stop (speed=0 by default).
+	//   - a zero speed combined with a zero spin is equivalent to a stop
+	//   - a zero speed combined with a non zero spin is a turn in place
 	optional float speed = 1 [ default = 0 ];
 
-	// Curvature of the drive (the curvature is defined as 1/radius)
-	//   - a curvature of 0 correspond to a straight line drive
-	//   - by convention, if |curvature| > 1000 (=1mm radius) will
-	//     generate a point turn
-	//   - a positive curvature correspond to a turn to the left
-	//   - a negative curvature correspond to a turn to the right
-	//   - if the curvature argument is omitted, the command is equivalent
-	//     to a straight drive (curvature=0 by default).
-	optional float curvature = 2 [ default = 0 ];
-
-	// Radius of the drive (only curvature OR radius should be specified)
-	//   - radius is a convenience argument that can replace the curvature
-	//     if it is preferred to have an singularity for straight lines
-	//	   (curvature shows a singularity for point turns).
-	//   - a positive radius correspond to a turn to the left
-	//   - a negative radius correspond to a turn to the right
-	//   - by convention, if |radius| > 1000, the drive will be considered
-	//     a straight drive (however this can be defined differently
-	//     if the client and server agree on a different convention)
-	//   - if the radius argument is omitted, the command is equivalent to a
-	//     straight drive (radius = 1000 by default).
-	optional float radius = 3 [ default = 1000 ];
+	// Angular velocity (spin) of the robot.
+	// By convention:
+	//   - the spin is expressed in rad/s
+	//   - a positive spin generates counter-clockwise rotation (to the left)
+	//   - a negative spin generates clockwise rotation (to the right)
+	optional float spin = 2 [ default = 0];
 
 	// Optional time out in seconds.
 	// The command will expire after the given time and then the mobile
 	// base should normally stop (by convention).
 	// A time out of zero indicate that the command should never expire,
 	// it is the default behavior is the argument is omitted.
-	optional float timeout = 4 [ default = 0 ];
+	optional float timeout = 3 [ default = 0 ];
 
 }

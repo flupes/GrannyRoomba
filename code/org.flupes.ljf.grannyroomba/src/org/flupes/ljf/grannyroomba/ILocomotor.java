@@ -4,8 +4,8 @@ public interface ILocomotor {
 
 		int stop(int mode);
 
-		int driveVelocity(float speed, float curvature, float timeout);
-		
+		int driveVelocity(float speed, float spin, float timeout);
+
 		int getStatus();
 		
 }

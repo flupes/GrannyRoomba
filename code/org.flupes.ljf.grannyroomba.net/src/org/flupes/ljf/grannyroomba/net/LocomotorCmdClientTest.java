@@ -76,7 +76,7 @@ public class LocomotorCmdClientTest {
 				builder.setDriveVelocity(
 						DriveVelocityMsg.newBuilder()
 						.setSpeed(0.5f)
-						.setCurvature(1)
+						.setSpin(1)
 						.build()
 						);
 				break;

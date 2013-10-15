@@ -34,20 +34,20 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 	}
 
 	@Override
-	public int driveVelocity(float speed, float curvature, float timeout) {
+	public int driveVelocity(float speed, float spin, float timeout) {
 		if ( ! isConnected() ) {
 			s_logger.warn("LocomotorClient is not connected!");
 		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.DRIVE_VELOCITY).setDriveVelocity(
 				DriveVelocityMsg.newBuilder().setSpeed(speed)
-				.setCurvature(curvature)
+				.setSpin(spin)
 				.setTimeout(timeout)
 				);
 		byte[] reply = reqrep(builder.build().toByteArray());
 		return parseReply(reply);
 	}
-	
+
 	@Override
 	public int getStatus() {
 		if ( ! isConnected() ) {

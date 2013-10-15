@@ -24,7 +24,7 @@ public class GrannyRoombaConsoleCtrl {
 			while ( controller.execute() ) {
 				// nothing
 			}
-			m_locomotor.driveVelocity(0, 0x8000, 1f);
+			m_locomotor.driveVelocityCurvature(0, 0x8000, 1f);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}

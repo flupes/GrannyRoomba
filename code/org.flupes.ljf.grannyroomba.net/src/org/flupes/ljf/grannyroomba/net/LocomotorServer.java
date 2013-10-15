@@ -37,7 +37,7 @@ public class LocomotorServer extends ZmqServer {
 
 			case DRIVE_VELOCITY:
 				DriveVelocityMsg msg = cmd.getDriveVelocity();
-				m_locomotor.driveVelocity(msg.getSpeed(), msg.getCurvature(), msg.getTimeout());
+				m_locomotor.driveVelocity(msg.getSpeed(), msg.getSpin(), msg.getTimeout());
 				CommandStatus.Builder builder2 = CommandStatus.newBuilder();
 				builder2.setId(m_cmdid).setStatus(Status.BUSY);
 				m_socket.send(builder2.build().toByteArray());

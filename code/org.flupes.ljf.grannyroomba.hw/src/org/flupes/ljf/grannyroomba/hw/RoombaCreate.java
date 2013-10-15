@@ -16,6 +16,15 @@ import ioio.lib.api.exception.ConnectionLostException;
 
 public class RoombaCreate extends SerialIoioRoomba {
 
+	/** Distance between the 2 motorized wheels */
+	public static final float WHEEL_BASE = 0.260f;
+	
+	/** Maximum linear velocity of each wheel (m/s) */ 
+	public static final float MAX_VELOCITY = 0.5f;
+	
+	/** Larger radius accepted by Roomba (m) */
+	public static final float MAX_RADIUS = 2.0f;
+	
 	public enum DataType {
 		BYTE(1),
 		UNSIGNED_WORD(2),
