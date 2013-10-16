@@ -1,21 +1,21 @@
 package org.flupes.ljf.grannyroomba.net;
 
-import org.flupes.ljf.grannyroomba.IRoombaLocomotor;
+import org.flupes.ljf.grannyroomba.ICreateLocomotor;
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd;
 import org.flupes.ljf.grannyroomba.messages.LocomotionProto.LocomotionCmd.Command;
 import org.flupes.ljf.grannyroomba.messages.RoombaStatusProto.RoombaStatus;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class RoombaLocomotorClient extends LocomotorClient implements
-		IRoombaLocomotor {
+public class CreateLocomotorClient extends LocomotorClient implements
+		ICreateLocomotor {
 
 	int m_oiMode;
 	int m_bumps;
 	int m_velocity;
 	int m_radius;
 
-	public RoombaLocomotorClient(String server, int port) {
+	public CreateLocomotorClient(String server, int port) {
 		super(server, port);
 	}
 
@@ -27,8 +27,11 @@ public class RoombaLocomotorClient extends LocomotorClient implements
 		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.STATUS_REQUEST);
-		m_socket.send(builder.build().toByteArray());
-		byte[] reply = m_socket.recv(0);
+		byte[] reply;
+		synchronized(this) {
+			m_socket.send(builder.build().toByteArray());
+			reply = m_socket.recv(0);
+		}
 		if ( reply == null ) throw new IllegalStateException("Did not get a reply for getStatus");
 		try {
 			RoombaStatus status = RoombaStatus.parseFrom(reply);

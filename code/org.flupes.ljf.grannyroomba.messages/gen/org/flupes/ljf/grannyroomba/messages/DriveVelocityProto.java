@@ -16,14 +16,13 @@ public final class DriveVelocityProto {
      * <code>optional float speed = 1 [default = 0];</code>
      *
      * <pre>
-     * Speed of the drive
-     * By convention, the speed is defined as a ratio of the vehicle
-     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     * Linear velocity (speed) of the robot.
+     * By convention:
+     *   - the speed is expressed in m/s
      *   - a positive speed will make the mobile base move forward
      *   - a negative speed will make the mobile base move backward
-     *   - a zero speed correspond to a stop (and ignores the curvature)
-     *   - if the speed argument is omitted, the command is equivalent
-     *     to a stop (speed=0 by default).
+     *   - a zero speed combined with a zero spin is equivalent to a stop
+     *   - a zero speed combined with a non zero spin is a turn in place
      * </pre>
      */
     boolean hasSpeed();
@@ -31,91 +30,46 @@ public final class DriveVelocityProto {
      * <code>optional float speed = 1 [default = 0];</code>
      *
      * <pre>
-     * Speed of the drive
-     * By convention, the speed is defined as a ratio of the vehicle
-     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     * Linear velocity (speed) of the robot.
+     * By convention:
+     *   - the speed is expressed in m/s
      *   - a positive speed will make the mobile base move forward
      *   - a negative speed will make the mobile base move backward
-     *   - a zero speed correspond to a stop (and ignores the curvature)
-     *   - if the speed argument is omitted, the command is equivalent
-     *     to a stop (speed=0 by default).
+     *   - a zero speed combined with a zero spin is equivalent to a stop
+     *   - a zero speed combined with a non zero spin is a turn in place
      * </pre>
      */
     float getSpeed();
 
-    // optional float curvature = 2 [default = 0];
+    // optional float spin = 2 [default = 0];
     /**
-     * <code>optional float curvature = 2 [default = 0];</code>
+     * <code>optional float spin = 2 [default = 0];</code>
      *
      * <pre>
-     * Curvature of the drive (the curvature is defined as 1/radius)
-     *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-     *     generate a point turn
-     *   - a positive curvature correspond to a turn to the left
-     *   - a negative curvature correspond to a turn to the right
-     *   - if the curvature argument is omitted, the command is equivalent
-     *     to a straight drive (curvature=0 by default).
+     * Angular velocity (spin) of the robot.
+     * By convention:
+     *   - the spin is expressed in rad/s
+     *   - a positive spin generates counter-clockwise rotation (to the left)
+     *   - a negative spin generates clockwise rotation (to the right)
      * </pre>
      */
-    boolean hasCurvature();
+    boolean hasSpin();
     /**
-     * <code>optional float curvature = 2 [default = 0];</code>
+     * <code>optional float spin = 2 [default = 0];</code>
      *
      * <pre>
-     * Curvature of the drive (the curvature is defined as 1/radius)
-     *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-     *     generate a point turn
-     *   - a positive curvature correspond to a turn to the left
-     *   - a negative curvature correspond to a turn to the right
-     *   - if the curvature argument is omitted, the command is equivalent
-     *     to a straight drive (curvature=0 by default).
+     * Angular velocity (spin) of the robot.
+     * By convention:
+     *   - the spin is expressed in rad/s
+     *   - a positive spin generates counter-clockwise rotation (to the left)
+     *   - a negative spin generates clockwise rotation (to the right)
      * </pre>
      */
-    float getCurvature();
+    float getSpin();
 
-    // optional float radius = 3 [default = 1000];
+    // optional float timeout = 3 [default = 0];
     /**
-     * <code>optional float radius = 3 [default = 1000];</code>
-     *
-     * <pre>
-     * Radius of the drive (only curvature OR radius should be specified)
-     *   - radius is a convenience argument that can replace the curvature
-     *     if it is preferred to have an singularity for straight lines
-     *	   (curvature shows a singularity for point turns).
-     *   - a positive radius correspond to a turn to the left
-     *   - a negative radius correspond to a turn to the right
-     *   - by convention, if |radius| &gt; 1000, the drive will be considered
-     *     a straight drive (however this can be defined differently
-     *     if the client and server agree on a different convention)
-     *   - if the radius argument is omitted, the command is equivalent to a
-     *     straight drive (radius = 1000 by default).
-     * </pre>
-     */
-    boolean hasRadius();
-    /**
-     * <code>optional float radius = 3 [default = 1000];</code>
-     *
-     * <pre>
-     * Radius of the drive (only curvature OR radius should be specified)
-     *   - radius is a convenience argument that can replace the curvature
-     *     if it is preferred to have an singularity for straight lines
-     *	   (curvature shows a singularity for point turns).
-     *   - a positive radius correspond to a turn to the left
-     *   - a negative radius correspond to a turn to the right
-     *   - by convention, if |radius| &gt; 1000, the drive will be considered
-     *     a straight drive (however this can be defined differently
-     *     if the client and server agree on a different convention)
-     *   - if the radius argument is omitted, the command is equivalent to a
-     *     straight drive (radius = 1000 by default).
-     * </pre>
-     */
-    float getRadius();
-
-    // optional float timeout = 4 [default = 0];
-    /**
-     * <code>optional float timeout = 4 [default = 0];</code>
+     * <code>optional float timeout = 3 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -127,7 +81,7 @@ public final class DriveVelocityProto {
      */
     boolean hasTimeout();
     /**
-     * <code>optional float timeout = 4 [default = 0];</code>
+     * <code>optional float timeout = 3 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -146,14 +100,30 @@ public final class DriveVelocityProto {
    *
    * Message to specify a velocity drive command.
    *
-   * The unified velocity drive message allow to command
-   * the mobile base at the given velocity for the following
-   * 3 types of move:
-   *   - straight line (curvature = 0)
-   *   - arc circle
-   *   - spin in place (curvature = 1000)
-   * Radius has been added for convenience. However the client and server
-   * need to chose which one they will rely on.
+   * The unified velocity drive message allows to command
+   * the mobile base in velocity mode for the following
+   * 3 types of moves:
+   *    - straight line (speed!=0 &amp;&amp; spin==0)
+   *    - turn in place (speed==0 &amp;&amp; spin!=0)
+   *    - arc circle (speed!=0 &amp;&amp; spin!=0)
+   *
+   * The advantage of using the speed (linear velocity) and
+   * spin (angular velocity) as parameter is double:
+   *    - There is no singularities in the commands compared to
+   *  	other set of parameters:
+   * 			(speed, curvature) for point turn -&gt; curvature = infinity
+   * 			(speed, radius) for straight line -&gt; radius = infinity
+   * 	  - There is continuity when changing from an arc turn to a
+   * 		point turn (given that the speed is within bounds).
+   *
+   * If radius/curvature are required, then can be extracted from
+   * the (speed/spin) set as follow:
+   *    - speed==0 and spin==0 -&gt; stop (radius does not matter)
+   *    - speed!=0 and spin==0 -&gt; straight (curvature zero or radius infinite)
+   *    - speed==0 and spin!=0 -&gt; point turn (radius zero or curvature infinite)
+   *    - speed!=0 and spin!=0 -&gt; regular arc circle:
+   * 		- velocity = speed
+   * 		- radius = velocity/spin (or curvature = spin/velocity)
    * </pre>
    */
   public static final class DriveVelocityMsg extends
@@ -211,16 +181,11 @@ public final class DriveVelocityProto {
             }
             case 21: {
               bitField0_ |= 0x00000002;
-              curvature_ = input.readFloat();
+              spin_ = input.readFloat();
               break;
             }
             case 29: {
               bitField0_ |= 0x00000004;
-              radius_ = input.readFloat();
-              break;
-            }
-            case 37: {
-              bitField0_ |= 0x00000008;
               timeout_ = input.readFloat();
               break;
             }
@@ -271,14 +236,13 @@ public final class DriveVelocityProto {
      * <code>optional float speed = 1 [default = 0];</code>
      *
      * <pre>
-     * Speed of the drive
-     * By convention, the speed is defined as a ratio of the vehicle
-     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     * Linear velocity (speed) of the robot.
+     * By convention:
+     *   - the speed is expressed in m/s
      *   - a positive speed will make the mobile base move forward
      *   - a negative speed will make the mobile base move backward
-     *   - a zero speed correspond to a stop (and ignores the curvature)
-     *   - if the speed argument is omitted, the command is equivalent
-     *     to a stop (speed=0 by default).
+     *   - a zero speed combined with a zero spin is equivalent to a stop
+     *   - a zero speed combined with a non zero spin is a turn in place
      * </pre>
      */
     public boolean hasSpeed() {
@@ -288,107 +252,56 @@ public final class DriveVelocityProto {
      * <code>optional float speed = 1 [default = 0];</code>
      *
      * <pre>
-     * Speed of the drive
-     * By convention, the speed is defined as a ratio of the vehicle
-     * maximum speed. So the speed range is normally comprised in [-1; 1].
+     * Linear velocity (speed) of the robot.
+     * By convention:
+     *   - the speed is expressed in m/s
      *   - a positive speed will make the mobile base move forward
      *   - a negative speed will make the mobile base move backward
-     *   - a zero speed correspond to a stop (and ignores the curvature)
-     *   - if the speed argument is omitted, the command is equivalent
-     *     to a stop (speed=0 by default).
+     *   - a zero speed combined with a zero spin is equivalent to a stop
+     *   - a zero speed combined with a non zero spin is a turn in place
      * </pre>
      */
     public float getSpeed() {
       return speed_;
     }
 
-    // optional float curvature = 2 [default = 0];
-    public static final int CURVATURE_FIELD_NUMBER = 2;
-    private float curvature_;
+    // optional float spin = 2 [default = 0];
+    public static final int SPIN_FIELD_NUMBER = 2;
+    private float spin_;
     /**
-     * <code>optional float curvature = 2 [default = 0];</code>
+     * <code>optional float spin = 2 [default = 0];</code>
      *
      * <pre>
-     * Curvature of the drive (the curvature is defined as 1/radius)
-     *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-     *     generate a point turn
-     *   - a positive curvature correspond to a turn to the left
-     *   - a negative curvature correspond to a turn to the right
-     *   - if the curvature argument is omitted, the command is equivalent
-     *     to a straight drive (curvature=0 by default).
+     * Angular velocity (spin) of the robot.
+     * By convention:
+     *   - the spin is expressed in rad/s
+     *   - a positive spin generates counter-clockwise rotation (to the left)
+     *   - a negative spin generates clockwise rotation (to the right)
      * </pre>
      */
-    public boolean hasCurvature() {
+    public boolean hasSpin() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional float curvature = 2 [default = 0];</code>
+     * <code>optional float spin = 2 [default = 0];</code>
      *
      * <pre>
-     * Curvature of the drive (the curvature is defined as 1/radius)
-     *   - a curvature of 0 correspond to a straight line drive
-     *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-     *     generate a point turn
-     *   - a positive curvature correspond to a turn to the left
-     *   - a negative curvature correspond to a turn to the right
-     *   - if the curvature argument is omitted, the command is equivalent
-     *     to a straight drive (curvature=0 by default).
+     * Angular velocity (spin) of the robot.
+     * By convention:
+     *   - the spin is expressed in rad/s
+     *   - a positive spin generates counter-clockwise rotation (to the left)
+     *   - a negative spin generates clockwise rotation (to the right)
      * </pre>
      */
-    public float getCurvature() {
-      return curvature_;
+    public float getSpin() {
+      return spin_;
     }
 
-    // optional float radius = 3 [default = 1000];
-    public static final int RADIUS_FIELD_NUMBER = 3;
-    private float radius_;
-    /**
-     * <code>optional float radius = 3 [default = 1000];</code>
-     *
-     * <pre>
-     * Radius of the drive (only curvature OR radius should be specified)
-     *   - radius is a convenience argument that can replace the curvature
-     *     if it is preferred to have an singularity for straight lines
-     *	   (curvature shows a singularity for point turns).
-     *   - a positive radius correspond to a turn to the left
-     *   - a negative radius correspond to a turn to the right
-     *   - by convention, if |radius| &gt; 1000, the drive will be considered
-     *     a straight drive (however this can be defined differently
-     *     if the client and server agree on a different convention)
-     *   - if the radius argument is omitted, the command is equivalent to a
-     *     straight drive (radius = 1000 by default).
-     * </pre>
-     */
-    public boolean hasRadius() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional float radius = 3 [default = 1000];</code>
-     *
-     * <pre>
-     * Radius of the drive (only curvature OR radius should be specified)
-     *   - radius is a convenience argument that can replace the curvature
-     *     if it is preferred to have an singularity for straight lines
-     *	   (curvature shows a singularity for point turns).
-     *   - a positive radius correspond to a turn to the left
-     *   - a negative radius correspond to a turn to the right
-     *   - by convention, if |radius| &gt; 1000, the drive will be considered
-     *     a straight drive (however this can be defined differently
-     *     if the client and server agree on a different convention)
-     *   - if the radius argument is omitted, the command is equivalent to a
-     *     straight drive (radius = 1000 by default).
-     * </pre>
-     */
-    public float getRadius() {
-      return radius_;
-    }
-
-    // optional float timeout = 4 [default = 0];
-    public static final int TIMEOUT_FIELD_NUMBER = 4;
+    // optional float timeout = 3 [default = 0];
+    public static final int TIMEOUT_FIELD_NUMBER = 3;
     private float timeout_;
     /**
-     * <code>optional float timeout = 4 [default = 0];</code>
+     * <code>optional float timeout = 3 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -399,10 +312,10 @@ public final class DriveVelocityProto {
      * </pre>
      */
     public boolean hasTimeout() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional float timeout = 4 [default = 0];</code>
+     * <code>optional float timeout = 3 [default = 0];</code>
      *
      * <pre>
      * Optional time out in seconds.
@@ -418,8 +331,7 @@ public final class DriveVelocityProto {
 
     private void initFields() {
       speed_ = 0F;
-      curvature_ = 0F;
-      radius_ = 1000F;
+      spin_ = 0F;
       timeout_ = 0F;
     }
     private byte memoizedIsInitialized = -1;
@@ -438,13 +350,10 @@ public final class DriveVelocityProto {
         output.writeFloat(1, speed_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFloat(2, curvature_);
+        output.writeFloat(2, spin_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeFloat(3, radius_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeFloat(4, timeout_);
+        output.writeFloat(3, timeout_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -461,15 +370,11 @@ public final class DriveVelocityProto {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, curvature_);
+          .computeFloatSize(2, spin_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, radius_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(4, timeout_);
+          .computeFloatSize(3, timeout_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -556,14 +461,30 @@ public final class DriveVelocityProto {
      *
      * Message to specify a velocity drive command.
      *
-     * The unified velocity drive message allow to command
-     * the mobile base at the given velocity for the following
-     * 3 types of move:
-     *   - straight line (curvature = 0)
-     *   - arc circle
-     *   - spin in place (curvature = 1000)
-     * Radius has been added for convenience. However the client and server
-     * need to chose which one they will rely on.
+     * The unified velocity drive message allows to command
+     * the mobile base in velocity mode for the following
+     * 3 types of moves:
+     *    - straight line (speed!=0 &amp;&amp; spin==0)
+     *    - turn in place (speed==0 &amp;&amp; spin!=0)
+     *    - arc circle (speed!=0 &amp;&amp; spin!=0)
+     *
+     * The advantage of using the speed (linear velocity) and
+     * spin (angular velocity) as parameter is double:
+     *    - There is no singularities in the commands compared to
+     *  	other set of parameters:
+     * 			(speed, curvature) for point turn -&gt; curvature = infinity
+     * 			(speed, radius) for straight line -&gt; radius = infinity
+     * 	  - There is continuity when changing from an arc turn to a
+     * 		point turn (given that the speed is within bounds).
+     *
+     * If radius/curvature are required, then can be extracted from
+     * the (speed/spin) set as follow:
+     *    - speed==0 and spin==0 -&gt; stop (radius does not matter)
+     *    - speed!=0 and spin==0 -&gt; straight (curvature zero or radius infinite)
+     *    - speed==0 and spin!=0 -&gt; point turn (radius zero or curvature infinite)
+     *    - speed!=0 and spin!=0 -&gt; regular arc circle:
+     * 		- velocity = speed
+     * 		- radius = velocity/spin (or curvature = spin/velocity)
      * </pre>
      */
     public static final class Builder extends
@@ -603,12 +524,10 @@ public final class DriveVelocityProto {
         super.clear();
         speed_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000001);
-        curvature_ = 0F;
+        spin_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000002);
-        radius_ = 1000F;
-        bitField0_ = (bitField0_ & ~0x00000004);
         timeout_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -644,13 +563,9 @@ public final class DriveVelocityProto {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.curvature_ = curvature_;
+        result.spin_ = spin_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
-        }
-        result.radius_ = radius_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
         }
         result.timeout_ = timeout_;
         result.bitField0_ = to_bitField0_;
@@ -672,11 +587,8 @@ public final class DriveVelocityProto {
         if (other.hasSpeed()) {
           setSpeed(other.getSpeed());
         }
-        if (other.hasCurvature()) {
-          setCurvature(other.getCurvature());
-        }
-        if (other.hasRadius()) {
-          setRadius(other.getRadius());
+        if (other.hasSpin()) {
+          setSpin(other.getSpin());
         }
         if (other.hasTimeout()) {
           setTimeout(other.getTimeout());
@@ -714,14 +626,13 @@ public final class DriveVelocityProto {
        * <code>optional float speed = 1 [default = 0];</code>
        *
        * <pre>
-       * Speed of the drive
-       * By convention, the speed is defined as a ratio of the vehicle
-       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       * Linear velocity (speed) of the robot.
+       * By convention:
+       *   - the speed is expressed in m/s
        *   - a positive speed will make the mobile base move forward
        *   - a negative speed will make the mobile base move backward
-       *   - a zero speed correspond to a stop (and ignores the curvature)
-       *   - if the speed argument is omitted, the command is equivalent
-       *     to a stop (speed=0 by default).
+       *   - a zero speed combined with a zero spin is equivalent to a stop
+       *   - a zero speed combined with a non zero spin is a turn in place
        * </pre>
        */
       public boolean hasSpeed() {
@@ -731,14 +642,13 @@ public final class DriveVelocityProto {
        * <code>optional float speed = 1 [default = 0];</code>
        *
        * <pre>
-       * Speed of the drive
-       * By convention, the speed is defined as a ratio of the vehicle
-       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       * Linear velocity (speed) of the robot.
+       * By convention:
+       *   - the speed is expressed in m/s
        *   - a positive speed will make the mobile base move forward
        *   - a negative speed will make the mobile base move backward
-       *   - a zero speed correspond to a stop (and ignores the curvature)
-       *   - if the speed argument is omitted, the command is equivalent
-       *     to a stop (speed=0 by default).
+       *   - a zero speed combined with a zero spin is equivalent to a stop
+       *   - a zero speed combined with a non zero spin is a turn in place
        * </pre>
        */
       public float getSpeed() {
@@ -748,14 +658,13 @@ public final class DriveVelocityProto {
        * <code>optional float speed = 1 [default = 0];</code>
        *
        * <pre>
-       * Speed of the drive
-       * By convention, the speed is defined as a ratio of the vehicle
-       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       * Linear velocity (speed) of the robot.
+       * By convention:
+       *   - the speed is expressed in m/s
        *   - a positive speed will make the mobile base move forward
        *   - a negative speed will make the mobile base move backward
-       *   - a zero speed correspond to a stop (and ignores the curvature)
-       *   - if the speed argument is omitted, the command is equivalent
-       *     to a stop (speed=0 by default).
+       *   - a zero speed combined with a zero spin is equivalent to a stop
+       *   - a zero speed combined with a non zero spin is a turn in place
        * </pre>
        */
       public Builder setSpeed(float value) {
@@ -768,14 +677,13 @@ public final class DriveVelocityProto {
        * <code>optional float speed = 1 [default = 0];</code>
        *
        * <pre>
-       * Speed of the drive
-       * By convention, the speed is defined as a ratio of the vehicle
-       * maximum speed. So the speed range is normally comprised in [-1; 1].
+       * Linear velocity (speed) of the robot.
+       * By convention:
+       *   - the speed is expressed in m/s
        *   - a positive speed will make the mobile base move forward
        *   - a negative speed will make the mobile base move backward
-       *   - a zero speed correspond to a stop (and ignores the curvature)
-       *   - if the speed argument is omitted, the command is equivalent
-       *     to a stop (speed=0 by default).
+       *   - a zero speed combined with a zero spin is equivalent to a stop
+       *   - a zero speed combined with a non zero spin is a turn in place
        * </pre>
        */
       public Builder clearSpeed() {
@@ -785,176 +693,75 @@ public final class DriveVelocityProto {
         return this;
       }
 
-      // optional float curvature = 2 [default = 0];
-      private float curvature_ ;
+      // optional float spin = 2 [default = 0];
+      private float spin_ ;
       /**
-       * <code>optional float curvature = 2 [default = 0];</code>
+       * <code>optional float spin = 2 [default = 0];</code>
        *
        * <pre>
-       * Curvature of the drive (the curvature is defined as 1/radius)
-       *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-       *     generate a point turn
-       *   - a positive curvature correspond to a turn to the left
-       *   - a negative curvature correspond to a turn to the right
-       *   - if the curvature argument is omitted, the command is equivalent
-       *     to a straight drive (curvature=0 by default).
+       * Angular velocity (spin) of the robot.
+       * By convention:
+       *   - the spin is expressed in rad/s
+       *   - a positive spin generates counter-clockwise rotation (to the left)
+       *   - a negative spin generates clockwise rotation (to the right)
        * </pre>
        */
-      public boolean hasCurvature() {
+      public boolean hasSpin() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional float curvature = 2 [default = 0];</code>
+       * <code>optional float spin = 2 [default = 0];</code>
        *
        * <pre>
-       * Curvature of the drive (the curvature is defined as 1/radius)
-       *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-       *     generate a point turn
-       *   - a positive curvature correspond to a turn to the left
-       *   - a negative curvature correspond to a turn to the right
-       *   - if the curvature argument is omitted, the command is equivalent
-       *     to a straight drive (curvature=0 by default).
+       * Angular velocity (spin) of the robot.
+       * By convention:
+       *   - the spin is expressed in rad/s
+       *   - a positive spin generates counter-clockwise rotation (to the left)
+       *   - a negative spin generates clockwise rotation (to the right)
        * </pre>
        */
-      public float getCurvature() {
-        return curvature_;
+      public float getSpin() {
+        return spin_;
       }
       /**
-       * <code>optional float curvature = 2 [default = 0];</code>
+       * <code>optional float spin = 2 [default = 0];</code>
        *
        * <pre>
-       * Curvature of the drive (the curvature is defined as 1/radius)
-       *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-       *     generate a point turn
-       *   - a positive curvature correspond to a turn to the left
-       *   - a negative curvature correspond to a turn to the right
-       *   - if the curvature argument is omitted, the command is equivalent
-       *     to a straight drive (curvature=0 by default).
+       * Angular velocity (spin) of the robot.
+       * By convention:
+       *   - the spin is expressed in rad/s
+       *   - a positive spin generates counter-clockwise rotation (to the left)
+       *   - a negative spin generates clockwise rotation (to the right)
        * </pre>
        */
-      public Builder setCurvature(float value) {
+      public Builder setSpin(float value) {
         bitField0_ |= 0x00000002;
-        curvature_ = value;
+        spin_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float curvature = 2 [default = 0];</code>
+       * <code>optional float spin = 2 [default = 0];</code>
        *
        * <pre>
-       * Curvature of the drive (the curvature is defined as 1/radius)
-       *   - a curvature of 0 correspond to a straight line drive
-       *   - by convention, if |curvature| &gt; 1000 (=1mm radius) will
-       *     generate a point turn
-       *   - a positive curvature correspond to a turn to the left
-       *   - a negative curvature correspond to a turn to the right
-       *   - if the curvature argument is omitted, the command is equivalent
-       *     to a straight drive (curvature=0 by default).
+       * Angular velocity (spin) of the robot.
+       * By convention:
+       *   - the spin is expressed in rad/s
+       *   - a positive spin generates counter-clockwise rotation (to the left)
+       *   - a negative spin generates clockwise rotation (to the right)
        * </pre>
        */
-      public Builder clearCurvature() {
+      public Builder clearSpin() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        curvature_ = 0F;
+        spin_ = 0F;
         onChanged();
         return this;
       }
 
-      // optional float radius = 3 [default = 1000];
-      private float radius_ = 1000F;
-      /**
-       * <code>optional float radius = 3 [default = 1000];</code>
-       *
-       * <pre>
-       * Radius of the drive (only curvature OR radius should be specified)
-       *   - radius is a convenience argument that can replace the curvature
-       *     if it is preferred to have an singularity for straight lines
-       *	   (curvature shows a singularity for point turns).
-       *   - a positive radius correspond to a turn to the left
-       *   - a negative radius correspond to a turn to the right
-       *   - by convention, if |radius| &gt; 1000, the drive will be considered
-       *     a straight drive (however this can be defined differently
-       *     if the client and server agree on a different convention)
-       *   - if the radius argument is omitted, the command is equivalent to a
-       *     straight drive (radius = 1000 by default).
-       * </pre>
-       */
-      public boolean hasRadius() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional float radius = 3 [default = 1000];</code>
-       *
-       * <pre>
-       * Radius of the drive (only curvature OR radius should be specified)
-       *   - radius is a convenience argument that can replace the curvature
-       *     if it is preferred to have an singularity for straight lines
-       *	   (curvature shows a singularity for point turns).
-       *   - a positive radius correspond to a turn to the left
-       *   - a negative radius correspond to a turn to the right
-       *   - by convention, if |radius| &gt; 1000, the drive will be considered
-       *     a straight drive (however this can be defined differently
-       *     if the client and server agree on a different convention)
-       *   - if the radius argument is omitted, the command is equivalent to a
-       *     straight drive (radius = 1000 by default).
-       * </pre>
-       */
-      public float getRadius() {
-        return radius_;
-      }
-      /**
-       * <code>optional float radius = 3 [default = 1000];</code>
-       *
-       * <pre>
-       * Radius of the drive (only curvature OR radius should be specified)
-       *   - radius is a convenience argument that can replace the curvature
-       *     if it is preferred to have an singularity for straight lines
-       *	   (curvature shows a singularity for point turns).
-       *   - a positive radius correspond to a turn to the left
-       *   - a negative radius correspond to a turn to the right
-       *   - by convention, if |radius| &gt; 1000, the drive will be considered
-       *     a straight drive (however this can be defined differently
-       *     if the client and server agree on a different convention)
-       *   - if the radius argument is omitted, the command is equivalent to a
-       *     straight drive (radius = 1000 by default).
-       * </pre>
-       */
-      public Builder setRadius(float value) {
-        bitField0_ |= 0x00000004;
-        radius_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional float radius = 3 [default = 1000];</code>
-       *
-       * <pre>
-       * Radius of the drive (only curvature OR radius should be specified)
-       *   - radius is a convenience argument that can replace the curvature
-       *     if it is preferred to have an singularity for straight lines
-       *	   (curvature shows a singularity for point turns).
-       *   - a positive radius correspond to a turn to the left
-       *   - a negative radius correspond to a turn to the right
-       *   - by convention, if |radius| &gt; 1000, the drive will be considered
-       *     a straight drive (however this can be defined differently
-       *     if the client and server agree on a different convention)
-       *   - if the radius argument is omitted, the command is equivalent to a
-       *     straight drive (radius = 1000 by default).
-       * </pre>
-       */
-      public Builder clearRadius() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        radius_ = 1000F;
-        onChanged();
-        return this;
-      }
-
-      // optional float timeout = 4 [default = 0];
+      // optional float timeout = 3 [default = 0];
       private float timeout_ ;
       /**
-       * <code>optional float timeout = 4 [default = 0];</code>
+       * <code>optional float timeout = 3 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -965,10 +772,10 @@ public final class DriveVelocityProto {
        * </pre>
        */
       public boolean hasTimeout() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional float timeout = 4 [default = 0];</code>
+       * <code>optional float timeout = 3 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -982,7 +789,7 @@ public final class DriveVelocityProto {
         return timeout_;
       }
       /**
-       * <code>optional float timeout = 4 [default = 0];</code>
+       * <code>optional float timeout = 3 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -993,13 +800,13 @@ public final class DriveVelocityProto {
        * </pre>
        */
       public Builder setTimeout(float value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         timeout_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float timeout = 4 [default = 0];</code>
+       * <code>optional float timeout = 3 [default = 0];</code>
        *
        * <pre>
        * Optional time out in seconds.
@@ -1010,7 +817,7 @@ public final class DriveVelocityProto {
        * </pre>
        */
       public Builder clearTimeout() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         timeout_ = 0F;
         onChanged();
         return this;
@@ -1042,11 +849,10 @@ public final class DriveVelocityProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\023DriveVelocity.proto\022\025grannyroomba.mess" +
-      "ages\"d\n\020DriveVelocityMsg\022\020\n\005speed\030\001 \001(\002:" +
-      "\0010\022\024\n\tcurvature\030\002 \001(\002:\0010\022\024\n\006radius\030\003 \001(\002" +
-      ":\0041000\022\022\n\007timeout\030\004 \001(\002:\0010B:\n$org.flupes" +
-      ".ljf.grannyroomba.messagesB\022DriveVelocit" +
-      "yProto"
+      "ages\"I\n\020DriveVelocityMsg\022\020\n\005speed\030\001 \001(\002:" +
+      "\0010\022\017\n\004spin\030\002 \001(\002:\0010\022\022\n\007timeout\030\003 \001(\002:\0010B" +
+      ":\n$org.flupes.ljf.grannyroomba.messagesB" +
+      "\022DriveVelocityProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1058,7 +864,7 @@ public final class DriveVelocityProto {
           internal_static_grannyroomba_messages_DriveVelocityMsg_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_grannyroomba_messages_DriveVelocityMsg_descriptor,
-              new java.lang.String[] { "Speed", "Curvature", "Radius", "Timeout", });
+              new java.lang.String[] { "Speed", "Spin", "Timeout", });
           return null;
         }
       };

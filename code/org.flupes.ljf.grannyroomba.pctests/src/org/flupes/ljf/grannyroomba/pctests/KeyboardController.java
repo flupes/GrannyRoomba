@@ -5,17 +5,17 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
+import org.flupes.ljf.grannyroomba.net.CreateLocomotorClient;
 
 public class KeyboardController {
 
 	private boolean m_active;
 	private Scanner m_scanner;
-	private RoombaLocomotorClient m_locomotor;
+	private CreateLocomotorClient m_locomotor;
 
 	private Timer m_timer;
 
-	KeyboardController(InputStream in, RoombaLocomotorClient lclient) {
+	KeyboardController(InputStream in, CreateLocomotorClient lclient) {
 		m_active = true;
 		m_scanner = new Scanner(in);
 		m_locomotor = lclient;
@@ -52,19 +52,18 @@ public class KeyboardController {
 			switch ( line.toLowerCase().charAt(0) ) {
 			case 'r':
 				System.out.println("forward");
-				m_locomotor.driveVelocity(100, 0x8000, 1f);
+				m_locomotor.driveVelocity(0.2f, 0, 1f);
 				break;	
 			case 'v':
 				System.out.println("backward");
-				m_locomotor.driveVelocity(-100, 0x8000, 1f);
+				m_locomotor.driveVelocity(-0.2f, 0, 1f);
 				break;	
 			case 'd':
 				System.out.println("turn left");
-				m_locomotor.driveVelocity(100, 0x0001, 1f);
-				break;	
+				m_locomotor.driveVelocity(0, -1, 1f);
 			case 'g':
 				System.out.println("turn right");
-				m_locomotor.driveVelocity(100, 0xFFFF, 1f);
+				m_locomotor.driveVelocity(0, 1, 1f);
 				break;	
 			case 's':
 				System.out.println("status");
@@ -83,7 +82,7 @@ public class KeyboardController {
 				break;	
 			default:
 				System.out.println("stop");
-				m_locomotor.driveVelocity(0, 0x8000, 1f);
+				m_locomotor.stop(0);
 			}
 		}
 		//		}

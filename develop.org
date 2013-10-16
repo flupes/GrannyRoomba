@@ -37,6 +37,16 @@ process below is replaced by the above qos...
        - select generate Java
        - Java Output Directory : gen
    - Add an association between the *.proto files and the protobuf editor
+** Install findbugs
+   - Install findbugs from the following repo:
+     http://findbugs.cs.umd.edu/eclipse
+   - Tutorial at:
+     http://www.vogella.com/articles/Findbugs/article.html
+** Install Eclipse MAT (Memory Analyzer
+   - Install MAT from the following repo:
+     http://download.eclipse.org/mat/1.3/update-site/
+   - Tutorial at:
+     http://www.vogella.com/articles/EclipseMemoryAnalyzer/article.html
 * Install GrannyRoomba dependencies
 #+BEGIN_SRC bash
 # IOIO

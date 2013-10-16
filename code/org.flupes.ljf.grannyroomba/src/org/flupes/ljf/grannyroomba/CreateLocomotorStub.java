@@ -1,7 +1,12 @@
 package org.flupes.ljf.grannyroomba;
 
-public class RoombaLocomotorStub extends LocomotorStub implements
-		IRoombaLocomotor {
+public class CreateLocomotorStub extends LocomotorStub implements
+		ICreateLocomotor {
+
+	@Override
+	public int getStatus() {
+		return 0;
+	}
 
 	@Override
 	public int getOiMode() {

@@ -46,6 +46,7 @@ public abstract class SerialIoioRoomba {
 	protected IOIO m_ioio;
 	protected Uart m_uart;
 	protected byte[] m_buffer = new byte[128];
+	protected int m_lastDriveCmd;
 
 	protected DigitalOutput m_deviceDetect; 
 	protected InputStream m_serialReceive;
@@ -117,16 +118,17 @@ public abstract class SerialIoioRoomba {
 
 	public void stop() throws ConnectionLostException {
 		s_logger.debug("Stop Drive");
-		drive(0, 0x8000);
+		baseDrive(0, 0x8000);
 	}
 
-	public void drive(int velocity, int radius)
+	public void baseDrive(int velocity, int radius)
 			throws ConnectionLostException {
-		s_logger.debug("drive("+velocity+", "+radius+")");
+		s_logger.debug("baseDrive("+velocity+", "+radius+")");
 		writeByte( CMD_DRIVE );
 		writeWord( velocity );
 		writeWord( radius );
 		delay(CMD_WAIT_MS);
+		m_lastDriveCmd = CMD_DRIVE;
 	}
 
 	protected void writeByte(int b) 
