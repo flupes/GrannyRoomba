@@ -46,7 +46,12 @@ public class LocomotorCmdClientTest {
 			int r = 0;
 			try {
 				str = input.readLine();
-				r = Integer.parseInt(str);
+				if ( str != null ) {
+					r = Integer.parseInt(str);
+				}
+				else {
+					r = -1;
+				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

@@ -5,7 +5,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
-import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
+import org.flupes.ljf.grannyroomba.net.CreateLocomotorClient;
 
 public class TestLocomotorService {
 
@@ -18,16 +18,21 @@ public class TestLocomotorService {
 		}
 		int port = Integer.getInteger("port", 4444);
 
+		int repeat = Integer.getInteger("repeat", 1);
+		
 		// initialize logger
 		s_logger.setLevel(Level.TRACE);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		s_logger.addAppender(appender);
 
-		RoombaLocomotorClient locoClient = new RoombaLocomotorClient(host, port);
+		CreateLocomotorClient locoClient = new CreateLocomotorClient(host, port);
 		locoClient.connect();
 		
 		try {
-			locoClient.getStatus();
+			for ( int i=0; i< repeat; i++ ) {
+				locoClient.getStatus();
+				Thread.sleep(200);
+			}
 			s_logger.info("getStatus request returned correctly");
 		} catch (Exception e) {
 			s_logger.error("Could not get status from Locomotor!");

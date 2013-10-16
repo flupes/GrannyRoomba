@@ -2,27 +2,22 @@ package org.flupes.ljf.grannyroomba.hw;
 
 import ioio.lib.api.exception.ConnectionLostException;
 
-import org.flupes.ljf.grannyroomba.IRoombaLocomotor;
+import org.flupes.ljf.grannyroomba.ILocomotor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IoioRoombaLocomotor implements IRoombaLocomotor {
+public class IoioRoomba400Locomotor implements ILocomotor {
 
-	protected RoombaCreate m_roomba;
-	
-	protected int m_oiMode;
-	protected int m_bumps;
-	protected int m_velocity;
-	protected int m_radius;
-	
+	protected RoombaSeries400 m_roomba;
+
 	protected static final float EPSILON = 1E-3f;
-	
+
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
-	public IoioRoombaLocomotor(RoombaCreate roomba) {
+	public IoioRoomba400Locomotor(RoombaSeries400 roomba) {
 		m_roomba = roomba;
 	}
-	
+
 	@Override
 	public int stop(int mode) {
 		try {
@@ -70,7 +65,7 @@ public class IoioRoombaLocomotor implements IRoombaLocomotor {
 			}
 			s_logger.trace("driveVelocity("+speed+","
 					+spin+") -> velocity="+velocity+" / radius="+radius);
-			m_roomba.drive(velocity, radius);
+			m_roomba.baseDrive(velocity, radius);
 		} catch (ConnectionLostException e) {
 			e.printStackTrace();
 			return -1;
@@ -78,33 +73,5 @@ public class IoioRoombaLocomotor implements IRoombaLocomotor {
 		return 0;
 	}
 
-	@Override
-	public int getStatus() {
-		m_oiMode = m_roomba.getOiMode();
-		m_bumps =  m_roomba.getBumps();
-		m_velocity = m_roomba.getVelocity();
-		m_radius = m_roomba.getRadius();
-		return 0;
-	}
-
-	@Override
-	public int getOiMode() {
-		return  m_oiMode;
-	}
-
-	@Override
-	public int getBumps() {
-		return m_bumps;
-	}
-
-	@Override
-	public int getVelocity() {
-		return m_velocity;
-	}
-
-	@Override
-	public int getRadius() {
-		return m_radius;
-	}
 
 }

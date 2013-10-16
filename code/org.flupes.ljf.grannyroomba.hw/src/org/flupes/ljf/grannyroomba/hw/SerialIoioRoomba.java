@@ -117,12 +117,12 @@ public abstract class SerialIoioRoomba {
 
 	public void stop() throws ConnectionLostException {
 		s_logger.debug("Stop Drive");
-		drive(0, 0x8000);
+		baseDrive(0, 0x8000);
 	}
 
-	public void drive(int velocity, int radius)
+	public void baseDrive(int velocity, int radius)
 			throws ConnectionLostException {
-		s_logger.debug("drive("+velocity+", "+radius+")");
+		s_logger.debug("baseDrive("+velocity+", "+radius+")");
 		writeByte( CMD_DRIVE );
 		writeWord( velocity );
 		writeWord( radius );

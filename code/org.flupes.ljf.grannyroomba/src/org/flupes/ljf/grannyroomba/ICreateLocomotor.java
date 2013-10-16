@@ -1,7 +1,9 @@
 package org.flupes.ljf.grannyroomba;
 
-public interface IRoombaLocomotor extends ILocomotor {
+public interface ICreateLocomotor extends ILocomotor {
 
+	int getStatus();
+	
 	int getOiMode();
 
 	int getBumps();

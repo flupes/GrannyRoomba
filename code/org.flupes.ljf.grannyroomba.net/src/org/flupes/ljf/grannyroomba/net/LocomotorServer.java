@@ -1,6 +1,6 @@
 package org.flupes.ljf.grannyroomba.net;
 
-import org.flupes.ljf.grannyroomba.IRoombaLocomotor;
+import org.flupes.ljf.grannyroomba.ICreateLocomotor;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus;
 import org.flupes.ljf.grannyroomba.messages.CommandStatusProto.CommandStatus.Status;
 import org.flupes.ljf.grannyroomba.messages.DriveVelocityProto.DriveVelocityMsg;
@@ -12,9 +12,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 public class LocomotorServer extends ZmqServer {
 
-	protected final IRoombaLocomotor m_locomotor;
+	protected final ICreateLocomotor m_locomotor;
 
-	public LocomotorServer(int port, IRoombaLocomotor loco) {
+	public LocomotorServer(int port, ICreateLocomotor loco) {
 		super(port);
 		m_locomotor = loco;
 	}

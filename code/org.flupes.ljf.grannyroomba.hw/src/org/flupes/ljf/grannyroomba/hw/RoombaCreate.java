@@ -78,6 +78,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	}
 
 	protected static final int CMD_DEMO = 136;
+	protected static final int CMD_DIRECT = 145;
 	protected static final int CMD_STREAM = 148;
 	protected static final int CMD_TOGGLESTREAM = 150;
 	protected static final int CMD_SCRIPT = 152;
@@ -182,6 +183,15 @@ public class RoombaCreate extends SerialIoioRoomba {
 		m_exec.execute(m_monitor);
 		TelemetryListening telem = new TelemetryListening();
 		m_exec.execute(telem);
+	}
+
+	public void directDrive(int leftWheelSpeed, int rightWheelSpeed)
+			throws ConnectionLostException {
+		s_logger.debug("direcDrive("+leftWheelSpeed+", "+rightWheelSpeed+")");
+		writeByte( CMD_DIRECT );
+		writeWord( rightWheelSpeed );
+		writeWord( leftWheelSpeed );
+		delay(CMD_WAIT_MS);
 	}
 
 	private void createScripts() {
@@ -376,6 +386,11 @@ public class RoombaCreate extends SerialIoioRoomba {
 				while ( !m_exec.isShutdown() ) {
 					// Block until triggered by the telemetry thread
 					synchronized(this) {
+						// TODO should change this synchronization method:
+						// we do not gain anything since the telemetry reading 
+						// thread will block not matter what until 
+						// we arrive again at this wait: it does not decouple
+						// the telemetry and safety checks!
 						wait();
 					}
 					int bumps;

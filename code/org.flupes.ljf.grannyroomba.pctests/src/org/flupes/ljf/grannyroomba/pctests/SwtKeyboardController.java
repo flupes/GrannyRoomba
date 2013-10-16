@@ -12,7 +12,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
+import org.flupes.ljf.grannyroomba.net.CreateLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
 
 public class SwtKeyboardController {
@@ -26,7 +26,7 @@ public class SwtKeyboardController {
 	private static final float TITL_INCR = 5.0f;
 
 	private ServoClient m_servoClient;
-	private RoombaLocomotorClient m_locoClient;
+	private CreateLocomotorClient m_locoClient;
 
 	private Float m_tilt = null;
 	private volatile float speed = 0;
@@ -36,7 +36,7 @@ public class SwtKeyboardController {
 	private boolean m_connected;
 	private Timer m_timer;
 
-	public SwtKeyboardController(ServoClient sclient, RoombaLocomotorClient lclient) {
+	public SwtKeyboardController(ServoClient sclient, CreateLocomotorClient lclient) {
 		m_servoClient = sclient;
 		m_locoClient = lclient;
 		m_connected = true;
@@ -89,7 +89,8 @@ public class SwtKeyboardController {
 		m_connected = false;
 		m_timer.cancel();
 		synchronized( m_timer ) {
-			m_locoClient.driveVelocityCurvature(0, 0x8000, 1.0f);
+			// TODO adapt for the new unified command
+			m_locoClient.driveVelocity(0, 0x8000, 1.0f);
 		}
 	}
 
@@ -263,7 +264,8 @@ public class SwtKeyboardController {
 		}
 		try {
 			synchronized(m_timer) {
-				m_locoClient.driveVelocityCurvature(velocity, radius, 1.0f);
+				// TODO adapt for the new unified command
+				m_locoClient.driveVelocity(velocity, radius, 1.0f);
 			}
 		} catch (Exception e) {
 			s_logger.error("REP/REQ failed for driveVelocity");

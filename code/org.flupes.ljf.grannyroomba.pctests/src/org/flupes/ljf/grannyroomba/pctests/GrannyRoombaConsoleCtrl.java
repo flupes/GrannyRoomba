@@ -5,17 +5,17 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
-import org.flupes.ljf.grannyroomba.net.RoombaLocomotorClient;
+import org.flupes.ljf.grannyroomba.net.CreateLocomotorClient;
 
 public class GrannyRoombaConsoleCtrl {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
 
-	private RoombaLocomotorClient m_locomotor;
+	private CreateLocomotorClient m_locomotor;
 	
 	public GrannyRoombaConsoleCtrl(String host, int locoPort) {
 
-		m_locomotor = new RoombaLocomotorClient(host, locoPort);
+		m_locomotor = new CreateLocomotorClient(host, locoPort);
 		m_locomotor.connect();
 
 		KeyboardController controller = new KeyboardController(System.in, m_locomotor);
@@ -24,7 +24,8 @@ public class GrannyRoombaConsoleCtrl {
 			while ( controller.execute() ) {
 				// nothing
 			}
-			m_locomotor.driveVelocityCurvature(0, 0x8000, 1f);
+			// TODO adapt for the new unified command
+			m_locomotor.driveVelocity(0, 0x8000, 1f);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}

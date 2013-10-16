@@ -233,7 +233,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 			}
 		}
 		try {
-			m_roomba.drive(velocity, radius);
+			m_roomba.baseDrive(velocity, radius);
 		} catch (ConnectionLostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
