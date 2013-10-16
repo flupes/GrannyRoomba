@@ -194,6 +194,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 		delay(CMD_WAIT_MS);
 	}
 
+	@Override
+	public void stop() throws ConnectionLostException {
+		s_logger.debug("Stop Drive");
+		directDrive(0, 0);
+	}
+
 	private void createScripts() {
 		m_backupScript = new Script();
 		m_backupScript.addByte(CMD_FULL);
@@ -385,12 +391,10 @@ public class RoombaCreate extends SerialIoioRoomba {
 			try {
 				while ( !m_exec.isShutdown() ) {
 					// Block until triggered by the telemetry thread
+					// The telemetry can continue at its own pace
+					// even if this thread is working on something 
+					// else: the notify will just not awaken anything
 					synchronized(this) {
-						// TODO should change this synchronization method:
-						// we do not gain anything since the telemetry reading 
-						// thread will block not matter what until 
-						// we arrive again at this wait: it does not decouple
-						// the telemetry and safety checks!
 						wait();
 					}
 					int bumps;
