@@ -6,6 +6,11 @@ import org.flupes.ljf.grannyroomba.ILocomotor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @warning This class has not been tested!
+ * It is mainly here to keep the old "driveVelocity" for future
+ * reference if a Roomba Serie 400 becomes available. 
+ */
 public class IoioRoomba400Locomotor implements ILocomotor {
 
 	protected RoombaSeries400 m_roomba;
@@ -48,19 +53,20 @@ public class IoioRoomba400Locomotor implements ILocomotor {
 					else {
 						radius = 0x0001; 
 					}
-					velocity = Math.round(RoombaCreate.WHEEL_BASE * spin); 
+					// wheel base = 0.260m
+					velocity = Math.round(260 * spin); 
 				}
 			}
 			else {
 				if ( Math.abs(spin) < EPSILON ) {
 					// straight drive
 					radius = 0x8000;
-					velocity = Math.round(speed);
+					velocity = Math.round(1000*speed);
 				}
 				else {
 					// arc circle
-					velocity = Math.round(speed);
-					radius = Math.round(speed / spin);
+					velocity = Math.round(1000*speed);
+					radius = Math.round(1000*speed / spin);
 				}
 			}
 			s_logger.trace("driveVelocity("+speed+","
