@@ -15,9 +15,9 @@ public class ZmqClient {
 	protected boolean m_connected;
 	protected int m_sendTimeoutMs;
 	protected int m_recvTimeoutMs;
-	
+
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
-	
+
 	public ZmqClient(String server, int port) {
 		m_server = server;
 		m_port = port;
@@ -26,11 +26,11 @@ public class ZmqClient {
 		m_sendTimeoutMs = Integer.getInteger("send_timeout", 1000);
 		m_recvTimeoutMs = Integer.getInteger("recv_timeout", 2000);
 	}
-	
+
 	public boolean isConnected() {
 		return m_connected;
 	}
-	
+
 	public synchronized void connect() {
 		if ( ! m_connected ) {
 			m_context = ZMQ.context(1);
@@ -42,7 +42,7 @@ public class ZmqClient {
 			s_logger.info("Client connected to ["+m_url+"]");
 		}
 	}
-	
+
 	public synchronized void disconnect() {
 		m_socket.disconnect(m_url);
 		m_socket.close();
@@ -50,14 +50,17 @@ public class ZmqClient {
 		m_connected = false;
 		s_logger.info("Client of [" + m_url + "] disconnected.");
 	}
-	
+
 	protected byte[] reqrep(byte[] buffer) throws ZMQException {
-		boolean req = m_socket.send(buffer);
-		if ( ! req ) {
-			s_logger.error("could not send request!");
-			throw new ZMQException(m_socket.base().errno());
+		byte[] rep;
+		synchronized(this) {
+			boolean req = m_socket.send(buffer);
+			if ( ! req ) {
+				s_logger.error("could not send request!");
+				throw new ZMQException(m_socket.base().errno());
+			}
+			rep = m_socket.recv(0);
 		}
-		byte[] rep = m_socket.recv(0);
 		if ( null == rep ) {
 			s_logger.error("did not receive response!");
 			throw new ZMQException(m_socket.base().errno());

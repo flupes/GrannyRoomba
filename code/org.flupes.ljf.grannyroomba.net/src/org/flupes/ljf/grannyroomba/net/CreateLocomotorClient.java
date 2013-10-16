@@ -27,8 +27,11 @@ public class CreateLocomotorClient extends LocomotorClient implements
 		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.STATUS_REQUEST);
-		m_socket.send(builder.build().toByteArray());
-		byte[] reply = m_socket.recv(0);
+		byte[] reply;
+		synchronized(this) {
+			m_socket.send(builder.build().toByteArray());
+			reply = m_socket.recv(0);
+		}
 		if ( reply == null ) throw new IllegalStateException("Did not get a reply for getStatus");
 		try {
 			RoombaStatus status = RoombaStatus.parseFrom(reply);
