@@ -46,6 +46,7 @@ public abstract class SerialIoioRoomba {
 	protected IOIO m_ioio;
 	protected Uart m_uart;
 	protected byte[] m_buffer = new byte[128];
+	protected int m_lastDriveCmd;
 
 	protected DigitalOutput m_deviceDetect; 
 	protected InputStream m_serialReceive;
@@ -127,6 +128,7 @@ public abstract class SerialIoioRoomba {
 		writeWord( velocity );
 		writeWord( radius );
 		delay(CMD_WAIT_MS);
+		m_lastDriveCmd = CMD_DRIVE;
 	}
 
 	protected void writeByte(int b) 
