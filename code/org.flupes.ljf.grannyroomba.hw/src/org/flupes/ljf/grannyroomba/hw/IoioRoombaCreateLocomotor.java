@@ -18,7 +18,7 @@ public class IoioRoombaCreateLocomotor implements ICreateLocomotor {
 	protected static final float EPSILON = 1E-3f;
 
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
-	
+
 	public IoioRoombaCreateLocomotor(RoombaCreate roomba) {
 		m_roomba = roomba;
 	}
@@ -37,40 +37,46 @@ public class IoioRoombaCreateLocomotor implements ICreateLocomotor {
 	@Override
 	public int driveVelocity(float speed, float spin, float timeout) {
 		try {
-			int velocity;
-			int radius;
+			float leftWheelSpeed;
+			float rightWheelSpeed;
 			if ( Math.abs(speed) < EPSILON ) {
 				if ( Math.abs(spin) < EPSILON ) {
 					// stop
-					velocity = 0;
-					radius = 0x8000;
+					rightWheelSpeed = 0;
+					leftWheelSpeed = 0;
 				}
 				else {
 					// point turn
-					if ( spin > 0 ) {
-						radius = 0xFFFF;
-					}
-					else {
-						radius = 0x0001; 
-					}
-					velocity = Math.round(RoombaCreate.WHEEL_BASE * spin); 
+					rightWheelSpeed = spin*RoombaCreate.WHEEL_BASE/2f;
+					leftWheelSpeed = -rightWheelSpeed;
 				}
 			}
 			else {
 				if ( Math.abs(spin) < EPSILON ) {
 					// straight drive
-					radius = 0x8000;
-					velocity = Math.round(speed);
+					rightWheelSpeed  = speed;
+					leftWheelSpeed = speed;
 				}
 				else {
 					// arc circle
-					velocity = Math.round(speed);
-					radius = Math.round(speed / spin);
+					float angularVel = spin*RoombaCreate.WHEEL_BASE/2f;
+					rightWheelSpeed = speed+ angularVel;
+					leftWheelSpeed = speed-angularVel;
 				}
 			}
 			s_logger.trace("driveVelocity("+speed+","
-					+spin+") -> velocity="+velocity+" / radius="+radius);
-			m_roomba.baseDrive(velocity, radius);
+					+spin+") -> leftWS="+leftWheelSpeed+" / rightWS="+rightWheelSpeed);
+			if ( Math.abs(rightWheelSpeed) <= RoombaCreate.MAX_VELOCITY
+					&& Math.abs(leftWheelSpeed) <= RoombaCreate.MAX_VELOCITY ) {
+				// reminder: roomba speed are expressed in mm, hence 
+				// the 1000 factor
+				m_roomba.directDrive(
+						Math.round(1000*leftWheelSpeed), 
+						Math.round(1000*rightWheelSpeed) );
+			}
+			else {
+				s_logger.warn("wheel velocity exceeded bounds!");
+			}
 		} catch (ConnectionLostException e) {
 			e.printStackTrace();
 			return -1;
