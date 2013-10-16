@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -14,6 +15,8 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
+import org.flupes.ljf.grannyroomba.ICreateLocomotor;
+import org.flupes.ljf.grannyroomba.hw.IoioRoombaCreateLocomotor;
 import org.flupes.ljf.grannyroomba.hw.RoombaCreate;
 
 import ioio.lib.api.DigitalInput;
@@ -31,7 +34,8 @@ public class TestRoombaCreate extends IOIOSwingApp {
 
 
 	private RoombaCreate m_roomba;
-
+	private ICreateLocomotor m_locomotor;
+	
 	private DigitalOutput m_heartBeatLed;
 	private boolean m_beatState;
 	private long m_lastTime;
@@ -40,11 +44,12 @@ public class TestRoombaCreate extends IOIOSwingApp {
 	private InputStream m_input;
 	private static Logger s_logger = Logger.getLogger("grannyroomba");
 
-	private static float SPEED_INCR = 0.2f;
-	private static float SPIN_INCR = 0.2f;
-	private static float MAX_VELOCITY = 500;
-	private static float MAX_RADIUS = 2000;
-
+	private static float SPEED_INCR = 0.05f;
+	private static float SPIN_INCR = 0.4f;
+	private static float MAX_LINEAR_VELOCITY = 0.5f;
+	private static float WHEEL_BASE = 0.260f;
+	private static float MAX_ANGULAR_VELOCITY = 2f*MAX_LINEAR_VELOCITY/WHEEL_BASE;
+	
 	private static boolean s_listen = false;
 
 	public static void main(String[] args) throws Exception {
@@ -68,7 +73,8 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				m_lastTime = System.currentTimeMillis();
 
 				m_roomba = new RoombaCreate(ioio_);
-//				m_roomba.connect();
+				m_locomotor = new IoioRoombaCreateLocomotor(m_roomba);
+				
 				m_roomba.connect(2, 1);
 
 				m_roomba.safeControl();
@@ -81,7 +87,8 @@ public class TestRoombaCreate extends IOIOSwingApp {
 
 				
 				m_roomba.startTelemetry();
-				//				m_roomba.demo(4);
+				
+				// m_roomba.demo(4);
 
 			}
 
@@ -130,28 +137,30 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				new KeyAdapter() {
 					private float speed = 0;
 					private float spin = 0;
-					private float prevSpeed = 0;
 					public void keyPressed(KeyEvent e) {
-						prevSpeed = speed;
 						boolean newDrive = false; 
 						switch ( e.getKeyCode() ) {
 						case KeyEvent.VK_UP: 
-							if ( speed < 1-SPEED_INCR/2 ) speed += SPEED_INCR;
+							speed += SPEED_INCR;
+							if ( speed > MAX_LINEAR_VELOCITY ) speed = MAX_LINEAR_VELOCITY;
 							s_logger.trace("UP pressed -> speed="+speed+" / spin="+spin);
 							newDrive=true;
 							break;
 						case KeyEvent.VK_DOWN:
-							if ( speed > -1+SPEED_INCR/2 ) speed -= SPEED_INCR;
+							speed -= SPEED_INCR;
+							if ( speed < -MAX_LINEAR_VELOCITY ) speed = -MAX_LINEAR_VELOCITY;
 							s_logger.trace("DOWN pressed -> speed="+speed+" / spin="+spin);
 							newDrive=true;
 							break;
 						case KeyEvent.VK_RIGHT:
-							if ( spin < 1-SPIN_INCR/2 ) spin += SPIN_INCR;
+							spin -= SPIN_INCR;
+							if ( spin < -MAX_ANGULAR_VELOCITY ) spin = -MAX_ANGULAR_VELOCITY;
 							s_logger.trace("RIGHT pressed -> speed="+speed+" / spin="+spin);
 							newDrive=true;
 							break;
 						case KeyEvent.VK_LEFT: 
-							if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
+							spin += SPIN_INCR;
+							if ( spin > MAX_ANGULAR_VELOCITY ) spin = MAX_ANGULAR_VELOCITY;
 							s_logger.trace("LEFT pressed -> speed="+speed+" / spin="+spin);
 							newDrive=true;
 							break;
@@ -168,23 +177,8 @@ public class TestRoombaCreate extends IOIOSwingApp {
 						default:
 							s_logger.trace("Key " + e.getKeyChar() + " not processed");
 						}
-						// From a slow speed, small radius, we shoudl transition
-						// to a slow point turn when speed becomes zero (without 
-						// this check, small radius is transformed into high point
-						// turn rate!)
-						s_logger.trace("prevSpeed=" + prevSpeed + " / currSpeed=" + speed);
-						if ( (Math.abs(prevSpeed)>SPEED_INCR/2) && (Math.abs(speed)<SPEED_INCR/2) ) {
-							float absSpin = Math.abs(prevSpeed);
-							if ( spin > SPIN_INCR/2 ) {
-								spin = absSpin;
-							}
-							else if ( spin < -SPIN_INCR/2 ) {
-								spin = -absSpin;
-							}
-							s_logger.trace("reset spin to: " + spin);
-						}
 						if ( newDrive ) {
-							changeDrive(speed, spin);
+							m_locomotor.driveVelocity(speed, spin, 0);
 						}
 					}
 				} 
@@ -192,54 +186,7 @@ public class TestRoombaCreate extends IOIOSwingApp {
 
 		return frame;
 	}
-
-	protected void changeDrive(float speed, float spin) {
-		int velocity;
-		int radius;
-		if ( Math.abs(speed) < SPEED_INCR/2 ) {
-			if ( Math.abs(spin) < SPIN_INCR/2 ) {
-				velocity = 0;
-				radius = 0x8000;
-			}
-			else {
-				// Zero speed, this is a point turn
-				if ( spin > 0 ) {
-					radius = 0xFFFF;
-				}
-				else {
-					radius = 0x0001; 
-				}
-				velocity = (int)(MAX_VELOCITY*Math.abs(spin));
-			}
-		}
-		else {
-			velocity = (int)(MAX_VELOCITY*speed);
-			if ( Math.abs(spin) < SPIN_INCR/2 ) {
-				// Zero spin, straight forward or backward move
-				radius = 0x8000;
-			}
-			else {
-				// We want the radius to decay exponentially, reduced by half
-				// for each increment of the spin (starting at 2000).
-				float steps = 1/SPIN_INCR;
-				float factor = MAX_RADIUS / (float)Math.pow(2, steps-1);
-				float absRadius = factor*(float)Math.pow(2, steps*(1-Math.abs(spin)));
-				if ( spin > 0 ) {
-					radius = -(int)absRadius;
-				}
-				else {
-					radius = (int)absRadius;
-				}
-			}
-		}
-		try {
-			m_roomba.baseDrive(velocity, radius);
-		} catch (ConnectionLostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+	
 	private void beat() {
 		long currentTime = System.currentTimeMillis();
 		try {
