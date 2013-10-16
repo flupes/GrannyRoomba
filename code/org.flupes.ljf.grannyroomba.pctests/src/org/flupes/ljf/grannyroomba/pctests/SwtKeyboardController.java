@@ -14,40 +14,40 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.flupes.ljf.grannyroomba.net.CreateLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
+import org.flupes.ljf.grannyroomba.RoombaLocomotorModel;
 
 public class SwtKeyboardController {
 
 	static Logger s_logger = Logger.getLogger("grannyroomba");
 
-	private static final float SPEED_INCR = 0.2f;
-	private static final float SPIN_INCR = 0.2f;
-	private static final float MAX_VELOCITY = 500;
-	private static final float MAX_RADIUS = 2000;
+	private static final float SPEED_INCR = RoombaLocomotorModel.ALLOWED_LINEAR_VELOCITY/5f;
+	private static final float SPIN_INCR = RoombaLocomotorModel.ALLOWED_ANGULAR_VELOCITY/5f;
+
 	private static final float TITL_INCR = 5.0f;
 
 	private ServoClient m_servoClient;
 	private CreateLocomotorClient m_locoClient;
+	private RoombaLocomotorModel m_model;
 
 	private Float m_tilt = null;
-	private volatile float speed = 0;
-	private volatile float prevSpeed = 0;
-	private volatile float spin = 0;
-
+	private volatile int m_speed;
+	private volatile int m_radius;
+	
 	private boolean m_connected;
 	private Timer m_timer;
 
 	public SwtKeyboardController(ServoClient sclient, CreateLocomotorClient lclient) {
 		m_servoClient = sclient;
 		m_locoClient = lclient;
+		m_model = new RoombaLocomotorModel(m_locoClient);
+
 		m_connected = true;
 		m_timer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
 				try {
-					synchronized(m_timer) {
-						m_locoClient.getStatus();
-					}
+					m_locoClient.getStatus();
 				} catch (Exception e) {
 					s_logger.error("REQ/REP failed for getStatus in Timer thread");
 					stop();
@@ -59,13 +59,14 @@ public class SwtKeyboardController {
 				// always done what ask!
 				//				s_logger.debug("Velocity="+m_locoClient.getVelocity()
 				//						+" / Radius="+m_locoClient.getRadius());
-				if ( m_locoClient.getVelocity() == 0 ) {
-					speed = 0;
-					prevSpeed = 0;
+				m_speed = m_locoClient.getVelocity();
+				m_radius = m_locoClient.getRadius();
+				if ( m_speed == 0 ) {
+					m_model.reset(0, m_model.getSpin());
 				}
-				if ( m_locoClient.getRadius() == 0x8000 ||
+				if ( m_radius == 0x8000 ||
 						m_locoClient.getBumps() == 0x7FFF ) {
-					spin = 0;
+					m_model.reset(m_model.getSpeed(), 0);
 				}
 			}
 		};
@@ -88,10 +89,7 @@ public class SwtKeyboardController {
 		s_logger.info("keyboard controller was canceled -> stop robot");
 		m_connected = false;
 		m_timer.cancel();
-		synchronized( m_timer ) {
-			// TODO adapt for the new unified command
-			m_locoClient.driveVelocity(0, 0x8000, 1.0f);
-		}
+		m_locoClient.stop(0);
 	}
 
 	protected void stop() {
@@ -122,9 +120,7 @@ public class SwtKeyboardController {
 		@Override
 		public void focusLost(FocusEvent e) {
 			s_logger.info("Lost focus -> stop the robot!");
-			speed = 0;
-			spin = 0;
-			changeDrive(speed, spin);
+			m_model.stop();
 		}
 	}
 
@@ -137,8 +133,6 @@ public class SwtKeyboardController {
 				m_tilt = m_servoClient.getPosition();
 			}
 			boolean ret;
-			prevSpeed = speed;
-			boolean newDrive = false; 
 			switch (e.keyCode) {
 			case SWT.PAGE_UP:
 				m_tilt += TITL_INCR;
@@ -168,108 +162,30 @@ public class SwtKeyboardController {
 					s_logger.warn("  invalid position returned!");
 				}
 				break;
-			case SWT.ARROW_UP: 
-				if ( speed < 1-SPEED_INCR/2 ) speed += SPEED_INCR;
-				s_logger.trace("UP pressed -> speed="+speed+" / spin="+spin);
-				newDrive=true;
+			case SWT.ARROW_UP:
+				m_model.incrementVelocity(SPEED_INCR);
 				break;
 			case SWT.ARROW_DOWN:
-				if ( speed > -1+SPEED_INCR/2 ) speed -= SPEED_INCR;
-				s_logger.trace("DOWN pressed -> speed="+speed+" / spin="+spin);
-				newDrive=true;
+				m_model.incrementVelocity(-SPEED_INCR);
 				break;
 			case SWT.ARROW_RIGHT:
-				if ( spin < 1-SPIN_INCR/2 ) spin += SPIN_INCR;
-				s_logger.trace("RIGHT pressed -> speed="+speed+" / spin="+spin);
-				newDrive=true;
+				m_model.incrementSpin(-SPIN_INCR);
 				break;
 			case SWT.ARROW_LEFT: 
-				if ( spin > -1+SPIN_INCR/2 ) spin -= SPIN_INCR;
-				s_logger.trace("LEFT pressed -> speed="+speed+" / spin="+spin);
-				newDrive=true;
+				m_model.incrementSpin(SPIN_INCR);
 				break;
 			case SWT.SPACE:
-				speed = 0;
-				spin = 0;
-				s_logger.trace("SPACE pressed -> speed="+speed+" / spin="+spin);
-				newDrive=true;
+				m_model.stop();
 				break;
-				//				case KeyEvent.VK_CONTROL:
-				//					s_logger.trace("CONTROL pressed -> print telemetry");
-				//					m_roomba.printRawTelemetry();
-				//					break;
+			case SWT.CTRL:
+				s_logger.trace("CONTROL pressed -> print telemetry");
+				s_logger.info("  Velocity = " + m_speed);
+				s_logger.info("  Radius = " + m_radius);
+				break;
 
 			default:
 				// just ignore silently
 			}
-			// From a slow speed, small radius, we should transition
-			// to a slow point turn when speed becomes zero (without 
-			// this check, small radius is transformed into high point
-			// turn rate!)
-			s_logger.trace("prevSpeed=" + prevSpeed + " / currSpeed=" + speed);
-			if ( (Math.abs(prevSpeed)>SPEED_INCR/2) && (Math.abs(speed)<SPEED_INCR/2) ) {
-				float absSpin = Math.abs(prevSpeed);
-				if ( spin > SPIN_INCR/2 ) {
-					spin = absSpin;
-				}
-				else if ( spin < -SPIN_INCR/2 ) {
-					spin = -absSpin;
-				}
-				s_logger.trace("reset spin to :" + spin);
-			}
-			if ( newDrive ) {
-				changeDrive(speed, spin);
-			}
-		}
-	}
-
-	private void changeDrive(float speed, float spin) {
-		int velocity;
-		int radius;
-		if ( Math.abs(speed) < SPEED_INCR/2 ) {
-			if ( Math.abs(spin) < SPIN_INCR/2 ) {
-				velocity = 0;
-				radius = 0x8000;
-			}
-			else {
-				// Zero speed, this is a point turn
-				if ( spin > 0 ) {
-					radius = 0xFFFF;
-				}
-				else {
-					radius = 0x0001; 
-				}
-				velocity = (int)(MAX_VELOCITY*Math.abs(spin)/2.5);
-			}
-		}
-		else {
-			velocity = (int)(MAX_VELOCITY*speed);
-			if ( Math.abs(spin) < SPIN_INCR/2 ) {
-				// Zero spin, straight forward or backward move
-				radius = 0x8000;
-			}
-			else {
-				// We want the radius to decay exponentially, reduced by half
-				// for each increment of the spin (starting at 2000).
-				float steps = 1/SPIN_INCR;
-				float factor = MAX_RADIUS / (float)Math.pow(2, steps-1);
-				float absRadius = factor*(float)Math.pow(2, steps*(1-Math.abs(spin)));
-				if ( spin > 0 ) {
-					radius = -(int)absRadius;
-				}
-				else {
-					radius = (int)absRadius;
-				}
-			}
-		}
-		try {
-			synchronized(m_timer) {
-				// TODO adapt for the new unified command
-				m_locoClient.driveVelocity(velocity, radius, 1.0f);
-			}
-		} catch (Exception e) {
-			s_logger.error("REP/REQ failed for driveVelocity");
-			stop();
 		}
 	}
 

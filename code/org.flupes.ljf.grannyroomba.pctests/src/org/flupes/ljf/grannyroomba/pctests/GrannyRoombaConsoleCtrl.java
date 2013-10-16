@@ -24,8 +24,7 @@ public class GrannyRoombaConsoleCtrl {
 			while ( controller.execute() ) {
 				// nothing
 			}
-			// TODO adapt for the new unified command
-			m_locomotor.driveVelocity(0, 0x8000, 1f);
+			m_locomotor.stop(0);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
