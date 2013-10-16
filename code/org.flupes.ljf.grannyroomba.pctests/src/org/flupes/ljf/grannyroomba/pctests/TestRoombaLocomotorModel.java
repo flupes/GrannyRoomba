@@ -58,6 +58,11 @@ public class TestRoombaLocomotorModel {
 		model.setVelocities(0.4f, -1.5f);
 		model.setVelocities(-0.4f, 1.5f);
 		model.setVelocities(-0.4f, -1.5f);
+		
+		model.reset();
+		model.incrementVelocity(0.2f);
+		model.incrementVelocity(0.2f);
+		model.incrementVelocity(0.2f);
 
 	}
 
