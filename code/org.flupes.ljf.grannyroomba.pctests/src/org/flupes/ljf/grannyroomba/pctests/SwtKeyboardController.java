@@ -135,11 +135,13 @@ public class SwtKeyboardController {
 			boolean ret;
 			switch (e.keyCode) {
 			case SWT.PAGE_UP:
+			case 'h':
 				m_tilt += TITL_INCR;
 				ret = m_servoClient.setPosition(m_tilt);
 				s_logger.info("PAGE_UP -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
 				break;
 			case SWT.PAGE_DOWN:
+			case 'b':
 				m_tilt -= TITL_INCR;
 				ret = m_servoClient.setPosition(m_tilt);
 				s_logger.info("PAGE_DOWN -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
