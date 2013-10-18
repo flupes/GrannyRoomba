@@ -42,7 +42,7 @@ public class RoombaLocomotorModel {
 	public static final float MAX_LINEAR_VELOCITY = MAX_WHEEL_SPEED;
 	public static final float MAX_ANGULAR_VELOCITY = 2f * MAX_WHEEL_SPEED / WHEEL_BASE;
 	
-	public static final float ALLOWED_LINEAR_VELOCITY = 0.8f * MAX_LINEAR_VELOCITY;
+	public static final float ALLOWED_LINEAR_VELOCITY = 0.6f * MAX_LINEAR_VELOCITY;
 	public static final float ALLOWED_ANGULAR_VELOCITY = (float)(Math.PI/2);
 	
 	private ILocomotor m_locomotor;
