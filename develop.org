@@ -74,13 +74,30 @@ export ANDROID_HOME=${SDK}
 mvn install
 #+END_SRC
 * GrannyRoomba Workspace creation (new)
+** Configure Eclipse ADK (if not already done)
+   - Eclipse -> Preferences -> Android
+   - Set the "SDK Location":
+     /Users/Shared/pkgs/android-sdk-macosx_r22.2
 ** Define path to dependencies
    Eclipse -> Preferences
    General -> Workspace -> Linked Resources
    New Path Variable
    GR_PKGS_ROOT : /Users/Shared/git
+** Clone the GrannyRoomba repository
 ** Import the project dependencies
-
+   - File -> Import -> Git -> Projects from Git
+   - Existing local repository
+   - Select the GrannyRoomba clone and then:
+     - IoioLibAndroid
+     - IoioLibPC
+     - jeromq_notests
+   - Check that everyting builds correctly
+** Import the GrannyRoomba projects
+   - Same process than above (can be done all at 
+     once in fact)
+   - Select all the org.flupes.ljf.grannyroomba.* projects
+     The remaining projects are tests and experiments that
+     can also be imported
 * GrannyRoomba Workspace creation (old)
 ** Download the v3.3 (for OTG) of the  IOIO Software from:
    https://github.com/ytai/ioio/wiki/Downloads
