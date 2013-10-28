@@ -4,7 +4,7 @@ GrannyRoomba or Telepresence Roomba for Grandma
 The idea of this project is to develop a simple and inexpensive telepresence robot to improve the Skype experience of a grandmother with her grandchild.
 
 On Columbus Day 2013, the system performed successfully a first robotic video conference from France to California!
-The system still need a lot of improvements, but the concepts are in place.
+The system still need improvements, but the concepts are in place.
 
 Quick facts:
   - Mobile base uses a [Roomba Create](http://www.irobot.com/us/learn/Educators/Create.aspx)
