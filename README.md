@@ -7,8 +7,8 @@ On Columbus Day 2013, the system performed successfully a first robotic video co
 The system still need improvements, but the concepts are in place.
 
 Quick facts:
-  - Mobile base uses a [Roomba Create](http://www.irobot.com/us/learn/Educators/Create.aspx)
-  - Custom tilt mechanism structure using a servo
+  - The mobile base uses a [Roomba Create](http://www.irobot.com/us/learn/Educators/Create.aspx)
+  - The custom super-structure uses a tilt mechanism actuated with a servo
   - Nexus-7 Android (gen 1) tablet runs the robot software
   - [IOIO-OTG](https://github.com/ytai/ioio/wiki) board interfaces the tablet with the hardware
   - Messaging is defined using Google [Protocol Buffers](https://developers.google.com/protocol-buffers/)
