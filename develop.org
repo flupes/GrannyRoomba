@@ -328,7 +328,16 @@ arm-linux-androideabi-strip -g libzmq.a libjzmq.a
 #+END_SRC
 * Random Stuff
 ** How to add the license headers:
+   - Test:
 copyright-header -n --license GPL3 --copyright-holder "Lorenzo Flueckiger"
 --copyright-year=2013 --copyright-software="GrannyRoomba"
 --copyright-software-description "Telepresence robot based on a Roomba
-and Android tablet" --add-path org.flupes.ljf.grannyroomba/src
+and Android tablet" --add-path code
+   - Perform:
+copyright-header --license GPL3 --copyright-holder "Lorenzo Flueckiger"
+--copyright-year=2013 --copyright-software="GrannyRoomba"
+--copyright-software-description "Telepresence robot based on a Roomba and
+Android tablet" --add-path
+code/org.flupes.ljf.grannyroomba/src:code/org.flupes.ljf.grannyroomba.net/src/:code/org.flupes.ljf.grannyroomba.hw/src/:code/org.flupes.ljf.grannyroomba.hw_pc/src/:code/org.flupes.ljf.grannyroomba.controller/src/:code/org.flupes.ljf.grannyroomba.pctests/src/
+--output-dir ./
+
