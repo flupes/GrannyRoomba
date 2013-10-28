@@ -1,7 +1,9 @@
 GrannyRoomba or Telepresence Roomba for Grandma
 ===============================================
 
-The idea of this project is to develop a simple and cheap telepresence robot to improve the Skype experience of a grandmother with her grandchild.
+The idea of this project is to develop a simple and inexpensive telepresence robot to improve the Skype experience of a grandmother with her grandchild.
+
+On 2013-10-14 (Columbus Day, how emblematic), the system supported a teleoperation of the GrannyRoomba robot from France to California!
 
 Quick facts:
   - Mobile base uses a [Roomba Create](http://www.irobot.com/us/learn/Educators/Create.aspx)
@@ -10,8 +12,6 @@ Quick facts:
   - [IOIO-OTG](https://github.com/ytai/ioio/wiki) board interfaces the tablet with the hardware
   - Messaging is defined using Google [Protocol Buffers](https://developers.google.com/protocol-buffers/)
   - Communication relies on the [ZeroMQ](http://zeromq.org/) library (more precisely [JeroMQ](https://github.com/zeromq/jeromq))
-
-As of 2013-10-14 (Columbus Day, how emblematic), the system allowed a teleoperation of the GrannyRoomba robot from France to California!
 
 You can look at some pics from the [Wiki page](https://github.com/flupes/GrannyRoomba/wiki/GrannyRoomba-Wiki-Home).
 
@@ -23,6 +23,6 @@ License:
     href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative
     Commons Attribution-ShareAlike 3.0 Unported License</a>
 
-Do you want to help? Do you find this name ridiculous? Contact me!
+Do you want to help? Do you like the name or find it ridiculous? Contact me!
 
 
