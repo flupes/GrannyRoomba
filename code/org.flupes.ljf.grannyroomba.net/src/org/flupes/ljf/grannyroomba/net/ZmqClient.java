@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQException;
 
+import zmq.ZError;
+
 public class ZmqClient {
 
 	protected String m_server;
@@ -38,6 +40,8 @@ public class ZmqClient {
 
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
+	static final int REQUEST_RETRIES = 3;
+
 	public ZmqClient(String server, int port) {
 		m_server = server;
 		m_port = port;
@@ -45,6 +49,7 @@ public class ZmqClient {
 		m_connected = false;
 		m_sendTimeoutMs = Integer.getInteger("send_timeout", 1000);
 		m_recvTimeoutMs = Integer.getInteger("recv_timeout", 2000);
+		m_context = ZMQ.context(1);
 	}
 
 	public boolean isConnected() {
@@ -53,7 +58,6 @@ public class ZmqClient {
 
 	public synchronized void connect() {
 		if ( ! m_connected ) {
-			m_context = ZMQ.context(1);
 			m_socket = m_context.socket(ZMQ.REQ);
 			m_socket.connect(m_url);
 			m_socket.setSendTimeOut(m_sendTimeoutMs);
@@ -64,26 +68,56 @@ public class ZmqClient {
 	}
 
 	public synchronized void disconnect() {
-		m_socket.disconnect(m_url);
-		m_socket.close();
-		m_context.term();
-		m_connected = false;
-		s_logger.info("Client of [" + m_url + "] disconnected.");
+		if ( m_connected ) {
+			m_socket.disconnect(m_url);
+			m_socket.close();
+			m_context.term();
+			m_connected = false;
+			s_logger.info("Client of [" + m_url + "] disconnected.");
+		}
 	}
 
-	protected byte[] reqrep(byte[] buffer) throws ZMQException {
-		byte[] rep;
-		synchronized(this) {
-			boolean req = m_socket.send(buffer);
-			if ( ! req ) {
-				s_logger.error("could not send request!");
-				throw new ZMQException(m_socket.base().errno());
+	protected synchronized byte[] reqrep(byte[] buffer) throws ZMQException {
+		byte[] rep = null;
+		if ( m_connected ) {
+			int retriesLeft = REQUEST_RETRIES;
+			while ( retriesLeft > 0 && rep == null  && !Thread.currentThread().isInterrupted() ) {
+				boolean req = m_socket.send(buffer);
+				if ( ! req ) {
+					s_logger.error("could not send request!");
+					throw new ZMQException(m_socket.base().errno());
+				}
+				// this recv call will time out using the value recv_timeout
+				rep = m_socket.recv(0);
+				if ( null == rep ) {
+					if ( m_socket.base().errno() == ZError.EAGAIN) {
+						s_logger.warn("timeout while waiting for response!");
+						retriesLeft--;
+						s_logger.warn("Close socket to [" + m_url + "]");
+						m_socket.disconnect(m_url);
+						m_socket.close();
+						m_connected = false;
+						connect();
+					}
+					else {
+						s_logger.error("did not receive response!");
+						throw new ZMQException(m_socket.base().errno());
+					}
+				}
+			} // while
+			if ( rep == null ) {
+				// give up!
+				s_logger.error("could not get response after " + REQUEST_RETRIES
+						+ " tries -> terminate this connection!");
+				// this behavior is OK for now for our simple client
+				// which is monitoring the connected status and will exit
+				// if not connected anymore.
+				// we may want to do something else in the future!
+				disconnect();
 			}
-			rep = m_socket.recv(0);
 		}
-		if ( null == rep ) {
-			s_logger.error("did not receive response!");
-			throw new ZMQException(m_socket.base().errno());
+		else {
+			s_logger.warn("client is not connected to ["+ m_url + "]... skip reqrep");
 		}
 		return rep;
 	}
