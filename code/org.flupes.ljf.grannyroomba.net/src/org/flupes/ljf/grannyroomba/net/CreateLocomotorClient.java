@@ -41,18 +41,14 @@ public class CreateLocomotorClient extends LocomotorClient implements
 
 	@Override
 	public int getStatus() {
-		if ( ! isConnected() ) {
-			s_logger.warn("LocomotorClient is not connected!");
-			return -1;
-		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.STATUS_REQUEST);
-		byte[] reply;
-		synchronized(this) {
-			m_socket.send(builder.build().toByteArray());
-			reply = m_socket.recv(0);
+		byte[] reply = reqrep(builder.build().toByteArray());
+		if ( reply == null ) {
+			s_logger.warn("CreateLocomotorClient.getStatus failed!");
+			return -1;
+//			throw new IllegalStateException("Did not get a reply for getStatus");
 		}
-		if ( reply == null ) throw new IllegalStateException("Did not get a reply for getStatus");
 		try {
 			RoombaStatus status = RoombaStatus.parseFrom(reply);
 			m_oiMode = status.getOimode();
