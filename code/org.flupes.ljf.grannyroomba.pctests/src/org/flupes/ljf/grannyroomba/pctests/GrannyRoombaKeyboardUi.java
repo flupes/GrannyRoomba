@@ -102,7 +102,9 @@ public class GrannyRoombaKeyboardUi {
 			}
 		}
 		else {
-			appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
+			TTCCLayout layout = new TTCCLayout();
+			layout.setDateFormat("ISO8601");
+			appender = new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT);
 		}
 		s_logger.addAppender(appender);
 
@@ -178,6 +180,7 @@ public class GrannyRoombaKeyboardUi {
 				if (!display.readAndDispatch ()) display.sleep ();
 			}
 			if ( kc.connected() ) {
+				locoClient.stop(0);
 				kc.cancel();
 			}
 		}
