@@ -42,9 +42,6 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 
 	@Override
 	public int stop(int mode) {
-		if ( ! isConnected() ) {
-			s_logger.warn("LocomotorClient is not connected!");
-		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.STOP).setStop(
 				StopMsg.newBuilder().setMode( StopMsg.Mode.valueOf(mode) ) 
@@ -55,9 +52,6 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 
 	@Override
 	public int driveVelocity(float speed, float spin, float timeout) {
-		if ( ! isConnected() ) {
-			s_logger.warn("LocomotorClient is not connected!");
-		}
 		LocomotionCmd.Builder builder = LocomotionCmd.newBuilder();
 		builder.setCmd(Command.DRIVE_VELOCITY).setDriveVelocity(
 				DriveVelocityMsg.newBuilder().setSpeed(speed)
