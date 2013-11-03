@@ -52,7 +52,7 @@ public class SwtKeyboardController {
 	private Float m_tilt = null;
 	private volatile int m_speed;
 	private volatile int m_radius;
-	
+
 	private boolean m_connected;
 	private Timer m_timer;
 
@@ -67,30 +67,36 @@ public class SwtKeyboardController {
 			@Override
 			public void run() {
 				try {
-					m_locoClient.getStatus();
-				} catch (Exception e) {
-					s_logger.error("REQ/REP failed for getStatus in Timer thread");
+					int ret = m_locoClient.getStatus();
+					if ( ret < 0 ) {
+						s_logger.error("getStatus REQ/REP in Timer thread failed after timeout");
+						stop();
+					}
+					else {
+						// Reset the speed and spin if the robot was stopped.
+						// otherwise just ignore the current velocity
+						// and radius, assuming that the robot would have
+						// always done what ask!
+						//				s_logger.debug("Velocity="+m_locoClient.getVelocity()
+						//						+" / Radius="+m_locoClient.getRadius());
+						m_speed = m_locoClient.getVelocity();
+						m_radius = m_locoClient.getRadius();
+						if ( m_speed == 0 ) {
+							m_model.reset(0, m_model.getSpin());
+						}
+						if ( m_radius == 0x8000 ||
+								m_locoClient.getBumps() == 0x7FFF ) {
+							m_model.reset(m_model.getSpeed(), 0);
+						}
+					}
+				} catch (Exception exception) {
+					s_logger.error("getStatus REQ/REP in Timer thread failed for an unknown reason");
+					s_logger.debug(exception);
 					stop();
-				}
-
-				// Reset the speed and spin if the robot was stopped.
-				// otherwise just ignore the current velocity
-				// and radius, assuming that the robot would have
-				// always done what ask!
-				//				s_logger.debug("Velocity="+m_locoClient.getVelocity()
-				//						+" / Radius="+m_locoClient.getRadius());
-				m_speed = m_locoClient.getVelocity();
-				m_radius = m_locoClient.getRadius();
-				if ( m_speed == 0 ) {
-					m_model.reset(0, m_model.getSpin());
-				}
-				if ( m_radius == 0x8000 ||
-						m_locoClient.getBumps() == 0x7FFF ) {
-					m_model.reset(m_model.getSpeed(), 0);
 				}
 			}
 		};
-		m_timer.schedule(task, 20, 200);
+		m_timer.schedule(task, 50, 500);
 	}
 
 	public boolean connected() {
@@ -106,41 +112,43 @@ public class SwtKeyboardController {
 	}
 
 	public void cancel() {
-		s_logger.info("keyboard controller was canceled -> stop robot");
 		m_connected = false;
 		m_timer.cancel();
-		m_locoClient.stop(0);
 	}
 
 	protected void stop() {
 		s_logger.warn("stoping the keyboard controller and send a popup notification");
 		m_timer.cancel();
-		if ( m_connected == true ) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					Shell[] shells = Display.getDefault().getShells();
-					if ( shells.length < 1 ) {
-						s_logger.error("Could not find a parent shell!");
-					}
-					else {
-						if ( shells.length > 1 ) {
-							s_logger.warn("More than one shell for this simple UI?");
-						}
-						MessageBox msg = new MessageBox(shells[0], SWT.OK);
-						msg.setMessage("Connection to GrannyRoomba interrupted!\nThe application will terminated now.\nYou can try to restart it when the robot is up again.");
-						msg.open();
-					}
-					m_connected = false;
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				Shell[] shells = Display.getDefault().getShells();
+				if ( shells.length < 1 ) {
+					s_logger.error("Could not find a parent shell!");
 				}
-			});
-		}
+				else {
+					if ( shells.length > 1 ) {
+						s_logger.warn("More than one shell for this simple UI?");
+					}
+					MessageBox msg = new MessageBox(shells[0], SWT.OK);
+					msg.setMessage("Connection to GrannyRoomba interrupted!\nThe application will terminate now.\nYou can try to restart it when the robot is up again.");
+					msg.open();
+				}
+				m_connected = false;
+			}
+		});
 	}
 
 	class FocusLost extends FocusAdapter {
 		@Override
 		public void focusLost(FocusEvent e) {
 			s_logger.info("Lost focus -> stop the robot!");
-			m_model.stop();
+			try {
+				m_model.stop();
+			} catch (Exception exception) {
+				s_logger.error("REQ/REP failed for focusLost");
+				s_logger.debug(exception);
+				stop();
+			}
 		}
 	}
 
@@ -149,64 +157,70 @@ public class SwtKeyboardController {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (!m_connected) return;
-			if ( m_tilt == null ) {
-				m_tilt = m_servoClient.getPosition();
-			}
-			boolean ret;
-			switch (e.keyCode) {
-			case SWT.PAGE_UP:
-			case 'h':
-				m_tilt += TITL_INCR;
-				ret = m_servoClient.setPosition(m_tilt);
-				s_logger.info("PAGE_UP -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
-				break;
-			case SWT.PAGE_DOWN:
-			case 'b':
-				m_tilt -= TITL_INCR;
-				ret = m_servoClient.setPosition(m_tilt);
-				s_logger.info("PAGE_DOWN -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
-				break;
-			case SWT.HELP:
-				s_logger.info("HELP -> get config and state");
-				float[] limits = m_servoClient.getLimits(null);
-				m_tilt = m_servoClient.getPosition();
-				if ( limits != null ) {
-					s_logger.info("  low limit = " + limits[0]);
-					s_logger.info("  high limit = " + limits[1]);
+			try {
+				if ( m_tilt == null ) {
+					m_tilt = m_servoClient.getPosition();
 				}
-				else {
-					s_logger.warn("  not motor limits returned!");
-				}
-				if ( m_tilt != null ) {
-					s_logger.info("  current position = " + m_tilt);
-				}
-				else {
-					s_logger.warn("  invalid position returned!");
-				}
-				break;
-			case SWT.ARROW_UP:
-				m_model.incrementVelocity(SPEED_INCR);
-				break;
-			case SWT.ARROW_DOWN:
-				m_model.incrementVelocity(-SPEED_INCR);
-				break;
-			case SWT.ARROW_RIGHT:
-				m_model.incrementSpin(-SPIN_INCR);
-				break;
-			case SWT.ARROW_LEFT: 
-				m_model.incrementSpin(SPIN_INCR);
-				break;
-			case SWT.SPACE:
-				m_model.stop();
-				break;
-			case SWT.CTRL:
-				s_logger.trace("CONTROL pressed -> print telemetry");
-				s_logger.info("  Velocity = " + m_speed);
-				s_logger.info("  Radius = " + m_radius);
-				break;
+				boolean ret;
+				switch (e.keyCode) {
+				case SWT.PAGE_UP:
+				case 'h':
+					m_tilt += TITL_INCR;
+					ret = m_servoClient.setPosition(m_tilt);
+					s_logger.info("PAGE_UP -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
+					break;
+				case SWT.PAGE_DOWN:
+				case 'b':
+					m_tilt -= TITL_INCR;
+					ret = m_servoClient.setPosition(m_tilt);
+					s_logger.info("PAGE_DOWN -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
+					break;
+				case SWT.HELP:
+					s_logger.info("HELP -> get config and state");
+					float[] limits = m_servoClient.getLimits(null);
+					m_tilt = m_servoClient.getPosition();
+					if ( limits != null ) {
+						s_logger.info("  low limit = " + limits[0]);
+						s_logger.info("  high limit = " + limits[1]);
+					}
+					else {
+						s_logger.warn("  not motor limits returned!");
+					}
+					if ( m_tilt != null ) {
+						s_logger.info("  current position = " + m_tilt);
+					}
+					else {
+						s_logger.warn("  invalid position returned!");
+					}
+					break;
+				case SWT.ARROW_UP:
+					m_model.incrementVelocity(SPEED_INCR);
+					break;
+				case SWT.ARROW_DOWN:
+					m_model.incrementVelocity(-SPEED_INCR);
+					break;
+				case SWT.ARROW_RIGHT:
+					m_model.incrementSpin(-SPIN_INCR);
+					break;
+				case SWT.ARROW_LEFT: 
+					m_model.incrementSpin(SPIN_INCR);
+					break;
+				case SWT.SPACE:
+					m_model.stop();
+					break;
+				case SWT.CTRL:
+					s_logger.trace("CONTROL pressed -> print telemetry");
+					s_logger.info("  Velocity = " + m_speed);
+					s_logger.info("  Radius = " + m_radius);
+					break;
 
-			default:
-				// just ignore silently
+				default:
+					// just ignore silently
+				}
+			} catch (Exception exception) {
+				s_logger.error("REQ/REP failed for getStatus in keyPressed processing");
+				s_logger.debug(exception);
+				stop();
 			}
 		}
 	}
