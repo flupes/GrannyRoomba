@@ -191,6 +191,14 @@ adb forward tcp:6666 tcp:3333
 adb forward tcp:7777 tcp:4444
 /Users/Shared/pkgs/IOIOBridge/ioiobridge /dev/tty.usbmodem1411
 #+END_SRC
+** Debug when running on the Nexus7
+   *This seems to be impossible with a non-rooted phone*
+   IOIO can be use either:
+   - over ADB -> it is not possible to debug anymore
+   - over OpenAccessory -> USB debugging need to be turned off
+     (preventing adb over wifi).
+     This post seems to confirm my findings:
+     http://stackoverflow.com/questions/19642583/how-to-use-adb-tcpip-without-usb-debugging-enabled
 * Protobuf
 https://developers.google.com/protocol-buffers/
 
