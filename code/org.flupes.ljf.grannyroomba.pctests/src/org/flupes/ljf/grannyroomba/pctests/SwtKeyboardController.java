@@ -50,6 +50,8 @@ public class SwtKeyboardController {
 	private RoombaLocomotorModel m_model;
 
 	private Float m_tilt = null;
+	private Float m_minTilt = null;
+	private Float m_maxTilt = null;
 	private volatile int m_speed;
 	private volatile int m_radius;
 
@@ -61,7 +63,25 @@ public class SwtKeyboardController {
 		m_locoClient = lclient;
 		m_model = new RoombaLocomotorModel(m_locoClient);
 
+		float limits[] = m_servoClient.getLimits(null);
+		if ( limits == null ) {
+			s_logger.error("Could not get servo position limits!");
+		}
+		else {
+			m_minTilt = limits[0];
+			m_maxTilt = limits[1];
+			s_logger.info("Tilt limits: [" + m_minTilt + ", " + m_maxTilt + "]");
+		}
+		m_tilt = m_servoClient.getPosition();
+		if ( m_tilt == null ) {
+			s_logger.error("Could not get current servo position!");
+		}
+		else {
+			s_logger.info("Tilt current position: " + m_tilt);
+		}
+
 		m_connected = true;
+		
 		m_timer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
@@ -158,40 +178,25 @@ public class SwtKeyboardController {
 		public void keyPressed(KeyEvent e) {
 			if (!m_connected) return;
 			try {
-				if ( m_tilt == null ) {
-					m_tilt = m_servoClient.getPosition();
-				}
 				boolean ret;
 				switch (e.keyCode) {
 				case SWT.PAGE_UP:
-				case 'h':
+				case 'h':					
 					m_tilt += TITL_INCR;
+					if ( m_tilt > m_maxTilt ) {
+						m_tilt = m_maxTilt;
+					}
 					ret = m_servoClient.setPosition(m_tilt);
 					s_logger.info("PAGE_UP -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
 					break;
 				case SWT.PAGE_DOWN:
 				case 'b':
 					m_tilt -= TITL_INCR;
+					if ( m_tilt < m_minTilt ) {
+						m_tilt = m_minTilt;
+					}
 					ret = m_servoClient.setPosition(m_tilt);
 					s_logger.info("PAGE_DOWN -> setPosition("+m_tilt+") => "+((ret)?"true":"false"));
-					break;
-				case SWT.HELP:
-					s_logger.info("HELP -> get config and state");
-					float[] limits = m_servoClient.getLimits(null);
-					m_tilt = m_servoClient.getPosition();
-					if ( limits != null ) {
-						s_logger.info("  low limit = " + limits[0]);
-						s_logger.info("  high limit = " + limits[1]);
-					}
-					else {
-						s_logger.warn("  not motor limits returned!");
-					}
-					if ( m_tilt != null ) {
-						s_logger.info("  current position = " + m_tilt);
-					}
-					else {
-						s_logger.warn("  invalid position returned!");
-					}
 					break;
 				case SWT.ARROW_UP:
 					m_model.incrementVelocity(SPEED_INCR);
@@ -200,10 +205,10 @@ public class SwtKeyboardController {
 					m_model.incrementVelocity(-SPEED_INCR);
 					break;
 				case SWT.ARROW_RIGHT:
-					m_model.incrementSpin(-SPIN_INCR);
+					m_model.incrementSpin((Math.abs(m_speed)<SPEED_INCR/2)?-SPIN_INCR:-SPIN_INCR/4);
 					break;
 				case SWT.ARROW_LEFT: 
-					m_model.incrementSpin(SPIN_INCR);
+					m_model.incrementSpin((Math.abs(m_speed)<SPEED_INCR/2)?SPIN_INCR:SPIN_INCR/4);
 					break;
 				case SWT.SPACE:
 					m_model.stop();
@@ -212,6 +217,13 @@ public class SwtKeyboardController {
 					s_logger.trace("CONTROL pressed -> print telemetry");
 					s_logger.info("  Velocity = " + m_speed);
 					s_logger.info("  Radius = " + m_radius);
+					m_tilt = m_servoClient.getPosition();
+					if ( m_tilt != null ) {
+						s_logger.info("  Tilt angle = " + m_tilt);
+					}
+					else {
+						s_logger.warn("  invalid position returned!");
+					}
 					break;
 
 				default:
