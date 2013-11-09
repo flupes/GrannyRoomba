@@ -44,8 +44,7 @@ public class ServoClient extends ZmqClient implements IServo {
 		SingleAxisCmd.Builder builder = SingleAxisCmd.newBuilder();
 		builder.setCmd(SingleAxisCmd.Command.GET_STATE);
 		SingleAxisCmd cmd = builder.build();
-		m_socket.send(cmd.toByteArray());
-		byte[] reply = m_socket.recv(0);
+		byte[] reply = reqrep(cmd.toByteArray());
 		try {
 			MotorState state = MotorState.parseFrom(reply);
 			if ( state.hasPosition() ) {
@@ -63,8 +62,7 @@ public class ServoClient extends ZmqClient implements IServo {
 		SingleAxisCmd.Builder builder = SingleAxisCmd.newBuilder();
 		builder.setCmd(SingleAxisCmd.Command.GET_CONFIG);
 		SingleAxisCmd cmd = builder.build();
-		m_socket.send(cmd.toByteArray());
-		byte[] reply = m_socket.recv(0);
+		byte[] reply = reqrep(cmd.toByteArray());
 		try {
 			MotorConfig config = MotorConfig.parseFrom(reply);
 			if ( config.hasLowLimit() && config.hasHighLimitl() ) {
@@ -93,8 +91,7 @@ public class ServoClient extends ZmqClient implements IServo {
 				MotorMsg.newBuilder().setMode(MotorMsg.Mode.CTRL_ABS_POS).setPosition(position)
 				);
 		SingleAxisCmd cmd = builder.build();
-		m_socket.send(cmd.toByteArray(), 0);
-		byte[] reply = m_socket.recv(0);
+		byte[] reply = reqrep(cmd.toByteArray());
 		try {
 			CommandStatus status = CommandStatus.parseFrom(reply);
 			if ( status.getStatus() == CommandStatus.Status.COMPLETED ) {
@@ -118,8 +115,7 @@ public class ServoClient extends ZmqClient implements IServo {
 				MotorMsg.newBuilder().setMode(MotorMsg.Mode.CTRL_REL_POS).setPosition(offset)
 				);
 		SingleAxisCmd cmd = builder.build();
-		m_socket.send(cmd.toByteArray(), 0);
-		byte[] reply = m_socket.recv(0);
+		byte[] reply = reqrep(cmd.toByteArray());
 		try {
 			CommandStatus status = CommandStatus.parseFrom(reply);
 			if ( status.getStatus() == CommandStatus.Status.COMPLETED ) {
