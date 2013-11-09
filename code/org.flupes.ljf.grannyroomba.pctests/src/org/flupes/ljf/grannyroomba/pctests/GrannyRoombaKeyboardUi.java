@@ -47,7 +47,7 @@ public class GrannyRoombaKeyboardUi {
 	static Logger s_logger = Logger.getLogger("grannyroomba");
 
 	static final String IMAGE_FILE = "KeyboardController.png";
-	
+
 	protected static final boolean m_debug = true;
 
 	enum Mode {
@@ -89,12 +89,14 @@ public class GrannyRoombaKeyboardUi {
 		s_logger.setLevel(Level.TRACE);
 		System.out.println("Connect Mode = " + connectMode);
 		Appender appender;
+		TTCCLayout layout = new TTCCLayout();
+		layout.setDateFormat("ISO8601");
 		if ( connectMode == Mode.PUBLIC) {
 			String homeDir = System.getProperty("user.home");
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 			String logFile = homeDir+"/granny_roomba_"+timeStamp+".txt";
 			try {
-				appender = new FileAppender(new TTCCLayout(), logFile);
+				appender = new FileAppender(layout, logFile);
 			} catch (IOException e) {
 				System.err.println("Could not create log file: "+logFile);
 				e.printStackTrace();
@@ -102,8 +104,6 @@ public class GrannyRoombaKeyboardUi {
 			}
 		}
 		else {
-			TTCCLayout layout = new TTCCLayout();
-			layout.setDateFormat("ISO8601");
 			appender = new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT);
 		}
 		s_logger.addAppender(appender);
@@ -128,7 +128,7 @@ public class GrannyRoombaKeyboardUi {
 		//	gd.grabExcessHorizontalSpace = true;
 		//	gd.grabExcessVerticalSpace = true;
 		//	gd.horizontalAlignment = GridData.CENTER;
-		
+
 		// WTF: why these dimension have to be smaller
 		// than the real image!!!
 		gd.heightHint = 294;
@@ -152,18 +152,22 @@ public class GrannyRoombaKeyboardUi {
 		boolean connected = true;
 		// check if connection is up
 		try {
-			locoClient.getStatus();
+			int ret =locoClient.getStatus();
+			if ( ret < 0 ) {
+				MessageBox msg = new MessageBox(shell, SWT.OK);
+				String text = "Connection to GrannyRoomba failed!\nTry again later.\n";
+				text += "connection="+modeStr+" host="+host+"\n";
+				text +=	"servoPort="+servoPort+" locoPort="+locoPort+"\n";
+				int sendTimeoutMs = Integer.getInteger("send_timeout", 1000);
+				int recvTimeoutMs = Integer.getInteger("recv_timeout", 2000);
+				text += "sendTimeoutMs="+sendTimeoutMs+" recvTimeoutMs="+recvTimeoutMs;
+				msg.setMessage(text);
+				msg.open();	
+				connected = false;
+			}
 		} catch (Exception e) {
-			s_logger.error("locoClient.getStatus() failed -> exit");
-			MessageBox msg = new MessageBox(shell, SWT.OK);
-			String text = "Connection to GrannyRoomba failed!\nTry again later.\n";
-			text += "connection="+modeStr+" host="+host+"\n";
-			text +=	"servoPort="+servoPort+" locoPort="+locoPort+"\n";
-			int sendTimeoutMs = Integer.getInteger("send_timeout", 1000);
-			int recvTimeoutMs = Integer.getInteger("recv_timeout", 2000);
-			text += "sendTimeoutMs="+sendTimeoutMs+" recvTimeoutMs="+recvTimeoutMs;
-			msg.setMessage(text);
-			msg.open();	
+			s_logger.error("could not connect to server for unknown reason!");
+			s_logger.info(e);
 			connected = false;
 		}
 
