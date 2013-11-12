@@ -137,7 +137,7 @@ public abstract class SerialIoioRoomba {
 	}
 
 	public void stop() throws ConnectionLostException {
-		s_logger.debug("Stop Drive");
+		s_logger.debug("stop locomotion");
 		baseDrive(0, 0x8000);
 	}
 
@@ -151,7 +151,7 @@ public abstract class SerialIoioRoomba {
 		m_lastDriveCmd = CMD_DRIVE;
 	}
 
-	protected void writeByte(int b) 
+	protected void writeByte(int b)
 			throws ConnectionLostException {
 		try {
 			m_serialTransmit.write( b );
