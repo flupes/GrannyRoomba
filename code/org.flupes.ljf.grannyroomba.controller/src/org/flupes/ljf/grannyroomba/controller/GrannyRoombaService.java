@@ -56,6 +56,8 @@ public class GrannyRoombaService extends IOIOService {
 	
 	protected ZmqServer m_locoService;
 	protected ICreateLocomotor m_locoImpl;
+	
+	protected RoombaCreate m_roomba;
 
 	protected static final boolean m_debug = false;
 
@@ -85,6 +87,7 @@ public class GrannyRoombaService extends IOIOService {
 		s_logger.info("GrannyRoombaService.onDestroy");
 		m_servoService.cancel();
 		m_locoService.cancel();
+		m_roomba.shutdown();
 		super.onDestroy();	// IOIO things
 	}
 
@@ -142,12 +145,11 @@ public class GrannyRoombaService extends IOIOService {
 					m_servoService.start();
 					s_logger.info("IOIO looper started the ServoService");
 					
-					RoombaCreate roomba = new RoombaCreate(ioio_);
-					roomba.connect(2, 1);
-					roomba.safeControl();
-					roomba.startTelemetry();
+					m_roomba = new RoombaCreate(ioio_);
+					m_roomba.connect(2, 1);
+					m_roomba.safeControl();
 
-					m_locoImpl = new IoioRoombaCreateLocomotor(roomba);
+					m_locoImpl = new IoioRoombaCreateLocomotor(m_roomba);
 					m_locoService = new LocomotorServer(4444, m_locoImpl);
 					m_locoService.start();
 					s_logger.info("IOIO looper started the LocomotorService");
