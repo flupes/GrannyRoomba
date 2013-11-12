@@ -104,10 +104,6 @@ public class TestRoombaCreate extends IOIOSwingApp {
 							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
 					m_input = m_uart.getInputStream();
 				}
-
-				
-				m_roomba.startTelemetry();
-				
 				// m_roomba.demo(4);
 
 			}
