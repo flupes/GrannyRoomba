@@ -151,50 +151,9 @@ public class RoombaCreate extends SerialIoioRoomba {
 	private ExecutorService m_exec;
 	private Runnable m_monitor;
 	protected boolean last_cmd_direct = false;
-	protected Script m_backupScript;
-	protected Script m_waitSafeScript;
+	protected RoombaScript m_backupScript;
+	protected RoombaScript m_waitSafeScript;
 	
-	class Chronometer {
-		private static final boolean CHECK_TIMING = true;
-		private long m_start;
-		private long m_stop;
-		private long m_duration;
-		private String m_name;
-		
-		public Chronometer(String name) {
-			m_name = name;
-		}
-		
-		public void start() { 
-			if ( CHECK_TIMING ) {
-				m_start = System.nanoTime();
-			}
-		}
-		
-		public void stop() {
-			if ( CHECK_TIMING ) {
-				m_stop = System.nanoTime();
-				m_duration = (m_stop-m_start)/1000000;
-			}
-		}
-		
-		public long duration() {
-			return m_duration;
-		}
-		
-		public void show() {
-			if ( CHECK_TIMING ) {
-				s_logger.warn("Timer [" + m_name + "] -> " + m_duration + "ms");
-			}
-		}
-		
-		public void show(long enough) {
-			if ( CHECK_TIMING && m_duration>enough ) {
-				s_logger.warn("Timer [" + m_name + "] -> " + m_duration + "ms");
-			}
-		}
-	}
-
 	Chronometer m_processChrono = new Chronometer("processMessage");
 	Chronometer m_readChrono = new Chronometer("readSerial");
 	Chronometer m_loopChrono = new Chronometer("readChrono");
@@ -270,7 +229,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	}
 
 	private void createScripts() {
-		m_backupScript = new Script();
+		m_backupScript = new RoombaScript();
 		m_backupScript.addByte(CMD_FULL);
 		m_backupScript.addByte(CMD_DRIVE).addWord(-100).addWord(0x8000);
 		m_backupScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_BUMPER);
@@ -279,7 +238,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		m_backupScript.addByte(CMD_SAFE);
 		m_backupScript.close();
 
-		m_waitSafeScript = new Script();
+		m_waitSafeScript = new RoombaScript();
 		m_waitSafeScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_CLIFF);
 		m_waitSafeScript.addByte(CMD_WAIT_EVENT).addByte(EVENT_NO_WHEELDROP);
 		m_waitSafeScript.addByte(CMD_SAFE);
@@ -406,60 +365,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	//		}
 	//	}
 
-	private class Script {
-
-		private final int CAPACITY = 100;
-		protected byte[] m_script;
-		protected int m_pos;
-		protected boolean m_closed;
-
-		Script() {
-			m_script = new byte[CAPACITY];
-			m_script[0] = 0;
-			m_pos = 1;
-			m_closed = false;
-		}
-
-		public Script addByte(int b) {
-			if ( m_closed ) throw new IllegalStateException("script was already closed");
-			if ( m_pos < CAPACITY-1 ) {
-				m_script[m_pos++] = (byte)b;
-			}
-			else {
-				throw new IndexOutOfBoundsException("script is limited to "+CAPACITY+" bytes");
-			}
-			return this;
-		}
-
-		public Script addWord(int w) {
-			if ( m_closed ) throw new IllegalStateException("script was already closed");
-			if ( m_pos < CAPACITY-2 ) {
-				m_script[m_pos++] = (byte)(w >> 8);
-				m_script[m_pos++] = (byte)(w & 0xFF);
-			}
-			else {
-				throw new IndexOutOfBoundsException("script is limited to "+CAPACITY+" bytes");
-			}
-			return this;
-		}
-
-		public int close() {
-			m_script[0] = (byte)(m_pos-1);
-			m_closed = true;
-			return m_pos;
-		}
-
-		public int length() {
-			System.err.println("script length = " + m_pos);
-			return m_pos;
-		}
-
-		public byte[] buffer() {
-			return m_script;
-		}
-	}
-
-	protected void runScript(Script script) throws ConnectionLostException {
+	protected void runScript(RoombaScript script) throws ConnectionLostException {
 		writeByte(CMD_SCRIPT);
 		writeBytes(script.buffer(), script.length());
 		delay(CMD_WAIT_MS);
