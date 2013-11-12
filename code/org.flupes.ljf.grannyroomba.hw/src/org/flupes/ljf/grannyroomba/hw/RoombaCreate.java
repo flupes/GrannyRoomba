@@ -153,7 +153,52 @@ public class RoombaCreate extends SerialIoioRoomba {
 	protected boolean last_cmd_direct = false;
 	protected Script m_backupScript;
 	protected Script m_waitSafeScript;
+	
+	class Chronometer {
+		private static final boolean CHECK_TIMING = true;
+		private long m_start;
+		private long m_stop;
+		private long m_duration;
+		private String m_name;
+		
+		public Chronometer(String name) {
+			m_name = name;
+		}
+		
+		public void start() { 
+			if ( CHECK_TIMING ) {
+				m_start = System.nanoTime();
+			}
+		}
+		
+		public void stop() {
+			if ( CHECK_TIMING ) {
+				m_stop = System.nanoTime();
+				m_duration = (m_stop-m_start)/1000000;
+			}
+		}
+		
+		public long duration() {
+			return m_duration;
+		}
+		
+		public void show() {
+			if ( CHECK_TIMING ) {
+				s_logger.warn("Timer [" + m_name + "] -> " + m_duration + "ms");
+			}
+		}
+		
+		public void show(long enough) {
+			if ( CHECK_TIMING && m_duration>enough ) {
+				s_logger.warn("Timer [" + m_name + "] -> " + m_duration + "ms");
+			}
+		}
+	}
 
+	Chronometer m_processChrono = new Chronometer("processMessage");
+	Chronometer m_readChrono = new Chronometer("readSerial");
+	Chronometer m_loopChrono = new Chronometer("readChrono");
+	
 	/**
 	 * Returns the number of different sensor packets requested
 	 */
@@ -566,7 +611,10 @@ public class RoombaCreate extends SerialIoioRoomba {
 						boolean valid = validChecksum();
 						if ( valid ) {
 							// if ( debug_serial ) s_logger.trace("Valid message received.");
+							m_processChrono.start();
 							processMessage();
+							m_processChrono.stop();
+							m_processChrono.show(15);
 						}
 						else {
 							if ( debug_serial ) s_logger.trace("Checksum error!");
@@ -587,6 +635,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			s_logger.info("Telemetry Thread Started");
 
 			while ( !m_exec.isShutdown() ) {
+				m_loopChrono.start();
 				if ( m_serialReceive == null ) {
 					// Telemetry thread is started at construction,
 					// however serial connection is not available
@@ -595,10 +644,15 @@ public class RoombaCreate extends SerialIoioRoomba {
 					delay(50);
 				}
 				else {
+					m_readChrono.start();
 					readSerial();
+					m_readChrono.stop();
+					m_readChrono.show(15);
 					// Sleep a little bit (less than 15ms ?)
 					delay(5);
 				}
+				m_loopChrono.stop();
+				m_loopChrono.show(100);
 			}
 			s_logger.info("Exiting Telemetry Thread.");
 		}
