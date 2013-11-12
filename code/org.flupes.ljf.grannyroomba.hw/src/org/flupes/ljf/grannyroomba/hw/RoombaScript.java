@@ -44,7 +44,6 @@ public class RoombaScript {
 	}
 
 	public int length() {
-		System.err.println("script length = " + m_pos);
 		return m_pos;
 	}
 
