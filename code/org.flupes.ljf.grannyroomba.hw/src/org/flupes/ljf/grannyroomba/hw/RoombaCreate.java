@@ -153,16 +153,18 @@ public class RoombaCreate extends SerialIoioRoomba {
 	private static final int TELEM_MSG_HEADER = 19;
 
 	private static final int REQUEST_TELEMETRY_RATE = 100;
-	
+	private long m_telemetryTimestamp;
 	private Map<SensorPackets, Integer> m_telemetry;
-	private final int m_msgSize;
+	private final int m_telemMessageSize;
+	private final int m_telemDataLength;
 
 	protected volatile RobotStates m_state;
+	protected boolean m_moving;
 	protected RoombaScript m_backupScript;
 	protected RoombaScript m_waitSafeScript;
 	protected ExecutorService m_exec;
 	protected TelemetryListening m_telemThread;
-	protected MonitorSafety m_monitorThread;
+	protected WatchDogThread m_monitorThread;
 	// Check if we will use a continuous telemetry stream (need a fast
 	// enough cpu), or request it at given interval (slow cpu)
 	protected static final boolean m_continuousTelemetry =
@@ -197,7 +199,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	 * count, and checksum.
 	 * @return
 	 */
-	private int telemetryMessageLength() {
+	private int telemetryMessageSize() {
 		return numberOfSensorPackets()+sizeOfSensorsData()+3;
 	}
 
@@ -209,21 +211,20 @@ public class RoombaCreate extends SerialIoioRoomba {
 		EnumMap<SensorPackets, Integer> telemetry_store = new EnumMap<SensorPackets, Integer>(SensorPackets.class);
 		m_telemetry = Collections.synchronizedMap(telemetry_store);
 
-		m_msgSize = telemetryMessageLength();
+		m_telemMessageSize = telemetryMessageSize();
+		m_telemDataLength = sizeOfSensorsData();
 
 		s_logger.info("Opening communication with a Roomba Create");
 		s_logger.debug("Telemetry:"
 				+ "\n    sensor packets = " + numberOfSensorPackets()
 				+ "\n    sensor data size = " + sizeOfSensorsData()
-				+ "\n    total message length = " + telemetryMessageLength());
+				+ "\n    total message length = " + telemetryMessageSize());
 
 		// Start a separate thread for telemetry listening
 		s_logger.trace("Launching Telemetry Thread");
 		m_exec = Executors.newFixedThreadPool(2);
-		m_monitorThread = new MonitorSafety();
-		if ( m_continuousTelemetry ) {
-			m_exec.execute(m_monitorThread);
-		}
+		m_monitorThread = new WatchDogThread();
+		m_exec.execute(m_monitorThread);
 		m_telemThread = new TelemetryListening();
 		m_exec.execute(m_telemThread);
 	}
@@ -244,9 +245,19 @@ public class RoombaCreate extends SerialIoioRoomba {
 	}
 
 	@Override
+	public synchronized void stop() throws ConnectionLostException {
+		s_logger.debug("RoombaCreate.stop()");
+		writeByte( RoombaCmds.CMD_DIRECT );
+		writeWord( 0 );
+		writeWord( 0 );
+		m_moving = false;
+	}
+
+	@Override
 	synchronized public void baseDrive(int velocity, int radius)
 			throws ConnectionLostException {
 		if ( m_state == RobotStates.READY ) {
+			m_moving = true;
 			super.baseDrive(velocity, radius);
 		}
 	}
@@ -255,6 +266,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			throws ConnectionLostException {
 		if ( m_state == RobotStates.READY ) {
 			s_logger.debug("directDrive("+leftWheelSpeed+", "+rightWheelSpeed+")");
+			m_moving = true;
 			writeByte( RoombaCmds.CMD_DIRECT );
 			writeWord( rightWheelSpeed );
 			writeWord( leftWheelSpeed );
@@ -349,29 +361,100 @@ public class RoombaCreate extends SerialIoioRoomba {
 		writeByte(RoombaCmds.CMD_PLAY_SCRIPT);
 	}
 
-	private class MonitorSafety implements Runnable {
+	private class WatchDogThread implements Runnable {
 
-		MonitorSafety() {
-			s_logger.info("MonitorSafety thread created");
+		WatchDogThread() {
+			s_logger.info("WatchDogThread thread created");
 		}
 
 		@Override
 		public void run() {
 			try {
+				int leds = 0;
+				int power = 0;
+				int intensity = 0;
+				boolean playLed = false;
+				boolean advanceLed = false;
+				boolean powerLed = false;
+				while ( m_serialTransmit == null ) {
+					s_logger.info("wait for the ioio serial port to be available");
+					delay(100);
+				}
+				leds(leds, power, intensity);
+				long advanceTimeOn = 0;
+				long advanceTimeOff = 0;
+				long playTimeOn = 0;
+				long playTimeOff = 0;
+				
 				while ( !m_exec.isShutdown() ) {
-					// Block until triggered by the telemetry thread
-					// The telemetry can continue at its own pace
-					// even if this thread is working on something 
-					// else: the notify will just not awaken anything
-					synchronized(this) {
-						wait();
+					long currentTime = System.nanoTime();
+					if ( !advanceLed && currentTime>advanceTimeOn ) {
+						leds |= 8;
+						advanceLed = true;
+						advanceTimeOff = currentTime+200*1000000;
 					}
-					check();
+					if ( advanceLed && currentTime>advanceTimeOff ) {
+						leds &= ~8;
+						advanceLed = false;
+						advanceTimeOn = currentTime+800*1000000;
+					}
+					
+					if ( currentTime > m_telemetryTimestamp+2000000*REQUEST_TELEMETRY_RATE ) {
+						playTimeOff = currentTime+8000*1000000;
+						leds |= 2;
+						playLed = true;
+					}
+					if ( playLed && currentTime>playTimeOff ) {
+						leds &= ~2;
+						playLed = false;
+					}
+
+					leds(leds, power, intensity);
+					
+					Thread.sleep(50);
 				} // while executor is up
 			} catch (InterruptedException e) {
-				s_logger.info("Monitor thread was interrupted while waiting");
+				s_logger.info("watch dog thread was interrupted while waiting");
+			} catch (ConnectionLostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			s_logger.info("Exiting monitor thread.");
+			s_logger.info("Exiting watch dog thread.");
+		}
+	}
+
+	private class TelemetryListening implements Runnable {
+
+		protected byte[] m_telemBuffer;
+		protected ByteArrayInputStream m_telemInput;
+		protected int m_offset = 0;
+		protected boolean m_newMsg = false;
+
+		protected TelemetryListening() {
+			// Queue to store a message in construction
+			//			m_message = new ArrayDeque<Integer>(MAX_MSG_SIZE);
+			// Byte buffer equivalent of the message
+			m_telemBuffer = new byte[m_telemMessageSize];
+			// Stream on the byte buffer
+			m_telemInput = new ByteArrayInputStream(m_telemBuffer, 0, m_telemMessageSize);
+		}
+
+		public void startTelemetry() throws ConnectionLostException {
+			writeByte( RoombaCmds.CMD_STREAM );
+			writeByte( numberOfSensorPackets() );
+			for ( SensorPackets p : SensorPackets.values() ) {
+				writeByte( p.id );
+			}
+		}
+
+		public void toggleTelemetry(boolean state) throws ConnectionLostException {
+			writeByte( RoombaCmds.CMD_TOGGLESTREAM );
+			if ( state ) {
+				writeByte( 1 );
+			}
+			else {
+				writeByte( 0 );
+			}
 		}
 
 		public void check() {
@@ -405,8 +488,8 @@ public class RoombaCreate extends SerialIoioRoomba {
 				else {
 					if ( m_state == RobotStates.UNBUMPING ) {
 						s_logger.warn("bump cleared.");
+						stop();
 						m_state = RobotStates.READY;
-						directDrive(0, 0);
 					}
 				}
 
@@ -421,7 +504,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 				}
 				else {
 					if ( m_state == RobotStates.SAGEGUARDING ) {
-						s_logger.warn("hazardous condition cleard.");
+						s_logger.warn("hazardous condition cleared.");
 						m_state = RobotStates.READY;
 					}
 				}
@@ -447,88 +530,29 @@ public class RoombaCreate extends SerialIoioRoomba {
 				m_state = RobotStates.DISCONNECTED;
 			}
 
-		}
-	}
-
-	private class TelemetryListening implements Runnable {
-
-		protected byte[] m_telemBuffer;
-		protected ByteArrayInputStream m_telemInput;
-		protected int m_offset = 0;
-		protected boolean m_newMsg = false;
-
-		protected TelemetryListening() {
-			// Queue to store a message in construction
-			//			m_message = new ArrayDeque<Integer>(MAX_MSG_SIZE);
-			// Byte buffer equivalent of the message
-			m_telemBuffer = new byte[m_msgSize];
-			// Stream on the byte buffer
-			m_telemInput = new ByteArrayInputStream(m_telemBuffer, 0, m_msgSize);
+			// mark that we processed a new telemetry packet
+			m_telemetryTimestamp = System.nanoTime();
 		}
 
-		public void startTelemetry() throws ConnectionLostException {
-			writeByte( RoombaCmds.CMD_STREAM );
-			writeByte( numberOfSensorPackets() );
-			for ( SensorPackets p : SensorPackets.values() ) {
-				writeByte( p.id );
-			}
-		}
-
-		public void toggleTelemetry(boolean state) throws ConnectionLostException {
-			writeByte( RoombaCmds.CMD_TOGGLESTREAM );
-			if ( state ) {
-				writeByte( 1 );
-			}
-			else {
-				writeByte( 0 );
-			}
-		}
-
-		public void requestTelemetry() throws ConnectionLostException {
-			// flush input stream
-			int remaining;
-			try {
-				remaining = m_serialReceive.available();
-				if ( remaining > 0 ) {
-					s_logger.warn("the serial input stream is not empty -> clear it before the request!");
-					m_serialReceive.skip(remaining);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// send request
-			writeByte( RoombaCmds.CMD_QUERY );
-			writeByte( numberOfSensorPackets() );
-			for ( SensorPackets p : SensorPackets.values() ) {
-				writeByte( p.id );
-			}
-		}
-
-		private boolean validChecksum() {
-			byte checksum = TELEM_MSG_HEADER;
-			for ( int i=0; i<m_msgSize; i++ ) {
-				checksum += m_telemBuffer[i];
-			}
-			return ( (checksum & 0xFF) == 0); 
-		}
-
-		protected int processRequest() {
+		public int requestTelemetry() throws ConnectionLostException {
 			int processed = 0;
-			int telemLength = sizeOfSensorsData();
 			int receivedBytes = 0;
 			try {
+				// send request
+				writeByte( RoombaCmds.CMD_QUERY );
+				writeByte( numberOfSensorPackets() );
+				for ( SensorPackets p : SensorPackets.values() ) {
+					writeByte( p.id );
+				}
+
+				// read telemetry
 				long start = System.nanoTime();
-				while ( receivedBytes < telemLength ) {
-					receivedBytes += m_serialReceive.read(m_telemBuffer, receivedBytes, telemLength-receivedBytes);
+				while ( receivedBytes < m_telemDataLength ) {
+					receivedBytes += m_serialReceive.read(m_telemBuffer, receivedBytes, m_telemDataLength-receivedBytes);
 					long stop = System.nanoTime();
-					long duration = (stop-start)/1000000;
-					if ( duration > 200 && Math.abs(getVelocity())>0 ) {
+					if ( (stop-start) > 200*1000000 ) {
 						s_logger.warn("slow telemetry -> stop the robot!");
-						stop();
-						// force mark the velocity to 0 since we will not get new telemetry soon
-						m_telemetry.put(SensorPackets.VELOCITY, 0);
+						if ( m_moving )stop();
 					}
 				}
 			} catch (IOException e) {
@@ -538,7 +562,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if ( receivedBytes == telemLength ) {
+			if ( receivedBytes == m_telemDataLength ) {
 				m_telemInput.reset();
 				//				s_logger.debug("got the right number of bytes :-)");
 				//				for (int b=0; b<telemLength; b++) {
@@ -566,13 +590,22 @@ public class RoombaCreate extends SerialIoioRoomba {
 						//						s_logger.debug("sensor packet: " + p.name + " -> " + value);
 					}
 				}
-				m_monitorThread.check();
+				check();
 				return processed;
 			}
 			else {
-				s_logger.warn("skip telemetry request!");
+				s_logger.warn("telemetry does not have the right length ("+receivedBytes+"<"+m_telemDataLength+") -> skip telemetry request!");
 				return -1;
 			}
+
+		}
+
+		private boolean validChecksum() {
+			byte checksum = TELEM_MSG_HEADER;
+			for ( int i=0; i<m_telemMessageSize; i++ ) {
+				checksum += m_telemBuffer[i];
+			}
+			return ( (checksum & 0xFF) == 0); 
 		}
 
 		protected int processMessage() {
@@ -619,9 +652,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 					}
 				}
 			}
-			synchronized(m_monitorThread) {
-				m_monitorThread.notify();
-			}
+			check();
 			return processed;
 		}
 
@@ -642,7 +673,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 							m_offset = 0;
 						}
 					}
-					if ( m_offset == m_msgSize-1 ) {
+					if ( m_offset == m_telemMessageSize-1 ) {
 						boolean valid = validChecksum();
 						if ( valid ) {
 							// if ( debug_serial ) s_logger.trace("Valid message received.");
@@ -690,10 +721,10 @@ public class RoombaCreate extends SerialIoioRoomba {
 					s_logger.info("Use continuous telemetry mode");
 				}
 				else {
-					requestTelemetry();
 					s_logger.info("Use telemetry on request mode");
 				}
-
+				m_telemetryTimestamp = System.nanoTime();
+				
 				while ( !m_exec.isShutdown() ) {
 					m_loopChrono.start();
 					m_readChrono.start();
@@ -704,7 +735,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 						delay(5);
 					}
 					else {
-						processRequest();
+						requestTelemetry();
 						m_readChrono.stop();
 						int remaining = REQUEST_TELEMETRY_RATE-m_readChrono.duration();
 						if ( remaining > 0 ) {
@@ -713,11 +744,10 @@ public class RoombaCreate extends SerialIoioRoomba {
 						else {
 							s_logger.warn("took more than "+ REQUEST_TELEMETRY_RATE +" to read telemetry");
 						}
-						requestTelemetry();
 					}
 					m_readChrono.show(REQUEST_TELEMETRY_RATE);
 					m_loopChrono.stop();
-					m_loopChrono.show(300);
+					//					m_loopChrono.show(300);
 				} // while
 			} catch (ConnectionLostException e) {
 				// TODO Auto-generated catch block
