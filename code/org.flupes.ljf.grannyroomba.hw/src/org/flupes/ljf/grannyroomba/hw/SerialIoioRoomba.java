@@ -59,8 +59,8 @@ public abstract class SerialIoioRoomba {
 	protected int m_lastDriveCmd;
 
 	protected DigitalOutput m_deviceDetect; 
-	protected InputStream m_serialReceive;
-	protected OutputStream m_serialTransmit;
+	protected volatile InputStream m_serialReceive;
+	protected volatile OutputStream m_serialTransmit;
 
 	public enum CtrlModes { DISCONNECTED, PASSIVE, SAFE, FULL };
 	protected CtrlModes m_mode;
@@ -140,6 +140,13 @@ public abstract class SerialIoioRoomba {
 		writeByte( RoombaCmds.CMD_SPOT );
 	}
 
+	public synchronized void leds(int leds, int color, int intensity) throws ConnectionLostException {
+		writeByte( RoombaCmds.CMD_LEDS );
+		writeByte( leds );
+		writeByte( color );
+		writeByte( intensity );
+	}
+	
 	protected void writeByte(int b)
 			throws ConnectionLostException {
 		try {
