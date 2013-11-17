@@ -1,5 +1,14 @@
 package org.flupes.ljf.grannyroomba.hw;
 
+/**
+ * Simple holder for Roomba Create scripts.
+ * 
+ * The class always:
+ *  - add a mode change to SAFE at the beginning of the script (on creation)
+ *  - add a mode change to FULL at the end of the script (on close)
+ *  This hack allow the telemetry system to monitor if the script is still
+ *  executing or not.
+ */
 public class RoombaScript {
 
 	private final int CAPACITY = 100;
@@ -12,6 +21,7 @@ public class RoombaScript {
 		m_script[0] = 0;
 		m_pos = 1;
 		m_closed = false;
+		addByte(RoombaCmds.CMD_SAFE);
 	}
 
 	public RoombaScript addByte(int b) {
@@ -38,6 +48,7 @@ public class RoombaScript {
 	}
 
 	public int close() {
+		addByte(RoombaCmds.CMD_FULL);
 		m_script[0] = (byte)(m_pos-1);
 		m_closed = true;
 		return m_pos;
