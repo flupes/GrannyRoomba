@@ -48,16 +48,6 @@ import org.slf4j.LoggerFactory;
 public abstract class SerialIoioRoomba {
 
 	protected static final int BAUD_RATE = 57600;
-	protected static final int CMD_START = 128;
-	protected static final int CMD_BAUD = 139;
-	protected static final int CMD_CONTROL = 130;
-	protected static final int CMD_SAFE = 131;
-	protected static final int CMD_FULL = 132;
-	protected static final int CMD_POWER = 133;
-	protected static final int CMD_SPOT = 134;
-	protected static final int CMD_DRIVE = 137;
-	protected static final int CMD_SENSORS = 142;
-
 	protected static final int CMD_WAIT_MS = 20;
 
 	protected static final int DEFAULT_TX_PIN = 6;
@@ -100,7 +90,7 @@ public abstract class SerialIoioRoomba {
 			m_serialTransmit = m_uart.getOutputStream();
 
 			s_logger.info("Send START to Roomba");
-			writeByte( CMD_START );
+			writeByte( RoombaCmds.CMD_START );
 			m_mode = CtrlModes.PASSIVE;
 			delay(100);			
 		}
@@ -118,21 +108,21 @@ public abstract class SerialIoioRoomba {
 
 	public void safeControl() throws ConnectionLostException {
 		s_logger.info("Switch to SAFE mode.");
-		writeByte( CMD_SAFE );
+		writeByte( RoombaCmds.CMD_SAFE );
 		delay(CMD_WAIT_MS);
 	}
 
 	public void fullControl() throws ConnectionLostException {
 		s_logger.info("Switch to FULL mode");
-		writeByte( CMD_FULL );
+		writeByte( RoombaCmds.CMD_FULL );
 		delay(CMD_WAIT_MS);
 	}
 
 	public void spot() throws ConnectionLostException {
 		s_logger.info("Spot Cleaning");
-		writeByte( CMD_CONTROL );
+		writeByte( RoombaCmds.CMD_CONTROL );
 		delay(CMD_WAIT_MS);
-		writeByte( CMD_SPOT );
+		writeByte( RoombaCmds.CMD_SPOT );
 		delay(CMD_WAIT_MS);
 	}
 
@@ -144,11 +134,11 @@ public abstract class SerialIoioRoomba {
 	public void baseDrive(int velocity, int radius)
 			throws ConnectionLostException {
 		s_logger.debug("baseDrive("+velocity+", "+radius+")");
-		writeByte( CMD_DRIVE );
+		writeByte( RoombaCmds.CMD_DRIVE );
 		writeWord( velocity );
 		writeWord( radius );
 		delay(CMD_WAIT_MS);
-		m_lastDriveCmd = CMD_DRIVE;
+		m_lastDriveCmd = RoombaCmds.CMD_DRIVE;
 	}
 
 	protected void writeByte(int b)
