@@ -62,7 +62,7 @@ public abstract class SerialIoioRoomba {
 	protected InputStream m_serialReceive;
 	protected OutputStream m_serialTransmit;
 
-	public enum CtrlModes { DISCONNECTED, PASSIVE, CONTROL, FULL };
+	public enum CtrlModes { DISCONNECTED, PASSIVE, SAFE, FULL };
 	protected CtrlModes m_mode;
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
@@ -106,39 +106,38 @@ public abstract class SerialIoioRoomba {
 
 	}
 
-	public void safeControl() throws ConnectionLostException {
+	public synchronized void safeControl() throws ConnectionLostException {
 		s_logger.info("Switch to SAFE mode.");
+		m_mode = CtrlModes.SAFE;
 		writeByte( RoombaCmds.CMD_SAFE );
 		delay(CMD_WAIT_MS);
 	}
 
-	public void fullControl() throws ConnectionLostException {
+	public synchronized void fullControl() throws ConnectionLostException {
 		s_logger.info("Switch to FULL mode");
+		m_mode = CtrlModes.FULL;
 		writeByte( RoombaCmds.CMD_FULL );
 		delay(CMD_WAIT_MS);
 	}
 
-	public void spot() throws ConnectionLostException {
-		s_logger.info("Spot Cleaning");
-		writeByte( RoombaCmds.CMD_CONTROL );
-		delay(CMD_WAIT_MS);
-		writeByte( RoombaCmds.CMD_SPOT );
-		delay(CMD_WAIT_MS);
-	}
-
-	public void stop() throws ConnectionLostException {
+	public synchronized void stop() throws ConnectionLostException {
 		s_logger.debug("stop locomotion");
 		baseDrive(0, 0x8000);
 	}
 
-	public void baseDrive(int velocity, int radius)
+	public synchronized void baseDrive(int velocity, int radius)
 			throws ConnectionLostException {
 		s_logger.debug("baseDrive("+velocity+", "+radius+")");
 		writeByte( RoombaCmds.CMD_DRIVE );
 		writeWord( velocity );
 		writeWord( radius );
-		delay(CMD_WAIT_MS);
 		m_lastDriveCmd = RoombaCmds.CMD_DRIVE;
+	}
+
+	public synchronized void spot() throws ConnectionLostException {
+		s_logger.info("Spot Cleaning");
+		safeControl();
+		writeByte( RoombaCmds.CMD_SPOT );
 	}
 
 	protected void writeByte(int b)
