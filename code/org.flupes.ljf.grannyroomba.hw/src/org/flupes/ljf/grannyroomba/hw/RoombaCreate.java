@@ -68,7 +68,13 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 	/** Description of the telemetry to be requested */
 	enum SensorPackets {
-		BUMPS(7, DataType.BYTE, "Bumps and Wheel Drops"),
+		BUMPS_DROPS(7, DataType.BYTE, "Bumps and Wheel Drops"),
+		CLIFF_LEFT(9, DataType.BYTE, "Cliff Left"),
+		CLIFF_FRONT_LEFT(10, DataType.BYTE, "Cliff Front Left"),
+		CLIFF_FRONT_RIGHT(11, DataType.BYTE, "Cliff Front Right"),
+		CLIFF_RIGHT(12, DataType.BYTE, "Cliff Right"),
+		VIRTUAL_WALL(13, DataType.BYTE, "Virtual Wall"),
+		OVERCURRENTS(14, DataType.BYTE, "Low side drivers and wheels Overcurrents"),
 		IR(17, DataType.BYTE, "IR Byte"),
 		BUTTONS(18, DataType.BYTE, "Buttons"),
 		CHARGING(21, DataType.BYTE, "Charging State"),
@@ -149,7 +155,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	private Map<SensorPackets, Integer> m_telemetry;
 	private final int m_msgSize;
 
-	protected RobotState m_state;
+	protected volatile RobotState m_state;
 	protected RoombaScript m_backupScript;
 	protected RoombaScript m_waitSafeScript;
 	protected ExecutorService m_exec;
@@ -197,7 +203,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		super(ioio);
 
 		m_state = RobotState.DISCONNECTED;
-		
+
 		EnumMap<SensorPackets, Integer> telemetry_store = new EnumMap<SensorPackets, Integer>(SensorPackets.class);
 		m_telemetry = Collections.synchronizedMap(telemetry_store);
 
@@ -235,27 +241,38 @@ public class RoombaCreate extends SerialIoioRoomba {
 		s_logger.info("controller threads terminated.");
 	}
 
-	public void directDrive(int leftWheelSpeed, int rightWheelSpeed)
+	synchronized public void baseDrive(int velocity, int radius)
 			throws ConnectionLostException {
-		s_logger.debug("directDrive("+leftWheelSpeed+", "+rightWheelSpeed+")");
-		writeByte( RoombaCmds.CMD_DIRECT );
-		writeWord( rightWheelSpeed );
-		writeWord( leftWheelSpeed );
-		delay(CMD_WAIT_MS);
-		m_lastDriveCmd = RoombaCmds.CMD_DIRECT;
+		if ( m_state == RobotState.READY ) {
+			super.baseDrive(velocity, radius);
+		}
 	}
 
-	public void positionDrive(int distance) {
-		RoombaScript driveScript = new RoombaScript();
-		driveScript.addByte(RoombaCmds.CMD_DRIVE).addWord(200).addWord(0x8000);
-		driveScript.addByte(RoombaCmds.CMD_WAIT_DISTANCE).addWord(distance);
-		driveScript.addByte(RoombaCmds.CMD_DRIVE).addWord(0).addWord(0x8000);
-		driveScript.close();
-		try {
-			runScript(driveScript);
-		} catch (ConnectionLostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	synchronized public void directDrive(int leftWheelSpeed, int rightWheelSpeed)
+			throws ConnectionLostException {
+		if ( m_state == RobotState.READY ) {
+			s_logger.debug("directDrive("+leftWheelSpeed+", "+rightWheelSpeed+")");
+			writeByte( RoombaCmds.CMD_DIRECT );
+			writeWord( rightWheelSpeed );
+			writeWord( leftWheelSpeed );
+			delay(CMD_WAIT_MS);
+			m_lastDriveCmd = RoombaCmds.CMD_DIRECT;
+		}
+	}
+
+	synchronized public void positionDrive(int distance) {
+		if ( m_state == RobotState.READY ) {
+			RoombaScript driveScript = new RoombaScript();
+			driveScript.addByte(RoombaCmds.CMD_DRIVE).addWord(200).addWord(0x8000);
+			driveScript.addByte(RoombaCmds.CMD_WAIT_DISTANCE).addWord(distance);
+			driveScript.addByte(RoombaCmds.CMD_DRIVE).addWord(0).addWord(0x8000);
+			driveScript.close();
+			try {
+				runScript(driveScript);
+			} catch (ConnectionLostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -270,7 +287,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	}
 
 	public int getBumps() {
-		return m_telemetry.get(SensorPackets.BUMPS);
+		return m_telemetry.get(SensorPackets.BUMPS_DROPS);
 	}
 
 	public int getVelocity() {
@@ -313,6 +330,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			else {
 				System.out.println("No telemetry has been received!");
 			}
+			System.out.println("robot state = " + m_state);
 		}
 	}
 
@@ -329,6 +347,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	//	}
 
 	protected void runScript(RoombaScript script) throws ConnectionLostException {
+		m_state = RobotState.SCRIPT_EXEC;
 		writeByte(RoombaCmds.CMD_SCRIPT);
 		writeBytes(script.buffer(), script.length());
 		delay(CMD_WAIT_MS);
@@ -361,40 +380,60 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 
 		public void check() {
-			int bumps;
+			int bumpsAndDrops;
 			int mode;
+			int charging;
+			int cliff;
+			int vwall;
+			int overcurrent;
 			synchronized(m_telemetry) {
-				bumps = m_telemetry.get(SensorPackets.BUMPS);
+				bumpsAndDrops = m_telemetry.get(SensorPackets.BUMPS_DROPS);
 				mode = m_telemetry.get(SensorPackets.OIMODE);
+				charging = m_telemetry.get(SensorPackets.CHARGING);
+				cliff = m_telemetry.get(SensorPackets.CLIFF_LEFT) 
+						| m_telemetry.get(SensorPackets.CLIFF_FRONT_LEFT)
+						| m_telemetry.get(SensorPackets.CLIFF_FRONT_RIGHT)
+						| m_telemetry.get(SensorPackets.CLIFF_RIGHT);
+				vwall = m_telemetry.get(SensorPackets.VIRTUAL_WALL);
+				overcurrent = m_telemetry.get(SensorPackets.VIRTUAL_WALL)&(8+16);
 			}
 
 			try {
 
-				if ( 0 != (bumps&(2+1)) ) {
-					if ( m_state != RobotState.UNBUMPING ) {
+				if ( 0 != (bumpsAndDrops&(2+1)) ) {
+					if ( m_state != RobotState.UNBUMPING && m_state != RobotState.SAGEGUARDING) {
 						// run the script if not already running!
 						s_logger.warn("bump -> backup!");
-						baseDrive(-100, 0x8000);
+						directDrive(-100, -100);
+						m_state = RobotState.UNBUMPING;
 					}
 				}
 				else {
 					if ( m_state == RobotState.UNBUMPING ) {
-						stop();
+						m_state = RobotState.READY;
+						directDrive(0, 0);
 						s_logger.warn("bump cleared.");
+					}
+				}
+
+				int drops = bumpsAndDrops&(4+8+16);
+
+				if ( 0 != (charging|cliff|drops|overcurrent) ) {
+					if ( m_state != RobotState.SAGEGUARDING ) {
+						stop();
+						m_state = RobotState.SAGEGUARDING;
+					}
+				}
+				else {
+					if ( m_state == RobotState.SAGEGUARDING ) {
 						m_state = RobotState.READY;
 					}
 				}
 
-				if ( mode == 1 && m_mode != CtrlModes.PASSIVE ) {
-					// Roomba reverted to passive because safe condition
-					// was triggered
-					m_mode = CtrlModes.PASSIVE;
-					s_logger.warn("passive -> wait for safety");;
-					waitForSafety();
-				}
 				if ( mode == 2 && m_mode != CtrlModes.CONTROL) {
 					m_mode = CtrlModes.CONTROL;
 				}
+
 				if ( mode == 3 && m_mode != CtrlModes.FULL) {
 					m_mode = CtrlModes.FULL;
 					// back from SAFE mode that was entered because 
@@ -631,6 +670,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 					s_logger.info("wait for the ioio serial port to be available");
 					delay(100);
 				}
+				fullControl();
 				if ( m_continuousTelemetry ) {
 					startTelemetry();
 					s_logger.info("Use continuous telemetry mode");
@@ -673,7 +713,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 		}
 
 	}
-	
+
 	@Deprecated
 	private void createScripts() {
 		m_backupScript = new RoombaScript();
