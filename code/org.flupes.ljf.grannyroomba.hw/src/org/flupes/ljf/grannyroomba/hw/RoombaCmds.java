@@ -10,6 +10,8 @@ public class RoombaCmds {
 	static final int CMD_FULL = 132;
 	static final int CMD_POWER = 133;
 	static final int CMD_SPOT = 134;
+	static final int CMD_CLEAN = 135;
+	static final int CMD_MAX = 136;
 	static final int CMD_DRIVE = 137;
 	static final int CMD_SENSORS = 142;
 
