@@ -71,14 +71,14 @@ public class RoombaSeries400 extends SerialIoioRoomba {
 			m_serialTransmit = m_uart.getOutputStream();
 
 			s_logger.info("Send START to Roomba");
-			writeByte( CMD_START );
+			writeByte( RoombaCmds.CMD_START );
 			m_mode = CtrlModes.PASSIVE;
 			delay(100);			
 		}
 	}
 	
 	public void power() throws ConnectionLostException {
-		writeByte ( CMD_POWER );
+		writeByte ( RoombaCmds.CMD_POWER );
 		delay(CMD_WAIT_MS);
 	}
 	
@@ -99,7 +99,7 @@ public class RoombaSeries400 extends SerialIoioRoomba {
 	}
 
 	public void requestSensorGroup(int groupId) throws ConnectionLostException {
-		writeByte ( CMD_SENSORS );
+		writeByte ( RoombaCmds.CMD_SENSORS );
 		writeByte ( groupId );
 		delay(CMD_WAIT_MS);
 	}
