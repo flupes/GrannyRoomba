@@ -22,6 +22,8 @@ package org.flupes.ljf.grannyroomba;
 
 public interface ICreateLocomotor extends ILocomotor {
 
+	int drivePosition(float distance, float angle, float velocity);
+
 	int getStatus();
 	
 	int getOiMode();

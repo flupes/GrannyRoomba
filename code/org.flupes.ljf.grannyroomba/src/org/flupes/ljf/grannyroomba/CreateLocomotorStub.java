@@ -24,6 +24,12 @@ public class CreateLocomotorStub extends LocomotorStub implements
 		ICreateLocomotor {
 
 	@Override
+	public int drivePosition(float distance, float angle, float velocity) {
+		s_logger.info("DRIVE_POSITION(distance="+distance+", angle="+angle+", velocity="+velocity+")");
+		return 0;
+	}
+
+	@Override
 	public int getStatus() {
 		return 0;
 	}

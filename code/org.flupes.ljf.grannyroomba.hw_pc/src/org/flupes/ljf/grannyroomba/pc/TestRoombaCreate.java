@@ -97,8 +97,6 @@ public class TestRoombaCreate extends IOIOSwingApp {
 				
 				m_roomba.connect(2, 1);
 
-				m_roomba.safeControl();
-				
 				if ( s_listen ) {
 					m_uart = ioio_.openUart(new DigitalInput.Spec(11), null,
 							57600, Uart.Parity.NONE, Uart.StopBits.ONE);
@@ -189,6 +187,10 @@ public class TestRoombaCreate extends IOIOSwingApp {
 						case KeyEvent.VK_CONTROL:
 							s_logger.trace("CONTROL pressed -> print telemetry");
 							m_roomba.printRawTelemetry();
+							break;
+						case KeyEvent.VK_W:
+							s_logger.trace("Drive forward 1m");
+							m_roomba.positionDrive(1000);
 							break;
 						default:
 							s_logger.trace("Key " + e.getKeyChar() + " not processed");

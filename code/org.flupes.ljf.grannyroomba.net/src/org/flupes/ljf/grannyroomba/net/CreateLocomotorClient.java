@@ -83,4 +83,10 @@ public class CreateLocomotorClient extends LocomotorClient implements
 		return m_radius;
 	}
 
+	@Override
+	public int drivePosition(float distance, float angle, float velocity) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

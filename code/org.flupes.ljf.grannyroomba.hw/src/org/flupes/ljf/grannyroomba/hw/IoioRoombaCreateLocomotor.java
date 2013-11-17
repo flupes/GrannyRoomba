@@ -105,6 +105,12 @@ public class IoioRoombaCreateLocomotor implements ICreateLocomotor {
 	}
 
 	@Override
+	public int drivePosition(float distance, float angle, float velocity) {
+		m_roomba.positionDrive((int)(distance*1000));
+		return 0;
+	}
+
+	@Override
 	public int getStatus() {
 		m_oiMode = m_roomba.getOiMode();
 		m_bumps =  m_roomba.getBumps();
