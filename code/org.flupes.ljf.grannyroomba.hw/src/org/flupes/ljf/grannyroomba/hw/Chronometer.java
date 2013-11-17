@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class Chronometer {
 
-	protected static final boolean CHECK_TIMING = true;	
+	protected static final boolean m_checkTiming = System.getProperty("chronometer", "true").equalsIgnoreCase("true");
 	protected static Logger s_logger = LoggerFactory.getLogger("grannyroomba");
 
 	private long m_start;
@@ -18,13 +18,13 @@ public class Chronometer {
 	}
 	
 	public void start() { 
-		if ( CHECK_TIMING ) {
+		if ( m_checkTiming ) {
 			m_start = System.nanoTime();
 		}
 	}
 	
 	public void stop() {
-		if ( CHECK_TIMING ) {
+		if ( m_checkTiming ) {
 			m_stop = System.nanoTime();
 			m_duration = (m_stop-m_start)/1000000;
 		}
@@ -35,13 +35,13 @@ public class Chronometer {
 	}
 	
 	public void show() {
-		if ( CHECK_TIMING ) {
+		if ( m_checkTiming ) {
 			s_logger.warn("Timer [" + m_name + "] -> " + m_duration + "ms");
 		}
 	}
 	
 	public void show(long enough) {
-		if ( CHECK_TIMING && m_duration>enough ) {
+		if ( m_checkTiming && m_duration>enough ) {
 			s_logger.warn("Timer [" + m_name + "] -> " + m_duration + "ms");
 		}
 	}
