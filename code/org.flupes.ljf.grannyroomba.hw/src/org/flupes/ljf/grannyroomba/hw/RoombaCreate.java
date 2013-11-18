@@ -152,7 +152,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	/** Header maker starting a Roomba Create telemetry message */
 	private static final int TELEM_MSG_HEADER = 19;
 
-	private static final int REQUEST_TELEMETRY_RATE = 100;
+	private static final int REQUEST_TELEMETRY_RATE = 200;
 	private long m_telemetryTimestamp;
 	private Map<SensorPackets, Integer> m_telemetry;
 	private final int m_telemMessageSize;
@@ -370,56 +370,61 @@ public class RoombaCreate extends SerialIoioRoomba {
 		@Override
 		public void run() {
 			try {
-				int leds = 0;
 				int power = 0;
 				int intensity = 0;
-				boolean playLed = false;
-				boolean advanceLed = false;
 				boolean powerLed = false;
+				int ledBits = 2;
+				boolean playLed = true;
+				boolean advanceLed = false;
 				while ( m_serialTransmit == null ) {
 					s_logger.info("wait for the ioio serial port to be available");
 					delay(100);
 				}
-				leds(leds, power, intensity);
 				long advanceTimeOn = 0;
 				long advanceTimeOff = 0;
 				long playTimeOn = 0;
 				long playTimeOff = 0;
-				
+
 				while ( !m_exec.isShutdown() ) {
 					long currentTime = System.nanoTime();
 					if ( !advanceLed && currentTime>advanceTimeOn ) {
-						leds |= 8;
+						ledBits |= 8;
 						advanceLed = true;
-						advanceTimeOff = currentTime+200*1000000;
+						advanceTimeOff = currentTime+200l*1000000l;
 					}
 					if ( advanceLed && currentTime>advanceTimeOff ) {
-						leds &= ~8;
+						ledBits &= ~8;
 						advanceLed = false;
-						advanceTimeOn = currentTime+800*1000000;
-					}
-					
-					if ( currentTime > m_telemetryTimestamp+2000000*REQUEST_TELEMETRY_RATE ) {
-						playTimeOff = currentTime+8000*1000000;
-						leds |= 2;
-						playLed = true;
-					}
-					if ( playLed && currentTime>playTimeOff ) {
-						leds &= ~2;
-						playLed = false;
+						advanceTimeOn = currentTime+800l*1000000l;
 					}
 
-					leds(leds, power, intensity);
-					
+					if ( currentTime > m_telemetryTimestamp+2000000l*(long)REQUEST_TELEMETRY_RATE ) {
+						if ( m_moving ) {
+							s_logger.warn("No telemetry received in "+2*REQUEST_TELEMETRY_RATE+"ms -> stop moving");
+							stop();
+						}
+						ledBits &= ~2;
+						playTimeOn = currentTime+8000l*1000000l;
+						playLed = false;
+					}
+					if ( !playLed && currentTime>playTimeOn ) {
+						ledBits |= 2;
+						playLed = true;
+					}
+
+					leds(ledBits, power, intensity);
+
 					Thread.sleep(50);
 				} // while executor is up
-			} catch (InterruptedException e) {
-				s_logger.info("watch dog thread was interrupted while waiting");
-			} catch (ConnectionLostException e) {
+			} 
+			catch (InterruptedException e) {
+				s_logger.info("WatchDog thread was interrupted while waiting");
+			} 
+			catch (ConnectionLostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			s_logger.info("Exiting watch dog thread.");
+			s_logger.info("Exiting WatchDog thread.");
 		}
 	}
 
@@ -439,7 +444,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			m_telemInput = new ByteArrayInputStream(m_telemBuffer, 0, m_telemMessageSize);
 		}
 
-		public void startTelemetry() throws ConnectionLostException {
+		public synchronized void startTelemetry() throws ConnectionLostException {
 			writeByte( RoombaCmds.CMD_STREAM );
 			writeByte( numberOfSensorPackets() );
 			for ( SensorPackets p : SensorPackets.values() ) {
@@ -447,7 +452,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 			}
 		}
 
-		public void toggleTelemetry(boolean state) throws ConnectionLostException {
+		public synchronized void toggleTelemetry(boolean state) throws ConnectionLostException {
 			writeByte( RoombaCmds.CMD_TOGGLESTREAM );
 			if ( state ) {
 				writeByte( 1 );
@@ -539,21 +544,17 @@ public class RoombaCreate extends SerialIoioRoomba {
 			int receivedBytes = 0;
 			try {
 				// send request
-				writeByte( RoombaCmds.CMD_QUERY );
-				writeByte( numberOfSensorPackets() );
-				for ( SensorPackets p : SensorPackets.values() ) {
-					writeByte( p.id );
+				synchronized(RoombaCreate.this) {
+					writeByte( RoombaCmds.CMD_QUERY );
+					writeByte( numberOfSensorPackets() );
+					for ( SensorPackets p : SensorPackets.values() ) {
+						writeByte( p.id );
+					}
 				}
 
 				// read telemetry
-				long start = System.nanoTime();
 				while ( receivedBytes < m_telemDataLength ) {
 					receivedBytes += m_serialReceive.read(m_telemBuffer, receivedBytes, m_telemDataLength-receivedBytes);
-					long stop = System.nanoTime();
-					if ( (stop-start) > 200*1000000 ) {
-						s_logger.warn("slow telemetry -> stop the robot!");
-						if ( m_moving )stop();
-					}
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -724,7 +725,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 					s_logger.info("Use telemetry on request mode");
 				}
 				m_telemetryTimestamp = System.nanoTime();
-				
+
 				while ( !m_exec.isShutdown() ) {
 					m_loopChrono.start();
 					m_readChrono.start();
