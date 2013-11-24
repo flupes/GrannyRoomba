@@ -231,6 +231,12 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 	public void shutdown() {
 		s_logger.info("shuting down the controller threads...");
+		try {
+			leds(0, 255, 255);
+		} catch (ConnectionLostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		m_exec.shutdown();
 		try {
 			if ( !m_exec.awaitTermination(500, TimeUnit.MILLISECONDS) ) {
@@ -246,7 +252,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 
 	@Override
 	public synchronized void stop() throws ConnectionLostException {
-		s_logger.debug("RoombaCreate.stop()");
+		s_logger.trace("RoombaCreate.stop()");
 		writeByte( RoombaCmds.CMD_DIRECT );
 		writeWord( 0 );
 		writeWord( 0 );
@@ -265,7 +271,7 @@ public class RoombaCreate extends SerialIoioRoomba {
 	public synchronized void directDrive(int leftWheelSpeed, int rightWheelSpeed)
 			throws ConnectionLostException {
 		if ( m_state == RobotStates.READY ) {
-			s_logger.debug("directDrive("+leftWheelSpeed+", "+rightWheelSpeed+")");
+			s_logger.trace("directDrive("+leftWheelSpeed+", "+rightWheelSpeed+")");
 			m_moving = true;
 			writeByte( RoombaCmds.CMD_DIRECT );
 			writeWord( rightWheelSpeed );
