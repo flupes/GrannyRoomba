@@ -69,7 +69,6 @@ public class ServoServer extends ZmqServer {
 				CommandStatus.Builder builder = CommandStatus.newBuilder();
 				builder.setId(m_cmdid).setStatus(response?Status.COMPLETED:Status.FAILED);
 				CommandStatus reply = builder.build();
-				s_logger.info("servo server send reply");
 				m_socket.send(reply.toByteArray());
 				break;
 
