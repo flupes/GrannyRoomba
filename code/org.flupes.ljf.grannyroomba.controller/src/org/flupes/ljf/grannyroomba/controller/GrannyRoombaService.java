@@ -59,6 +59,9 @@ public class GrannyRoombaService extends IOIOService {
 	
 	protected RoombaCreate m_roomba;
 
+	private DigitalOutput m_greenLed;
+	private DigitalOutput m_yellowLed;
+
 	protected static final boolean m_debug = false;
 
 	@Override
@@ -132,13 +135,16 @@ public class GrannyRoombaService extends IOIOService {
 	@Override
 	protected IOIOLooper createIOIOLooper() {
 		return new BaseIOIOLooper() {
-			private DigitalOutput m_onboardLed;
+			private DigitalOutput m_onboardLed;			
 			private int count = 0;
 
 			@Override
 			protected void setup() throws ConnectionLostException,
 			InterruptedException {
 				m_onboardLed = ioio_.openDigitalOutput(IOIO.LED_PIN);
+				m_yellowLed = ioio_.openDigitalOutput(6);
+				m_greenLed = ioio_.openDigitalOutput(12);
+				
 				if ( ! m_debug ) {
 					m_servoImpl = new IoioServo(10, ioio_, 1500, 2000, -180, 180);
 					m_servoService = new ServoServer(3333, m_servoImpl);
@@ -159,8 +165,12 @@ public class GrannyRoombaService extends IOIOService {
 			public void loop() throws ConnectionLostException,
 			InterruptedException {
 				m_onboardLed.write(false);
+				m_yellowLed.write(true);
+				m_greenLed.write(false);
 				Thread.sleep(100);
 				m_onboardLed.write(true);
+				m_yellowLed.write(false);
+				m_greenLed.write(true);
 				Thread.sleep(900);
 				count += 1;
 //				s_logger.info("loop #"+count);
