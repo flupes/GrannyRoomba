@@ -7,6 +7,7 @@ import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
+import org.flupes.ljf.grannyroomba.RoombaLocomotorModel;
 import org.flupes.ljf.grannyroomba.net.CreateLocomotorClient;
 import org.flupes.ljf.grannyroomba.net.ServoClient;
 
@@ -23,9 +24,12 @@ public class JoystickClient {
 	
 	private float m_currSlider;
 	private float m_prevSlider;
+	private float m_minTilt;
+	private float m_maxTilt;
 	
 	protected ServoClient m_servoClient;
 	protected CreateLocomotorClient m_locoClient;
+
 
 	protected static final float DEAD_ZONE = 0.1f;
 
@@ -38,8 +42,7 @@ public class JoystickClient {
 			m_state = State.REST;
 			m_servoClient = servo;
 			m_locoClient = loco;
-//			m_servoClient.connect();
-//			m_locoClient.connect();
+			connect();
 			s_logger.info("JoystickClient started.");
 		}
 	}
@@ -54,9 +57,11 @@ public class JoystickClient {
 		m_currSlider = m_slider.getPollData();
 //		s_logger.trace("x= "+x+" / y="+y+" / rz="+rz+" / slider="+m_currSlider);
 		
-		if ( Math.abs(m_currSlider - m_prevSlider) > DEAD_ZONE ) {
+		if ( Math.abs(m_currSlider - m_prevSlider) > DEAD_ZONE/4 ) {
 			m_prevSlider = m_currSlider;
-			s_logger.debug("new slider value: " + m_currSlider);
+			float angle = (m_minTilt+m_maxTilt)/2 + m_currSlider*(m_maxTilt-m_minTilt)/2;
+			m_servoClient.changePosition(angle);
+			s_logger.debug("new slider value=" + m_currSlider + " -> angle="+angle);
 		}
 
 		boolean deadX = Math.abs(x)<DEAD_ZONE;
@@ -66,6 +71,7 @@ public class JoystickClient {
 		if ( deadX && deadY && deadRZ ) {
 			if ( m_state != State.REST ) {
 				m_state = State.REST;
+				m_locoClient.stop(0);
 				s_logger.debug("new state: REST");
 			}
 		}
@@ -81,6 +87,20 @@ public class JoystickClient {
 				}
 			}
 		}
+		if ( m_state == State.ROTATE ) {
+			float spin = -rz * RoombaLocomotorModel.ALLOWED_ANGULAR_VELOCITY;
+			s_logger.debug("rz="+rz+" -> rotate spin="+spin);
+			m_locoClient.driveVelocity(0, spin, 0);
+		}
+		if ( m_state == State.MOVE ) {
+			float speed = -y * RoombaLocomotorModel.ALLOWED_LINEAR_VELOCITY;
+			float spin = x * RoombaLocomotorModel.ALLOWED_ANGULAR_VELOCITY/2;
+			if ( speed > 0 ) {
+				spin = -spin;
+			}
+			s_logger.info("x="+x+" | y="+y+" -> driveVelocity("+speed+","+spin+")");
+			m_locoClient.driveVelocity(speed, spin, 0);
+		}
 		
 		return active();
 	}
@@ -89,6 +109,20 @@ public class JoystickClient {
 		return true;
 	}
 
+	private void connect() {
+		m_servoClient.connect();
+		m_locoClient.connect();
+		float limits[] = m_servoClient.getLimits(null);
+		if ( limits == null ) {
+			s_logger.error("Could not get servo position limits!");
+		}
+		else {
+			m_minTilt = limits[0];
+			m_maxTilt = limits[1];
+			s_logger.info("Tilt limits: [" + m_minTilt + ", " + m_maxTilt + "]");
+		}
+
+	}
 	private Controller findSuitableStick() {
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		for ( Controller ca : ce.getControllers() ) {
