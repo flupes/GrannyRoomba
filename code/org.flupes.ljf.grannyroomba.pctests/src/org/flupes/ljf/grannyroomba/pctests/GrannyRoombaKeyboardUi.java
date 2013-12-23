@@ -53,7 +53,7 @@ public class GrannyRoombaKeyboardUi {
 	enum Mode {
 		LOCAL("local", "localhost", 6666, 7777),
 		PRIVATE("private", "172.16.0.39", 3333, 4444),
-		PUBLIC("public", "67.188.2.6", 3140, 3141);
+		PUBLIC("public", "some.public.ip.here", 3140, 3141);
 
 		final String mode;
 		final String host;
