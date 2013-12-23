@@ -21,22 +21,23 @@ public class TestJoystickClient {
 		if ( host ==  null ) {
 			host = "172.16.0.39";
 		}
-		int servoPort = Integer.getInteger("servoPort", 3333);
-		int locoPort = Integer.getInteger("locoPort", 4444);
-		
+		int servoPort = Integer.getInteger("servoPort", 3140);
+		int locoPort = Integer.getInteger("locoPort", 3141);
+
 		ServoClient servo = new ServoClient(host, servoPort);
 		CreateLocomotorClient loco = new CreateLocomotorClient(host, locoPort);
-		
+
 		JoystickClient stick = new JoystickClient(servo, loco);
-		
-		boolean up = true;
-		while ( up ) {
-			up = stick.poll();
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if ( stick.isConnected() ) {
+			boolean up = true;
+			while ( up ) {
+				up = stick.poll();
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
