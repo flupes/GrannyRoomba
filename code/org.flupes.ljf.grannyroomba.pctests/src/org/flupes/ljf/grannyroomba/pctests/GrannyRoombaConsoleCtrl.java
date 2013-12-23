@@ -58,7 +58,7 @@ public class GrannyRoombaConsoleCtrl {
 		if ( host ==  null ) {
 			host = "172.16.0.39";
 		}
-		int locoPort = Integer.getInteger("port", 4444);
+		int locoPort = Integer.getInteger("port", 3141);
 		s_logger.setLevel(Level.TRACE);
 		Appender appender = new ConsoleAppender(new TTCCLayout(), ConsoleAppender.SYSTEM_OUT);
 		s_logger.addAppender(appender);

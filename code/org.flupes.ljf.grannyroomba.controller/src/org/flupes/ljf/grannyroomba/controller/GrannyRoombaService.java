@@ -76,11 +76,11 @@ public class GrannyRoombaService extends IOIOService {
 		s_logger.info("GrannyRoombaService.onCreate");
 		if ( m_debug ) {
 			m_servoImpl = new ServoStub(-45, 90, 45);
-			m_servoService = new ServoServer(3333, m_servoImpl);
+			m_servoService = new ServoServer(3140, m_servoImpl);
 			m_servoService.start();
 			
 			m_locoImpl = new CreateLocomotorStub();
-			m_locoService = new LocomotorServer(4444, m_locoImpl);
+			m_locoService = new LocomotorServer(3141, m_locoImpl);
 			m_locoService.start();
 		}
 	}
@@ -147,7 +147,7 @@ public class GrannyRoombaService extends IOIOService {
 				
 				if ( ! m_debug ) {
 					m_servoImpl = new IoioServo(10, ioio_, 1500, 2000, -180, 180);
-					m_servoService = new ServoServer(3333, m_servoImpl);
+					m_servoService = new ServoServer(3140, m_servoImpl);
 					m_servoService.start();
 					s_logger.info("IOIO looper started the ServoService");
 					
@@ -155,7 +155,7 @@ public class GrannyRoombaService extends IOIOService {
 					m_roomba.connect(2, 1);
 
 					m_locoImpl = new IoioRoombaCreateLocomotor(m_roomba);
-					m_locoService = new LocomotorServer(4444, m_locoImpl);
+					m_locoService = new LocomotorServer(3141, m_locoImpl);
 					m_locoService.start();
 					s_logger.info("IOIO looper started the LocomotorService");
 				}
