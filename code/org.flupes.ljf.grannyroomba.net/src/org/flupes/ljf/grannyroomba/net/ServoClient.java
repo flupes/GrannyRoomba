@@ -63,19 +63,21 @@ public class ServoClient extends ZmqClient implements IServo {
 		builder.setCmd(SingleAxisCmd.Command.GET_CONFIG);
 		SingleAxisCmd cmd = builder.build();
 		byte[] reply = reqrep(cmd.toByteArray());
-		try {
-			MotorConfig config = MotorConfig.parseFrom(reply);
-			if ( config.hasLowLimit() && config.hasHighLimitl() ) {
-				if ( store == null ) {
-					store = new float[2];
+		if ( reply != null ) {
+			try {
+				MotorConfig config = MotorConfig.parseFrom(reply);
+				if ( config.hasLowLimit() && config.hasHighLimitl() ) {
+					if ( store == null ) {
+						store = new float[2];
+					}
+					store[0] = config.getLowLimit();
+					store[1] = config.getHighLimitl();
+					return store;
 				}
-				store[0] = config.getLowLimit();
-				store[1] = config.getHighLimitl();
-				return store;
+			} catch (InvalidProtocolBufferException e) {
+				s_logger.error("Got invalid MotorConfig response!");
+				s_logger.error("Exception: "+e);
 			}
-		} catch (InvalidProtocolBufferException e) {
-			s_logger.error("Got invalid MotorConfig response!");
-			s_logger.error("Exception: "+e);
 		}
 		return null;
 	}
@@ -92,14 +94,16 @@ public class ServoClient extends ZmqClient implements IServo {
 				);
 		SingleAxisCmd cmd = builder.build();
 		byte[] reply = reqrep(cmd.toByteArray());
-		try {
-			CommandStatus status = CommandStatus.parseFrom(reply);
-			if ( status.getStatus() == CommandStatus.Status.COMPLETED ) {
-				return true;
+		if ( reply != null ) {
+			try {
+				CommandStatus status = CommandStatus.parseFrom(reply);
+				if ( status.getStatus() == CommandStatus.Status.COMPLETED ) {
+					return true;
+				}
+			} catch (InvalidProtocolBufferException e) {
+				s_logger.error("got invalid response from server!");
+				s_logger.error("Exception: "+e);
 			}
-		} catch (InvalidProtocolBufferException e) {
-			s_logger.error("got invalid response from server!");
-			s_logger.error("Exception: "+e);
 		}
 		return false;
 	}
@@ -116,14 +120,16 @@ public class ServoClient extends ZmqClient implements IServo {
 				);
 		SingleAxisCmd cmd = builder.build();
 		byte[] reply = reqrep(cmd.toByteArray());
-		try {
-			CommandStatus status = CommandStatus.parseFrom(reply);
-			if ( status.getStatus() == CommandStatus.Status.COMPLETED ) {
-				return true;
+		if ( reply != null ) {
+			try {
+				CommandStatus status = CommandStatus.parseFrom(reply);
+				if ( status.getStatus() == CommandStatus.Status.COMPLETED ) {
+					return true;
+				}
+			} catch (InvalidProtocolBufferException e) {
+				s_logger.error("got invalid response from server!");
+				s_logger.error("Exception: "+e);
 			}
-		} catch (InvalidProtocolBufferException e) {
-			s_logger.error("got invalid response from server!");
-			s_logger.error("Exception: "+e);
 		}
 		return false;
 	}
