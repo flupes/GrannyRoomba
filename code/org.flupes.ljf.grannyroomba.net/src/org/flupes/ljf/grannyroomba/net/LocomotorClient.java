@@ -63,6 +63,9 @@ public class LocomotorClient extends ZmqClient implements ILocomotor {
 	}
 
 	protected int parseReply(byte[] reply) {
+		if ( reply == null ) {
+			return -1;
+		}
 		try {
 			CommandStatus status = CommandStatus.parseFrom(reply);
 			return status.getStatus().getNumber();
