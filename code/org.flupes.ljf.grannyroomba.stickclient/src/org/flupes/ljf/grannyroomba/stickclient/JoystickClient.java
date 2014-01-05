@@ -1,5 +1,11 @@
 package org.flupes.ljf.grannyroomba.stickclient;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +35,9 @@ public class JoystickClient {
 	private float m_maxTilt;
 	private Float m_currentTilt;
 
+	protected FutureTask<Integer> m_future;
+	protected ExecutorService m_executor;
+	
 	protected ServoClient m_servoClient;
 	protected CreateLocomotorClient m_locoClient;
 
@@ -45,20 +54,71 @@ public class JoystickClient {
 			m_state = State.REST;
 			m_servoClient = servo;
 			m_locoClient = loco;
-			connect();
-			s_logger.info("JoystickClient started.");
+			boolean ok = connect();
+			if ( ok ) {
+				s_logger.info("JoystickClient connected.");
+				m_executor = Executors.newSingleThreadExecutor();
+				run();
+				s_logger.info("JoystickClient looping...");
+			}
+			else {
+				s_logger.error("JoystickClient not started!");
+			}
 		}
 	}
 
-	Controller getController() {
+	protected Controller getController() {
 		return m_stick;
 	}
 
-	boolean isConnected() {
+	public boolean stop() {
+		boolean terminated = m_future.cancel(true);
+		if ( terminated ) {
+			s_logger.debug("future task terminated with success.");
+		}
+		else {
+			s_logger.debug("future task could not be canceled!");
+		}
+		m_executor.shutdown();
+		try {
+			m_executor.awaitTermination(500, TimeUnit.MILLISECONDS);
+			s_logger.debug("Executor is now down.");
+		} catch (InterruptedException e) {
+			s_logger.warn("Executor failed to terminate in given time!");
+			m_executor.shutdownNow();
+			s_logger.warn("Executor has been forced to shutdown");
+		};
+		return terminated;
+	}
+	
+	public boolean isConnected() {
 		return (m_stick==null)?false:true;
 	}
 
-	public boolean poll() {
+	class Poller implements Callable<Integer> {
+		@Override
+		public Integer call() throws Exception {
+			boolean up = true;
+			while ( up ) {
+				up = poll();
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					s_logger.info("sleep in polling loop was interrupted!");
+					up = false;
+				}
+			}
+			s_logger.info("Poller terminated.");
+			return (up)?1:-1;
+		}
+	}
+	
+	private void run() {
+		m_future = new FutureTask<Integer>(new Poller());
+		m_executor.execute(m_future);
+	}
+	
+	private boolean poll() {
 
 		m_stick.poll();
 
@@ -139,12 +199,13 @@ public class JoystickClient {
 		return true;
 	}
 
-	private void connect() {
+	private boolean connect() {
 		m_servoClient.connect();
 		m_locoClient.connect();
 		float limits[] = m_servoClient.getLimits(null);
 		if ( limits == null ) {
 			s_logger.error("Could not get servo position limits!");
+			return false;
 		}
 		else {
 			m_minTilt = limits[0];
@@ -154,13 +215,14 @@ public class JoystickClient {
 		m_currentTilt = m_servoClient.getPosition();
 		if ( m_currentTilt == null ) {
 			s_logger.error("Could not get current servo position!");
+			return false;
 		}
 		else {
 			s_logger.info("Tilt current position: " + m_currentTilt);
 		}
-
-
+		return true;
 	}
+	
 	private Controller findSuitableStick() {
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		for ( Controller ca : ce.getControllers() ) {
