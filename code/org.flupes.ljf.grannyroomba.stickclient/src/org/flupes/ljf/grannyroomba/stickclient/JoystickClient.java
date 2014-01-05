@@ -42,7 +42,7 @@ public class JoystickClient {
 	protected CreateLocomotorClient m_locoClient;
 
 
-	protected static final float DEAD_ZONE = 0.1f;
+	protected static final float DEAD_ZONE = 0.12f;
 	protected static final float TILT_INCR = 10.0f;
 
 	JoystickClient(ServoClient servo, CreateLocomotorClient loco) {
@@ -161,8 +161,8 @@ public class JoystickClient {
 		if ( deadX && deadY && deadRZ ) {
 			if ( m_state != State.REST ) {
 				m_state = State.REST;
-				m_locoClient.stop(0);
 				s_logger.debug("new state: REST");
+				m_locoClient.stop(0);
 			}
 		}
 		else {
@@ -179,7 +179,7 @@ public class JoystickClient {
 		}
 		if ( m_state == State.ROTATE ) {
 			float spin = -rz * RoombaLocomotorModel.ALLOWED_ANGULAR_VELOCITY;
-			s_logger.debug("rz="+rz+" -> rotate spin="+spin);
+			s_logger.debug("rz="+rz+" -> driveVelocity(0, "+spin+")");
 			m_locoClient.driveVelocity(0, spin*speedScale, 0);
 		}
 		if ( m_state == State.MOVE ) {
